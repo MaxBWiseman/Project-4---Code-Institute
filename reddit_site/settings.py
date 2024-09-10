@@ -83,9 +83,14 @@ WSGI_APPLICATION = 'reddit_site.wsgi.application'
 DATABASES = {
     'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
+# parsed the DATABASE_URL environment variable using dj_database_url.parse() method.
+# This method returns a dictionary that Django can use to connect to the database.
+# The DATABASE_URL environment variable is set in the env.py file.
 
 if 'test' in sys.argv:
     DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
+# This code checks if the test command is in the sys.argv list. If it is, the database engine is set to sqlite3.
+# This is because Django uses an in-memory database when running tests, which is faster than using a real database.
 
 
 # Password validation
