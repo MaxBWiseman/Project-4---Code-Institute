@@ -44,7 +44,7 @@ class Post(models.Model):
 # I dont include a is_downvote field in the Vote model as I can determine if a vote is a downvote
 # by checking if is_upvote is False.
 
-@reciever(pre_save, sender=Post)
+@receiver(pre_save, sender=Post)
 def add_slug_to_post(sender, instance, *args, **kwargs):
     if not instance.slug:
         instance.slug = slugify(instance.title)
