@@ -3,10 +3,11 @@
 {% block content %}
 <!-- category_list.html content starts here -->
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
+    <div class="row d-flex justify-content-center">
+        <div class="col-12 text-center">
             <h1 class="text-center mt-5">Categories</h1>
-            <ul>
+            <hr>
+            <ul class="list-unstyled">
                 {% for category in categories %}
                 <li>{{ category.category_name }}</li>
                 {% endfor %}
