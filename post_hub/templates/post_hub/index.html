@@ -1,7 +1,82 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
 
+<!-- index.html content starts here -->
+<div class="container-fluid">
+    <div class="row mt-4">
 
+        <!-- Blog Entries Column -->
+        <div class="col-12 mt-3 left">
+            <div class="row">
+                {% for post in post_list %}
+                <!--A for loop needs something to iterate over. In this case, the post_list object.
+ This object is passed into the template by the generic ListView, and contains the
+  contents of the queryset that we defined earlier inside views.py-->
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="image-container">
+                                {% if "placeholder" in post.banner_image.url %}
+                                <img class="card-img-top" src="{% static 'images/default.jpg' %}"
+                                    alt="placeholder image">
+                                {% else %}
+                                <img class="card-img-top" src=" {{ post.banner_image.url }}" alt="{{ post.title }}">
+                                {% endif %}
+                                <div class="image-flash">
+                                    <p class="author">Author: {{ post.author }}</p>
+                                </div>
+                            </div>
+                            <a href="{% url 'post_detail' post.slug %}" class="post-link">
+                                <!--The {% url 'post_detail' post.slug %} template tag dynamically constructs the URL based on the URL
+ pattern named 'post_detail' and the post.slug value. This allows for clean, readable URLs and easy
+  navigation to individual post detail pages. The DTL url tag syntax allows us to pass in an argument in
+   addition to the urlpattern name. As the anchor element is inside the for loop, we can use post.slug
+    as the argument, which gives us the slug value for the specific post in that iteration of the post_list
+     object. This syntax is the same dot notation you used to access the post author, title and excerpt.-->
+                                <h2 class="card-title">{{ post.title }}</h2>
+                                <p class="card-text">{{ post.blurb|truncatewords:30 }}</p>
+                            </a>
+                            <hr />
+                            <p class="card-text text-muted h6">{{ post.created_at|date:"F d, Y" }}</p>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% if forloop.counter|divisibleby:3 %}
+                <!-- This if statement checks to see how many times our for loop has run. If the counter
+ is divisible by three, then it inserts another closing div tag and a new div with the
+  class of row. This is so that we have a maximum of three posts per row on the homepage.-->
+            </div>
+            <div class="row">
+                {% endif %}
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+    {% if is_paginated %}
+    <!--This checks if the list of items is paginated. The is_paginated variable is
+ typically provided by the Django view context when pagination is enabled.-->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <!--This checks if there is a previous page available. The page_obj is a Django Page object-->
+            <li><a href="?page={{ page_obj.previous_page_number }}" class="page-link">&laquo; PREV</a></li>
+            {% endif %}
+
+            {% if page_obj.has_next %}
+            <!--This checks if there is a next page available. The page_obj is a Django Page object
+ that contains pagination information. The has_next method returns True if there is a next page.-->
+            <li><a href="?page={{ page_obj.next_page_number }}" class="page-link"> NEXT &raquo;</a></li>
+            <!--If there is a next page, this creates a list item containing a link to the next page.
+ The href attribute is set to ?page={{ page_obj.next_page_number }}, which appends the page number as
+  a query parameter to the URL.-->
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
 
 
 

@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
+from cloudinary.models import CloudinaryField
 
 
 STATUS = ((0, "Blocked"), (1, "Approved"))
@@ -21,6 +22,7 @@ class Post(models.Model):
     title = models.CharField(max_length=100)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     blurb = models.TextField(blank=True)
+    banner_image = CloudinaryField('image', default='placeholder')
     content = models.TextField()
     status = models.IntegerField(choices=STATUS, default=1)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_posts')
