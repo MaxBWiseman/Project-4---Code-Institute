@@ -4,6 +4,8 @@ from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
 
+
+STATUS = ((0, "Blocked"), (1, "Approved"))
 # Create your models here.
 
 class Category(models.Model):
@@ -20,7 +22,7 @@ class Post(models.Model):
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     blurb = models.CharField(max_length=255)
     content = models.TextField()
-    status = models.BooleanField(default=True)
+    status = models.IntergerField(choices=STATUS, default=1)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='posts')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -33,7 +35,7 @@ class Post(models.Model):
         return f"{self.title} by {self.author.username}"
 
     
-    def total_upvotes(self):
+   def total_upvotes(self):
         return self.votes.filter(is_upvote=True).count()
 # I learned that count() is a method that returns the number of items in a queryset from
 # https://docs.djangoproject.com/en/5.1/ref/models/querysets/#count
