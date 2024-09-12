@@ -19,3 +19,12 @@ def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)
     comments = post.comments.filter(status=True)
     return render(request, 'post_hub/post_detail.html', {'post': post, 'comments': comments})
+
+def category_list(request):
+    categories = Category.objects.all()
+    return render(request, 'post_hub/category_list.html', {'categories': categories})
+
+def category_detail(request, name):
+    category = get_object_or_404(Category, name=name)
+    posts = category.posts.filter(status=True)
+    return render(request, 'post_hub/category_detail.html', {'category': category, 'posts': posts})
