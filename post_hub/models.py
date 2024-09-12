@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.text import slugify
 
 # Create your models here.
 
@@ -28,6 +29,16 @@ class Post(models.Model):
     
     def __str__(self):
         return self.title
+    
+    def total_upvotes(self):
+        return self.votes.filter(is_upvote=True).count()
+# I learned that count() is a method that returns the number of items in a queryset from
+# https://docs.djangoproject.com/en/5.1/ref/models/querysets/#count
+    
+    def total_downvotes(self):
+        return self.votes.filter(is_upvote=False).count()
+# I dont include a is_downvote field in the Vote model as I can determine if a vote is a downvote
+# by checking if is_upvote is False.
     
 
 class Comment(models.Model):
