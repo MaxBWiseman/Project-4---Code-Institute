@@ -22,9 +22,9 @@ class Post(models.Model):
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     blurb = models.CharField(max_length=255)
     content = models.TextField()
-    status = models.IntergerField(choices=STATUS, default=1)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='posts')
+    status = models.IntegerField(choices=STATUS, default=1)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_posts')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 # Post model has a many to one relationship with the User and Category models,
@@ -35,7 +35,7 @@ class Post(models.Model):
         return f"{self.title} by {self.author.username}"
 
     
-   def total_upvotes(self):
+    def total_upvotes(self):
         return self.votes.filter(is_upvote=True).count()
 # I learned that count() is a method that returns the number of items in a queryset from
 # https://docs.djangoproject.com/en/5.1/ref/models/querysets/#count
@@ -62,7 +62,7 @@ def add_slug_to_post(sender, instance, *args, **kwargs):
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='commenter')
     content = models.TextField()
     status = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -75,7 +75,7 @@ class Comment(models.Model):
     
 class Vote(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='votes')
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='voter')
     is_upvote = models.BooleanField()
 # Vote model has a many to one relationship with the Post and User models,
 # this is to store the votes of the users on the posts.
@@ -84,7 +84,7 @@ class Vote(models.Model):
         return self.post.title
     
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_profile')
     bio = models.TextField()
     location = models.CharField(max_length=30, blank=True)
     birthdate = models.DateField(null=True, blank=True)
