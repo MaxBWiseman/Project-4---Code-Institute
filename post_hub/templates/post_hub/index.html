@@ -7,21 +7,21 @@
     <div class="row mt-4">
 
         <!-- Blog Entries Column -->
-        <div class="col-12 mt-3 left">
-            <div class="row">
+        <div class="col-12 mt-5">
+            <div class="row d-flex justify-content-center">
                 {% for post in post_list %}
                 <!--A for loop needs something to iterate over. In this case, the post_list object.
  This object is passed into the template by the generic ListView, and contains the
   contents of the queryset that we defined earlier inside views.py-->
-                <div class="col-md-4">
-                    <div class="card mb-4">
+                <div class="col-md-4 post-card">
+                    <div class="card">
                         <div class="card-body">
                             <div class="image-container">
                                 {% if "placeholder" in post.banner_image.url %}
-                                <img class="card-img-top" src="{% static 'images/default.jpg' %}"
+                                <img class="post-picture" src="{% static 'images/default.jpg' %}"
                                     alt="placeholder image">
                                 {% else %}
-                                <img class="card-img-top" src=" {{ post.banner_image.url }}" alt="{{ post.title }}">
+                                <img class="post-picture" src=" {{ post.banner_image.url }}" alt="{{ post.title }}">
                                 {% endif %}
                                 <div class="image-flash">
                                     <p class="author">Author: {{ post.author }}</p>
@@ -43,7 +43,7 @@
                         </div>
                     </div>
                 </div>
-                {% if forloop.counter|divisibleby:3 %}
+                {% if forloop.counter|divisibleby:1 %}
                 <!-- This if statement checks to see how many times our for loop has run. If the counter
  is divisible by three, then it inserts another closing div tag and a new div with the
   class of row. This is so that we have a maximum of three posts per row on the homepage.-->
