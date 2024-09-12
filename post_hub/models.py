@@ -30,7 +30,8 @@ class Post(models.Model):
 # Each Post belongs to a single User and Category.
     
     def __str__(self):
-        return f{self.title} by {self.author.username}
+        return f"{self.title} by {self.author.username}"
+
     
     def total_upvotes(self):
         return self.votes.filter(is_upvote=True).count()
