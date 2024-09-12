@@ -9,7 +9,7 @@ STATUS = ((0, "Blocked"), (1, "Approved"))
 # Create your models here.
 
 class Category(models.Model):
-    name = models.CharField(max_length=50, unique=True)
+    category_name = models.CharField(max_length=50, unique=True)
 # Category model is used to store the categories of the posts.
 # Each Category has a unique name.
 # This has a many to one relationship with the Post model.
@@ -20,7 +20,7 @@ class Category(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=100)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
-    blurb = models.CharField(max_length=255)
+    blurb = models.TextField(blank=True)
     content = models.TextField()
     status = models.IntegerField(choices=STATUS, default=1)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_posts')
