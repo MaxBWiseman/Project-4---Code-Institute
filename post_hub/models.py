@@ -16,7 +16,7 @@ class Category(models.Model):
 # This has a many to one relationship with the Post model.
 
     def __str__(self):
-        return self.name
+        return self.category_name
 
 class Post(models.Model):
     title = models.CharField(max_length=100)
