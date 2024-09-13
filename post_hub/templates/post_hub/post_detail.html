@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1>{{ post.title }}</h1>
+            <p class="text-muted">{{ post.created_at|date:"F d, Y" }}</p>
+            <p>{{ post.content }}</p>
+            <hr>
+            <!--<a href="{% url 'post_edit' post.slug %}" class="btn btn-primary">Edit</a>
+            <a href="{% url 'post_delete' post.slug %}" class="btn btn-danger">Delete</a>-->
+        </div>
+    </div>
+
+
+
+
+
+
+
+{% endblock content %}
