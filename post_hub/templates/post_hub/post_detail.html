@@ -27,17 +27,18 @@
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="comment-box" class="fw-lighter">Join the discussion!</label>
-                        <textarea class="form-control fw-lighter" id="comment-box" name="comment-box" rows="3" placeholder="Leave a comment here"></textarea>
+                        <textarea class="form-control fw-lighter" id="comment-box" name="comment-box" rows="3"
+                            placeholder="Leave a comment here"></textarea>
                     </div>
-                <hr>
-                <div class="comment-container">
-                    {% for comment in post.comments.all %}
-                    <div class="comment">
-                        <p class="fw-lighter">{{ comment.author }} | {{ comment.created_at|date:"F d, Y" }}</p>
-                        <p>{{ comment.content }}</p>
+                    <hr>
+                    <div class="comment-container">
+                        {% for comment in post.comments.all %}
+                        <div class="comment">
+                            <p class="fw-lighter">{{ comment.author }} | {{ comment.created_at|date:"F d, Y" }}</p>
+                            <p>{{ comment.content }}</p>
+                        </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
-                </div>
         </div>
 
 
