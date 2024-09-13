@@ -3,19 +3,15 @@
 {% block content %}
 
 <!-- index.html content starts here -->
-<div class="container-fluid">
-    <div class="row mt-4">
-
-        <!-- Blog Entries Column -->
-        <div class="col-12 mt-5">
-            <div class="row d-flex justify-content-center">
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8">
+            <h1 class="fw-bolder">Latest Posts</h1>
+            <hr>
+            <div class="card mb-3">
                 {% for post in post_list %}
-                <!--A for loop needs something to iterate over. In this case, the post_list object.
- This object is passed into the template by the generic ListView, and contains the
-  contents of the queryset that we defined earlier inside views.py-->
-                <div class="col-md-4 post-card">
+                <div class="col-md-4 col-lg-12">
                     <div class="card">
-                        <div class="card-body">
                             <div class="image-container">
                                 {% if "placeholder" in post.banner_image.url %}
                                 <img class="post-picture" src="{% static 'images/default.jpg' %}"
