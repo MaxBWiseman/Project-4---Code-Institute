@@ -19,7 +19,7 @@
                             <img class="post-picture" src=" {{ post.banner_image.url }}" alt="{{ post.title }}">
                             {% endif %}
                             <div class="image-flash">
-                                <p class="author">Author: {{ post.author }}</p>
+                                <p class="author ms-1">Author: {{ post.author }}</p>
                             </div>
                         </div>
                         <a href="{% url 'post_detail' post.slug %}" class="post-link">
@@ -29,11 +29,11 @@
    addition to the urlpattern name. As the anchor element is inside the for loop, we can use post.slug
     as the argument, which gives us the slug value for the specific post in that iteration of the post_list
      object. This syntax is the same dot notation you used to access the post author, title and excerpt.-->
-                            <h2 class="card-title">{{ post.title }}</h2>
-                            <p class="card-text">{{ post.blurb|truncatewords:30 }}</p>
+                            <h2 class="card-title ms-1">{{ post.title }}</h2>
+                            <p class="card-text ms-1">{{ post.blurb|truncatewords:30 }}</p>
                         </a>
                         <hr />
-                        <p class="card-text text-muted h6">{{ post.created_at|date:"F d, Y" }}</p>
+                        <p class="card-text text-muted h6 ms-1">{{ post.created_at|date:"F d, Y" }}</p>
                         </p>
                     </div>
                 </div>
