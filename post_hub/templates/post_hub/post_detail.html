@@ -8,9 +8,9 @@
             <article>
                 <header>
                     {% if "placeholder" in post.banner_image.url %}
-                    <img src="{% static 'images/default.jpg' %}" class="img-fluid mt-5" alt="placeholder image">
+                    <img src="{% static 'images/default.jpg' %}" class="img-fluid mt-5 rounded" alt="placeholder image">
                     {% else %}
-                    <img src="{{ post.banner_image.url }}" class="img-fluid mt-5" alt="{{ post.title }}">
+                    <img src="{{ post.banner_image.url }}" class="img-fluid mt-5 rounded" alt="{{ post.title }}">
                     {% endif %}
                     <div class="col-12">
                         <h1 class="fw-bolder mb-2 mt-2">{{ post.title }}</h1>
@@ -23,7 +23,12 @@
                 </section>
             </article>
             <section>
-                <h2 class="fw-bolder">Comments</h2>
+                <form method="POST" class="form-control">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="comment-box" class="fw-lighter">Join the discussion!</label>
+                        <textarea class="form-control fw-lighter" id="comment-box" name="comment-box" rows="3" placeholder="Leave a comment here"></textarea>
+                    </div>
                 <hr>
                 <div class="comment-container">
                     {% for comment in post.comments.all %}
