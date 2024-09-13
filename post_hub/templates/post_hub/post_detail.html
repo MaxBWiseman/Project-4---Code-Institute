@@ -8,9 +8,9 @@
             <article>
                 <header>
                     {% if "placeholder" in post.banner_image.url %}
-                    <img src="{% static 'images/default.jpg' %}" class="img-fluid" alt="placeholder image">
+                    <img src="{% static 'images/default.jpg' %}" class="img-fluid mt-5" alt="placeholder image">
                     {% else %}
-                    <img src="{{ post.banner_image.url }}" class="img-fluid" alt="{{ post.title }}">
+                    <img src="{{ post.banner_image.url }}" class="img-fluid mt-5" alt="{{ post.title }}">
                     {% endif %}
                     <div class="col-12">
                         <h1 class="fw-bolder mb-2 mt-2">{{ post.title }}</h1>
@@ -18,6 +18,9 @@
                         <p class="fw-lighter">Category: {{ post.category }}</p>
                     </div>
                 </header>
+                <section class="mb-5">
+                    <p class="fs-5">{{ post.content | safe }}</p>
+                </section>
             </article>
         </div>
     </div>
