@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.utils.text import slugify
 from cloudinary.models import CloudinaryField
@@ -11,12 +11,18 @@ STATUS = ((0, "Blocked"), (1, "Approved"))
 
 class Category(models.Model):
     category_name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
 # Category model is used to store the categories of the posts.
 # Each Category has a unique name.
 # This has a many to one relationship with the Post model.
 
     def __str__(self):
         return self.category_name
+
+@receiver(pre_save, sender=Category)
+def add_slug_to_category(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = slugify(instance.category_name)
 
 class Post(models.Model):
     title = models.CharField(max_length=100)

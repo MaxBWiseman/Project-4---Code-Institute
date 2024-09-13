@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
+from django.views.generic import DetailView
 from .models import Post, Category, Comment
 
 # Create your views here.
@@ -24,7 +25,11 @@ def category_list(request):
     categories = Category.objects.all()
     return render(request, 'post_hub/category_list.html', {'categories': categories})
 
-def category_detail(request, name):
-    category = get_object_or_404(Category, name=name)
-    posts = category.posts.filter(status=True)
-    return render(request, 'post_hub/category_detail.html', {'category': category, 'posts': posts})
+class CategoryDetailView(DetailView):
+    model = Category
+    template_name = 'category_detail.html'
+    context_object_name = 'category'
+
+    def get_object(self):
+        slug_ = self.kwargs.get("slug")
+        return get_object_or_404(Category, slug=slug_)
