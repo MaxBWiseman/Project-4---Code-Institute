@@ -8,14 +8,14 @@
             <article>
                 <header>
                     {% if "placeholder" in post.banner_image.url %}
-                    <img src="{% static 'images/default.jpg' %}" class="" alt="placeholder image">
+                    <img src="{% static 'images/default.jpg' %}" class="img-fluid" alt="placeholder image">
                     {% else %}
-                    <img src="{{ post.banner_image.url }}" class="" alt="{{ post.title }}">
+                    <img src="{{ post.banner_image.url }}" class="img-fluid" alt="{{ post.title }}">
                     {% endif %}
                     <div class="col-12">
-                        <h1>{{ post.title }}</h1>
-                        <p class="text-muted">{{post.author}} | {{ post.created_at|date:"F d, Y" }}</p>
-                        <p>{{ post.category }}</p>
+                        <h1 class="fw-bolder mb-2 mt-2">{{ post.title }}</h1>
+                        <p class="text-muted mb-1">{{post.author}} | {{ post.created_at|date:"F d, Y" }}</p>
+                        <p class="fw-lighter">Category: {{ post.category }}</p>
                     </div>
                 </header>
             </article>
