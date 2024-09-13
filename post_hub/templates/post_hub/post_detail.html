@@ -5,15 +5,15 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <h1>{{ post.title }}</h1>
-            <p class="text-muted">{{post.author}} | {{ post.created_at|date:"F d, Y" }}</p>
-        </div>
-        <div class="col-12">
             {% if "placeholder" in post.banner_image.url %}
             <img src="{% static 'images/default.jpg' %}" class="img-fluid" alt="placeholder image">
             {% else %}
             <img src="{{ post.banner_image.url }}" class="img-fluid" alt="{{ post.title }}">
-        
+            {% endif %}
+            <div class="col-12">
+                <h1>{{ post.title }}</h1>
+                <p class="text-muted">{{post.author}} | {{ post.created_at|date:"F d, Y" }}</p>
+            </div>
     </div>
 
 
