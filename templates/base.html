@@ -23,27 +23,30 @@
 </head>
 
 <body>
-    <header>
-        <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
-            <div class="container px-4 px-lg-5">
-                <a class="navbar-brand" href="{% url 'home' %}">MW's Start Template</a>
-                <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    Menu
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'category_list' %}">Categories</a></li>
-                        <li class="nav-item"><a class="nav-link" href="">Discussions</a></li>
-                    </ul>
-                </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#!">reddit-style site</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == home_url %}active{% endif %}" aria-current="page"
+                            href="{% url 'home' %}">Home</a>
+                        <!-- Our if statement. It compares request.path, which is our current URL, with the home_url variable.
+ If they're the same, then it inserts the word active into the class names. So, we're saying that if
+  the current request.path is equal to the variable we created at the top of base.html,
+   then the text "active" is inserted into the class. Doing this means that we can apply a different
+    class to our navigation with diffent styles for better UI design, depending on which page we're on-->
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link
+                          {% if request.path == about_url %}active{%endif%}" aria-current="page"
+                            href="{% url 'category_list' %}">About</a>
+                    </li>
+                </ul>
             </div>
-        </nav>
-    </header>
+        </div>
+    </nav>
 
     <!--Everything above is copied for every page-->
     {% block content %}
