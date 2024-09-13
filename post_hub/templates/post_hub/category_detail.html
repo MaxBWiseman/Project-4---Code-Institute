@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+    <title>{{ category.category_name }}</title>
+
+    <h1>{{ category.category_name }}</h1>
+    <p>Details about the category...</p>
+
+    <h2>Posts in this category</h2>
+    <ul>
+        {% for post in posts %}
+        <li>
+            <a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a>
+            <p>{{ post.excerpt }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

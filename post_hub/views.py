@@ -12,6 +12,11 @@ class PostList(generic.ListView):
     template_name = "post_hub/index.html"
     paginate_by = 3
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        return context
+    
     # django automatically sets the context_object_name attribute to object_list.
     # e.g "post_list" is the context_object_name, this becomes our iterator
     # in the templates to show all published posts in order of date posted.
@@ -27,9 +32,15 @@ def category_list(request):
 
 class CategoryDetailView(DetailView):
     model = Category
-    template_name = 'category_detail.html'
+    template_name = 'post_hub/category_detail.html'
     context_object_name = 'category'
 
     def get_object(self):
-        slug_ = self.kwargs.get("slug")
-        return get_object_or_404(Category, slug=slug_)
+        slug = self.kwargs.get("slug")
+        return get_object_or_404(Category, slug=slug)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category = self.get_object()
+        context['posts'] = Post.objects.filter(category=category, status=1).order_by("-created_at")
+        return context
