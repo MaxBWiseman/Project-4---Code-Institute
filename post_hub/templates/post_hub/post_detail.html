@@ -36,6 +36,8 @@
                         <div class="comment">
                             <p class="fw-lighter">{{ comment.author }} | {{ comment.created_at|date:"F d, Y" }}</p>
                             <p>{{ comment.content }}</p>
+                            <a href="javascript:void(0);" class="reply-link" data-parent-id="{{ comment.id }}">Reply</a>
+                        {% include 'comment_replies.html' with comment=comment %}
                         </div>
                         {% endfor %}
                     </div>

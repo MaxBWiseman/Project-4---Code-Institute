@@ -75,6 +75,8 @@ class Comment(models.Model):
     status = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
+# The parent field references the comment model iteself, the related name allowes to access child comments
 # Comment model has a many to one relationship with the Post and User models,
 # this is to store the comments of the users on the posts.
     

@@ -23,8 +23,24 @@ class PostList(generic.ListView):
 
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)
-    comments = post.comments.filter(status=True)
-    return render(request, 'post_hub/post_detail.html', {'post': post, 'comments': comments})
+# This line of code retrieves the post with the given slug from the database.
+    if request.method == 'POST':
+# If user requests to post a comment, the code below will be executed.
+        content = request.POST.get('comment-box')
+# The content of the comment is retrieved from the form.
+        parent_id = request.POST.get('parent-id')
+# The parent_id is retrieved from the form.
+        parent_comment = None
+# The parent_comment variable is set to None. Because the comment is not a reply to another comment.
+        if parent_id:
+            parent_comment = Comment.objects.get(id=parent_id)
+# If the parent_id exists, the parent_comment variable is set to the comment with the given id.
+        Comment.objects.create(post=post, author=request.user, content=content, parent=parent_comment)
+# The comment is created with the post, author, content, and parent_comment.
+        return redirect('post_detail', slug=slug)
+# The user is redirected to the post detail page.
+    return render(request, 'post_detail.html', {'post': post})
+# The post detail page is rendered with the post object.
 
 def category_list(request):
     categories = Category.objects.all()
