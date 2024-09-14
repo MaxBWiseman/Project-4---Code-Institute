@@ -16,8 +16,25 @@
 }
 
 .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+   background-color: #28323C !important;
+    color: #caced1 !important;
 }
+
+footer {
+    color:#caced1 !important;
+ }
+
+ li {
+     margin-top: 20px ;
+     margin-bottom: 20px ;
+ }
+ 
+.row-style {
+    background-color:#1E242A !important;
+}
+
+.row-style-2 {
+    
+    background-color: #28323C !important;
+}
+
