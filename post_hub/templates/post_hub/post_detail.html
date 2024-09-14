@@ -24,10 +24,10 @@
                 </section>
             </article>
             <section>
-                <form method="POST" class="form-control">
+                <form method="POST" class="form-control" id="comment-form">
                     {% csrf_token %}
                     {{ form|crispy }}
-                    <button type="submit" class="btn btn-primary mt-2">Submit</button>
+                    <button type="submit" id="submit-button" class="btn btn-primary mt-2">Submit</button>
                 </form>
                 <hr>
                 <div class="comment-container">
@@ -65,7 +65,18 @@
                 }
             });
         });
-    });
+         // Prevent multiple form submissions
+         const form = document.getElementById('comment-form');
+         form.addEventListener('submit', function(event) {
+             const submitButton = document.getElementById('submit-button');
+             if (submitButton.disabled) {
+                 event.preventDefault();
+                 return;
+             }
+             submitButton.disabled = true;
+         });
+     });
+    
 </script>
 
 
