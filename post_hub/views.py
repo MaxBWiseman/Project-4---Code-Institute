@@ -12,14 +12,21 @@ class PostList(generic.ListView):
     template_name = "post_hub/index.html"
     paginate_by = 3
     
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.all()
-        return context
-    
-    # django automatically sets the context_object_name attribute to object_list.
+ # django automatically sets the context_object_name attribute to object_list.
     # e.g "post_list" is the context_object_name, this becomes our iterator
     # in the templates to show all published posts in order of date posted.
+
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+# The get_context_data method is overridden to add the categories to the context.
+        context['categories'] = Category.objects.all()
+# The categories are retrieved and added to the context.
+        return context
+# By overriding the get_context_data method, you can add the categories to the context in a more
+# standard and efficient way. This approach ensures that the categories are available in the template
+# without creating a separate method for retrieving category data.
+ 
 
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)
@@ -37,9 +44,9 @@ def post_detail(request, slug):
 # If the parent_id exists, the parent_comment variable is set to the comment with the given id.
         Comment.objects.create(post=post, author=request.user, content=content, parent=parent_comment)
 # The comment is created with the post, author, content, and parent_comment.
-        return redirect('post_detail', slug=slug)
+        return redirect('post_hub/post_detail', slug=slug)
 # The user is redirected to the post detail page.
-    return render(request, 'post_detail.html', {'post': post})
+    return render(request, 'post_hub/post_detail.html', {'post': post})
 # The post detail page is rendered with the post object.
 
 def category_list(request):
@@ -57,6 +64,9 @@ class CategoryDetailView(DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+# The get_context_data method is overridden to add the posts in the category to the context.
         category = self.get_object()
+# The category object is retrieved from the context.
         context['posts'] = Post.objects.filter(category=category, status=1).order_by("-created_at")
+# The posts in the category are retrieved and added to the context.
         return context
