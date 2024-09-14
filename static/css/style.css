@@ -44,10 +44,61 @@ footer {
                -15px -15px 30px #ffffff;
 }
 
+header {
+    position: relative;
+    z-index: 1000;
+}
+
+/* The side navigation menu */
+.sidebar {
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color: #f1f1f1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    overflow: auto;
+    z-index: 10;
+}
+
+
+.sidebar a {
+    display: block;
+    color: black;
+    padding: 16px;
+    text-decoration: none;
+}
+
+
+.sidebar a.active {
+    background-color: #04AA6D;
+    color: white;
+}
+
+
+.sidebar a:hover:not(.active) {
+    background-color: #555;
+    color: white;
+}
+
+/* Media querys */
+@media screen and (max-width: 700px) {
+    .sidebar {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .sidebar  {
+        display: none;
+    }
+}
+
 @media (max-width: 576px) {
     .phone-center {
         text-align: center;
         margin-left: 0 !important;
     }
-
 }
