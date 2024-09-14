@@ -5,6 +5,7 @@ cloudinary==1.41.0
 cloudinary-cli==1.10.3
 dj-database-url==0.5.0
 Django==4.2.16
+django-crispy-forms==2.3
 django-summernote==0.8.20.0
 docstring_parser==0.16
 psycopg2==2.9.9
