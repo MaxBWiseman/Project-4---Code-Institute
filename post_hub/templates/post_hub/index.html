@@ -3,151 +3,111 @@
 {% block content %}
 
 <!-- index.html content starts here -->
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-lg-8">
-            <h1 class="fw-bolder">Latest Posts</h1>
-            <hr>
-            <div class="card mb-3 shadow">
+<div class="row">
+    <h1 class="text-center">Welcome to the Post Hub</h1>
+    <p class="text-center">This is a place where you can find all the latest posts from our community.</p>
+    <hr>
+    <div class="container mt-2">
+        <div class="row">
+            <!-- Main Content Column -->
+            <div class="col-lg-8">
                 {% for post in post_list %}
-                <div class="col-md-4 col-lg-12">
-                    <div class="card">
-                        <div class="card-img-top">
-                            {% if "placeholder" in post.banner_image.url %}
-                            <img class="post-picture" src="{% static 'images/default.jpg' %}" alt="placeholder image">
-                            {% else %}
-                            <img class="post-picture" src=" {{ post.banner_image.url }}" alt="{{ post.title }}">
-                            {% endif %}
-                            <div class="image-flash">
-                                <p class="author ms-1">Author: {{ post.author }}</p>
+                <hr>
+                <div class="card mb-3 shadow">
+                    <div class="col-md-4 col-lg-12">
+                        <div class="card">
+                            <div class="card-img-top">
+                                {% if "placeholder" in post.banner_image.url %}
+                                <img class="post-picture" src="{% static 'images/default.jpg' %}"
+                                    alt="placeholder image">
+                                {% else %}
+                                <img class="post-picture" src="{{ post.banner_image.url }}" alt="{{ post.title }}">
+                                {% endif %}
+                                <div class="image-flash">
+                                    <p class="author ms-1">Author: {{ post.author }}</p>
+                                </div>
                             </div>
-                        </div>
-                        <a href="{% url 'post_detail' post.slug %}" class="post-link">
-                            <!--The {% url 'post_detail' post.slug %} template tag dynamically constructs the URL based on the URL
+                            <a href="{% url 'post_detail' post.slug %}" class="post-link">
+                                <!--The {% url 'post_detail' post.slug %} template tag dynamically constructs the URL based on the URL
  pattern named 'post_detail' and the post.slug value. This allows for clean, readable URLs and easy
   navigation to individual post detail pages. The DTL url tag syntax allows us to pass in an argument in
    addition to the urlpattern name. As the anchor element is inside the for loop, we can use post.slug
     as the argument, which gives us the slug value for the specific post in that iteration of the post_list
      object. This syntax is the same dot notation you used to access the post author, title and excerpt.-->
-                            <h2 class="card-title ms-1">{{ post.title }}</h2>
-                        </a>
+                                <h2 class="card-title ms-1">{{ post.title }}</h2>
+                            </a>
                             <p class="card-subtitle ms-1">{{ post.blurb|truncatewords:30 }}</p>
-                        <hr />
-                        <p class="card-text text-muted h6 ms-1">{{ post.created_at|date:"F d, Y" }}</p>
-                        </p>
+                            <hr />
+                            <p class="card-text text-muted h6 ms-1">{{ post.created_at|date:"F d, Y" }}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            {% if forloop.counter|divisibleby:1 %}
-            <!-- This if statement checks to see how many times our for loop has run. If the counter
- is divisible by three, then it inserts another closing div tag and a new div with the
-  class of row. This is so that we have a maximum of three posts per row on the homepage.-->
-        </div>
+                {% endfor %}
 
-        {% endif %}
-        {% endfor %}
-
-        <!-- Side Widgets Column -->
-        <div class="col-lg-4">
-            <!-- Categories widget-->
-            <div class="card mb-4 shadow">
-                <div class="card-header">Top Categories</div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <ul class="list-unstyled">
-                                {% for category in categories %}
-                                <li><a href="{% url 'category_detail' category.slug %}">{{ category.category_name }}</a></li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                {% if is_paginated %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                        <li><a href="?page={{ page_obj.previous_page_number }}" class="page-link">&laquo; PREV</a></li>
+                        {% endif %}
+                        {% if page_obj.has_next %}
+                        <li><a href="?page={{ page_obj.next_page_number }}" class="page-link"> NEXT &raquo;</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
             </div>
-            <!-- Side widget-->
-            <div class="card mb-4 shadow">
-                <div class="card-header">Top Groups</div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <ul class="list-unstyled mb-0">
-                                <li><a href="#!">Web Design</a></li>
-                                <li><a href="#!">HTML</a></li>
-                                <li><a href="#!">Freebies</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-sm-6">
-                            <ul class="list-unstyled mb-0">
-                                <li><a href="#!">JavaScript</a></li>
-                                <li><a href="#!">CSS</a></li>
-                                <li><a href="#!">Tutorials</a></li>
-                            </ul>
+
+            <!-- Side Widgets Column -->
+            <div class="col-lg-4 d-flex flex-column align-items-end">
+                <!-- Categories widget-->
+                <div class="card mb-4 shadow w-100">
+                    <div class="card-header">Top Categories</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <ul class="list-unstyled">
+                                    {% for category in categories %}
+                                    <li><a
+                                            href="{% url 'category_detail' category.slug %}">{{ category.category_name }}</a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
-<!-- I learned to use these cards at - https://www.sitepoint.com/bootstrap-card-component-introduction/ -->
+                <!-- Side widget-->
+                <div class="card mb-4 shadow w-100">
+                    <div class="card-header">Top Groups</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <ul class="list-unstyled mb-0">
+                                    <li><a href="#!">Web Design</a></li>
+                                    <li><a href="#!">HTML</a></li>
+                                    <li><a href="#!">Freebies</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-6">
+                                <ul class="list-unstyled mb-0">
+                                    <li><a href="#!">JavaScript</a></li>
+                                    <li><a href="#!">CSS</a></li>
+                                    <li><a href="#!">Tutorials</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- I learned to use these cards at - https://www.sitepoint.com/bootstrap-card-component-introduction/ -->
+                </div>
             </div>
         </div>
     </div>
-</div>
-</div>
-{% if is_paginated %}
-<!--This checks if the list of items is paginated. The is_paginated variable is
- typically provided by the Django view context when pagination is enabled.-->
-<nav aria-label="Page navigation">
-    <ul class="pagination justify-content-center">
-        {% if page_obj.has_previous %}
-        <!--This checks if there is a previous page available. The page_obj is a Django Page object-->
-        <li><a href="?page={{ page_obj.previous_page_number }}" class="page-link">&laquo; PREV</a></li>
-        {% endif %}
-
-        {% if page_obj.has_next %}
-        <!--This checks if there is a next page available. The page_obj is a Django Page object
- that contains pagination information. The has_next method returns True if there is a next page.-->
-        <li><a href="?page={{ page_obj.next_page_number }}" class="page-link"> NEXT &raquo;</a></li>
-        <!--If there is a next page, this creates a list item containing a link to the next page.
- The href attribute is set to ?page={{ page_obj.next_page_number }}, which appends the page number as
-  a query parameter to the URL.-->
-        {% endif %}
-    </ul>
-</nav>
-{% endif %}
-</div>
 
 
 
+    {% endblock %}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{% endblock %}
-
-{% block copyright %}
-Copyright 2023 Mw
-{% endblock %}
+    {% block copyright %}
+    Copyright 2023 Mw
+    {% endblock %}
