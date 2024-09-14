@@ -24,14 +24,15 @@
                 </section>
             </article>
             <section>
+                <!-- Normal Comment Form -->
                 <form method="POST" class="form-control" id="comment-form">
                     {% csrf_token %}
-                    {{ form|crispy }}
+                    {{ comment_form|crispy }}
                     <button type="submit" id="submit-button" class="btn btn-primary mt-2">Submit</button>
                 </form>
                 <hr>
                 <div class="comment-container">
-                    {% for comment in post.comments.all %}
+                    {% for comment in comments %}
                     <div class="comment">
                         <p class="fw-lighter">{{ comment.author }} | {{ comment.created_at|date:"F d, Y" }}</p>
                         <p>{{ comment.content }}</p>
@@ -44,43 +45,15 @@
         </div>
     </div>
 </div>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('Script loaded!');
-        document.querySelectorAll('.reply-link').forEach(function(link) {
-            console.log('Link found!');
-            link.addEventListener('click', function(event) {
-                console.log('Link clicked!');
-                event.preventDefault();
-                const parentId = this.getAttribute('data-parent-id');
-                console.log('Parent ID:', parentId);
-                const parentInput = document.getElementById('id_parent');
-                const commentBox = document.querySelector('.comment-box');
-                if (parentInput && commentBox) {
-                    parentInput.value = parentId;
-                    commentBox.focus();
-                    console.log('Parent ID set and comment box focused');
-                } else {
-                    console.error('Parent input or comment box not found');
-                }
-            });
-        });
-         // Prevent multiple form submissions
-         const form = document.getElementById('comment-form');
-         form.addEventListener('submit', function(event) {
-             const submitButton = document.getElementById('submit-button');
-             if (submitButton.disabled) {
-                 event.preventDefault();
-                 return;
-             }
-             submitButton.disabled = true;
-         });
-     });
-    
-</script>
-
-
-
+<!-- Reply Comment Form (Initially Hidden) -->
+<div id="reply-form-container" style="display: none;">
+    <form method="POST" class="form-control" id="reply-form">
+        {% csrf_token %}
+        {{ reply_form|crispy }}
+        <input type="hidden" id="id_parent" name="parent">
+        <button type="submit" id="reply-submit-button" class="btn btn-primary mt-2">Submit Reply</button>
+    </form>
+</div>
 
 
         {% endblock content %}

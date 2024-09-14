@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
 from django.views.generic import DetailView
 from .models import Post, Category, Comment
-from .forms import CommentForm
+from .forms import CommentForm, ReplyForm
 
 # Create your views here.
 
@@ -31,21 +31,35 @@ class PostList(generic.ListView):
 
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)
-# The get_object_or_404 function is used to retrieve the post object with the specified slug.
+    comment_form = CommentForm()
+    reply_form = ReplyForm()
+
     if request.method == 'POST':
-        form = CommentForm(request.POST)
-# The CommentForm from forms.py is initialized with the POST data.
-        if form.is_valid():
-            comment = form.save(commit=False)
-# The comment object is created but not saved to the database.
-            comment.post = post
-# The post object is assigned to the comment's post field.
-            comment.author = request.user
-            comment.save()
-            return redirect('post_detail', slug=slug)
-    else:
-        form = CommentForm()
-    return render(request, 'post_hub/post_detail.html', {'post': post, 'form': form})
+        if 'submit_comment' in request.POST:
+            comment_form = CommentForm(request.POST)
+            if comment_form.is_valid():
+                comment = comment_form.save(commit=False)
+                comment.post = post
+                comment.author = request.user
+                comment.save()
+                return redirect('post_hub/post_detail', slug=slug)
+        elif 'submit_reply' in request.POST:
+            reply_form = ReplyForm(request.POST)
+            if reply_form.is_valid():
+                reply = reply_form.save(commit=False)
+                reply.post = post
+                reply.author = request.user
+                reply.save()
+                return redirect('post_hub/post_detail', slug=slug)
+
+    comments = post.comments.filter(parent__isnull=True)
+
+    return render(request, 'post_hub/post_detail.html', {
+        'post': post,
+        'comment_form': comment_form,
+        'reply_form': reply_form,
+        'comments': comments,
+    })
 
 def category_list(request):
     categories = Category.objects.all()
