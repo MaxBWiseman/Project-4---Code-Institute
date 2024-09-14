@@ -44,7 +44,29 @@
         </div>
     </div>
 </div>
-
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Script loaded!');
+        document.querySelectorAll('.reply-link').forEach(function(link) {
+            console.log('Link found!');
+            link.addEventListener('click', function(event) {
+                console.log('Link clicked!');
+                event.preventDefault();
+                const parentId = this.getAttribute('data-parent-id');
+                console.log('Parent ID:', parentId);
+                const parentInput = document.getElementById('id_parent');
+                const commentBox = document.querySelector('.comment-box');
+                if (parentInput && commentBox) {
+                    parentInput.value = parentId;
+                    commentBox.focus();
+                    console.log('Parent ID set and comment box focused');
+                } else {
+                    console.error('Parent input or comment box not found');
+                }
+            });
+        });
+    });
+</script>
 
 
 

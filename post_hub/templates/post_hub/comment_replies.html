@@ -1,9 +1,10 @@
+{% load static %}
 {% for reply in comment.replies.all %}
 <!-- This loop retireves all child comments of the current comment-->
 <div class="comment ms-4">
     <p class="fw-lighter">{{ reply.author }} | {{ reply.created_at|date:"F d, Y" }}</p>
     <p>{{ reply.content }}</p>
     <a href="javascript:void(0);" class="reply-link" data-parent-id="{{ reply.id }}">Reply</a>
-    {% include 'comment_replies.html' with comment=reply %}
+    {% include 'post_hub/comment_replies.html' with comment=reply %}
 </div>
 {% endfor %}

@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_summernote',
     'crispy_forms',
+    'crispy_bootstrap4',
     'post_hub',
 ]
 

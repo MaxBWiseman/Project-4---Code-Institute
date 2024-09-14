@@ -1,10 +1,13 @@
 
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Script loaded!');
 /*When all content is loaded, the beloe executes*/
     document.querySelectorAll('.reply-link').forEach(function(link) {
+        console.log('Link found!');
 /*Selects all elements with class "reply-link" and iterates with forEach method,
 each "link" is one of these elements*/
         link.addEventListener('click', function(event) {
+            console.log('Link clicked!');
 /*For each "link" element, adds an event listener to the click event*/
             event.preventDefault();
 /*Prevents the default action of the event (navigating away)*/
