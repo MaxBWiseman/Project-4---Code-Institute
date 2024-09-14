@@ -31,6 +31,8 @@ class PostList(generic.ListView):
 
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)
+    comments = post.comments.filter(parent__isnull=True)  # Fetch top-level comments
+
     comment_form = CommentForm()
     reply_form = ReplyForm()
 
@@ -42,17 +44,16 @@ def post_detail(request, slug):
                 comment.post = post
                 comment.author = request.user
                 comment.save()
-                return redirect('post_hub/post_detail', slug=slug)
+                return redirect('post_detail', slug=slug)
         elif 'submit_reply' in request.POST:
             reply_form = ReplyForm(request.POST)
             if reply_form.is_valid():
                 reply = reply_form.save(commit=False)
                 reply.post = post
                 reply.author = request.user
+                reply.parent_id = request.POST.get('parent')
                 reply.save()
-                return redirect('post_hub/post_detail', slug=slug)
-
-    comments = post.comments.filter(parent__isnull=True)
+                return redirect('post_detail', slug=slug)
 
     return render(request, 'post_hub/post_detail.html', {
         'post': post,

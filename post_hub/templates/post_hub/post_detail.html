@@ -28,7 +28,7 @@
                 <form method="POST" class="form-control" id="comment-form">
                     {% csrf_token %}
                     {{ comment_form|crispy }}
-                    <button type="submit" id="submit-button" class="btn btn-primary mt-2">Submit</button>
+                    <button type="submit" name="submit_comment" id="submit-button" class="btn btn-primary mt-2">Submit</button>
                 </form>
                 <hr>
                 <div class="comment-container">
@@ -51,9 +51,8 @@
         {% csrf_token %}
         {{ reply_form|crispy }}
         <input type="hidden" id="id_parent" name="parent">
-        <button type="submit" id="reply-submit-button" class="btn btn-primary mt-2">Submit Reply</button>
+        <button type="submit" name="submit_reply" id="reply-submit-button" class="btn btn-primary mt-2">Submit Reply</button>
     </form>
 </div>
 
-
-        {% endblock content %}
+{% endblock content %}

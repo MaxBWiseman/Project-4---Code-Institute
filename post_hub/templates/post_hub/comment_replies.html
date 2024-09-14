@@ -1,9 +1,10 @@
-{% for reply in comment.replies.all %}
-<!-- This loop retireves all child comments of the current comment-->
-<div class="comment ms-4">
-    <p class="fw-lighter">{{ reply.author }} | {{ reply.created_at|date:"F d, Y" }}</p>
-    <p>{{ reply.content }}</p>
-    <a href="javascript:void(0);" class="reply-link" data-parent-id="{{ reply.id }}">Reply</a>
-    {% include 'post_hub/comment_replies.html' with comment=reply %}
+<div class="replies ms-4">
+    {% for reply in comment.replies.all %}
+    <div class="comment nested-comment">
+        <p class="fw-lighter">{{ reply.author }} | {{ reply.created_at|date:"F d, Y" }}</p>
+        <p>{{ reply.content }}</p>
+        <a href="javascript:void(0);" class="reply-link" data-parent-id="{{ reply.id }}">Reply</a>
+        {% include 'post_hub/comment_replies.html' with comment=reply %}
+    </div>
+    {% endfor %}
 </div>
-{% endfor %}

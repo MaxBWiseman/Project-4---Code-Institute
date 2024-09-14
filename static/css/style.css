@@ -49,6 +49,23 @@ header {
     z-index: 1000;
 }
 
+.comment {
+    margin-left: 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+/* Style for nested comments */
+.nested-comment {
+    margin-top: 7px;
+    margin-left: 1px; /* Adjust the value as needed */
+    background-color: #f9f9f9;
+    border-left: 3px solid #ccc;
+    padding-left: 10px;
+}
+
 /* The side navigation menu */
 .sidebar {
     margin: 0;

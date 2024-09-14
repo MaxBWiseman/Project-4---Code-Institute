@@ -6,7 +6,7 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ['content', 'parent']
         widgets = {
-            'content': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Leave a comment here', 'class': 'comment-box'}),
+            'content': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Leave a comment here'}),
             'parent': forms.HiddenInput(),
         }
         labels = {
@@ -16,10 +16,9 @@ class CommentForm(forms.ModelForm):
 class ReplyForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ['content', 'parent']
+        fields = ['content']
         widgets = {
-            'content': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Leave a reply here', 'class': 'comment-box'}),
-            'parent': forms.HiddenInput(),
+            'content': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Leave a reply here'}),
         }
         labels = {
             'content': 'Reply',
