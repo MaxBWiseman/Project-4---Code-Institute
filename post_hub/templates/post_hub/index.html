@@ -8,11 +8,11 @@
         <div class="col-lg-8">
             <h1 class="fw-bolder">Latest Posts</h1>
             <hr>
-            <div class="card mb-3">
+            <div class="card mb-3 shadow">
                 {% for post in post_list %}
                 <div class="col-md-4 col-lg-12">
                     <div class="card">
-                        <div class="image-container">
+                        <div class="card-img-top">
                             {% if "placeholder" in post.banner_image.url %}
                             <img class="post-picture" src="{% static 'images/default.jpg' %}" alt="placeholder image">
                             {% else %}
@@ -30,8 +30,8 @@
     as the argument, which gives us the slug value for the specific post in that iteration of the post_list
      object. This syntax is the same dot notation you used to access the post author, title and excerpt.-->
                             <h2 class="card-title ms-1">{{ post.title }}</h2>
-                            <p class="card-text ms-1">{{ post.blurb|truncatewords:30 }}</p>
                         </a>
+                            <p class="card-subtitle ms-1">{{ post.blurb|truncatewords:30 }}</p>
                         <hr />
                         <p class="card-text text-muted h6 ms-1">{{ post.created_at|date:"F d, Y" }}</p>
                         </p>
@@ -50,7 +50,7 @@
         <!-- Side Widgets Column -->
         <div class="col-lg-4">
             <!-- Categories widget-->
-            <div class="card mb-4">
+            <div class="card mb-4 shadow">
                 <div class="card-header">Top Categories</div>
                 <div class="card-body">
                     <div class="row">
@@ -65,7 +65,7 @@
                 </div>
             </div>
             <!-- Side widget-->
-            <div class="card mb-4">
+            <div class="card mb-4 shadow">
                 <div class="card-header">Top Groups</div>
                 <div class="card-body">
                     <div class="row">
