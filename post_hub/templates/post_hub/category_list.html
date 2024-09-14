@@ -9,7 +9,7 @@
             <hr>
             <ul class="list-unstyled">
                 {% for category in categories %}
-                <li>{{ category.category_name }}</li>
+                <li><a href="{% url 'category_detail' category.slug %}">{{ category.category_name }}</a></li>
                 {% endfor %}
             </ul>
         </div>
