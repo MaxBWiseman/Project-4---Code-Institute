@@ -17,4 +17,5 @@ each "link" is one of these elements*/
         });
     });
 });
-/**/
+/* The JavaScript code sets the value of the hidden parent input field to the ID of the comment
+ being replied to and focuses on the comment box.*/

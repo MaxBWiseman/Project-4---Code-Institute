@@ -1,7 +1,8 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
 from django.views.generic import DetailView
 from .models import Post, Category, Comment
+from .forms import CommentForm
 
 # Create your views here.
 
@@ -30,24 +31,21 @@ class PostList(generic.ListView):
 
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)
-# This line of code retrieves the post with the given slug from the database.
+# The get_object_or_404 function is used to retrieve the post object with the specified slug.
     if request.method == 'POST':
-# If user requests to post a comment, the code below will be executed.
-        content = request.POST.get('comment-box')
-# The content of the comment is retrieved from the form.
-        parent_id = request.POST.get('parent-id')
-# The parent_id is retrieved from the form.
-        parent_comment = None
-# The parent_comment variable is set to None. Because the comment is not a reply to another comment.
-        if parent_id:
-            parent_comment = Comment.objects.get(id=parent_id)
-# If the parent_id exists, the parent_comment variable is set to the comment with the given id.
-        Comment.objects.create(post=post, author=request.user, content=content, parent=parent_comment)
-# The comment is created with the post, author, content, and parent_comment.
-        return redirect('post_hub/post_detail', slug=slug)
-# The user is redirected to the post detail page.
-    return render(request, 'post_hub/post_detail.html', {'post': post})
-# The post detail page is rendered with the post object.
+        form = CommentForm(request.POST)
+# The CommentForm from forms.py is initialized with the POST data.
+        if form.is_valid():
+            comment = form.save(commit=False)
+# The comment object is created but not saved to the database.
+            comment.post = post
+# The post object is assigned to the comment's post field.
+            comment.author = request.user
+            comment.save()
+            return redirect('post_detail', slug=slug)
+    else:
+        form = CommentForm()
+    return render(request, 'post_hub/post_detail.html', {'post': post, 'form': form})
 
 def category_list(request):
     categories = Category.objects.all()
