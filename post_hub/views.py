@@ -84,7 +84,6 @@ def create_post(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
-            
             new_category_name = form.cleaned_data.get('new_category')
  # The new_category field is retrieved from the cleaned_data attribute of the form.
 # The new_category field is used to create a new category if it does not already exist.
