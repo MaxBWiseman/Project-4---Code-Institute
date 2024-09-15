@@ -39,7 +39,7 @@ class PostForm(forms.ModelForm):
     def clean_new_category(self):
         new_category_name = self.cleaned_data.get('new_category')
         if new_category_name:
-            existing_categories = Category.objects.filter(name=new_category_name)
+            existing_categories = Category.objects.filter(category_name=new_category_name)
             if existing_categories.count() >= 2:
                 raise forms.ValidationError('There cannot be more than 2 categories with the same name.')
         return new_category_name

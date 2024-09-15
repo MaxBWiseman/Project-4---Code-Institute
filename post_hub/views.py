@@ -90,7 +90,7 @@ def create_post(request):
 # cleaned_data attribute is used to retrieve the form data after it has been cleaned and validated.
 # Django forms automatically clean and validate the data when the is_valid method is called.
             if new_category_name:
-                category, created = Category.objects.get_or_create(name=new_category_name)
+                category, created = Category.objects.get_or_create(category_name=new_category_name)
 # This line of code retrieves the category object from the database or creates a new category if it does not already exist.
                 post.category = category
                 if created:
