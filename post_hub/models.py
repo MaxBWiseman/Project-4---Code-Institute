@@ -4,6 +4,7 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.utils.text import slugify
 from cloudinary.models import CloudinaryField
+from mptt.models import MPTTModel, TreeForeignKey
 
 
 STATUS = ((0, "Blocked"), (1, "Approved"))
@@ -68,20 +69,26 @@ def add_slug_to_post(sender, instance, *args, **kwargs):
 # This decorator is used to connect the function to the signal.
 # https://stackoverflow.com/questions/8170704/execute-code-on-model-creation-in-django#:~:text=You%20can%20use%20django%20signals%20%27%20post_save%3A%20%23,MyModel%28models.Model%29%3A%20pass%20def%20my_model_post_save%28sender%2C%20instance%2C%20created%2C%20%2Aargs%2C%20%2A%2Akwargs%29%3A
 
-class Comment(models.Model):
+class Comment(MPTTModel):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='commenter')
     content = models.TextField()
     status = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
 # The parent field references the comment model iteself, the related name allowes to access child comments
 # Comment model has a many to one relationship with the Post and User models,
 # this is to store the comments of the users on the posts.
     
+    class MPTTMeta:
+        order_insertion_by = ['created_at']
+    
+    def reply_count(self):
+        return self.get_children().count()
+
     def __str__(self):
-        return self.content
+        return f'Comment by {self.author} on {self.post}'
     
 class Vote(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='votes')

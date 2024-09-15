@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django_summernote',
     'crispy_forms',
     'crispy_bootstrap4',
+    'mptt',
     'post_hub',
 ]
 

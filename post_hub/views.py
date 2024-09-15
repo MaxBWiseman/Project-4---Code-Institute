@@ -1,10 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponseRedirect
+from django.template.loader import render_to_string
 from django.views import generic
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.views.generic import DetailView
-from .models import Post, Category, Comment
-from .forms import CommentForm, ReplyForm
+from django.urls import reverse
+from .models import Post, Comment, Category  
+from .forms import CommentForm
 
-# Create your views here.
 
 class PostList(generic.ListView):
     queryset = Post.objects.filter(status=1).order_by("-created_at")
@@ -30,38 +33,26 @@ class PostList(generic.ListView):
  
 
 def post_detail(request, slug):
-    post = get_object_or_404(Post, slug=slug)
-    comments = post.comments.filter(parent__isnull=True)  # Fetch top-level comments
+    post = get_object_or_404(Post, slug=slug, status='1')
 
-    comment_form = CommentForm()
-    reply_form = ReplyForm()
+    allcomments = post.comments.filter(status=True)
+    page = request.GET.get('page', 1)
+    user_comment = None
 
     if request.method == 'POST':
-        if 'submit_comment' in request.POST:
-            comment_form = CommentForm(request.POST)
-            if comment_form.is_valid():
-                comment = comment_form.save(commit=False)
-                comment.post = post
-                comment.author = request.user
-                comment.save()
-                return redirect('post_detail', slug=slug)
-        elif 'submit_reply' in request.POST:
-            reply_form = ReplyForm(request.POST)
-            if reply_form.is_valid():
-                reply = reply_form.save(commit=False)
-                reply.post = post
-                reply.author = request.user
-                reply.parent_id = request.POST.get('parent')
-                reply.save()
-                return redirect('post_detail', slug=slug)
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            user_comment = comment_form.save(commit=False)
+            user_comment.post = post
+            user_comment.author = request.user
+            user_comment.save()
+            return HttpResponseRedirect(reverse('post_detail', args=[post.slug]))
+    else:
+        comment_form = CommentForm()
+    return render(request, 'post_hub/post_detail.html', {'post': post, 'comments': comments, 'comment_form': comment_form, 'allcomments': allcomments})
 
-    return render(request, 'post_hub/post_detail.html', {
-        'post': post,
-        'comment_form': comment_form,
-        'reply_form': reply_form,
-        'comments': comments,
-    })
 
+    
 def category_list(request):
     categories = Category.objects.all()
     return render(request, 'post_hub/category_list.html', {'categories': categories})
