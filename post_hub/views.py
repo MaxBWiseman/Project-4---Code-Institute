@@ -78,17 +78,34 @@ def post_detail(request, slug):
 def create_post(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
-# The data from the form is retrieved and stored in the form variable.
-# The request.FILES attribute is used to handle image uploads.
+        # The data from the form is retrieved and stored in the form variable.
+        # The request.FILES attribute is used to handle image uploads.
+        
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
+            
+            new_category_name = form.cleaned_data.get('new_category')
+ # The new_category field is retrieved from the cleaned_data attribute of the form.
+# The new_category field is used to create a new category if it does not already exist.
+# cleaned_data attribute is used to retrieve the form data after it has been cleaned and validated.
+# Django forms automatically clean and validate the data when the is_valid method is called.
+            if new_category_name:
+                category, created = Category.objects.get_or_create(name=new_category_name)
+# This line of code retrieves the category object from the database or creates a new category if it does not already exist.
+                post.category = category
+                if created:
+                    print(f"A new category '{new_category_name}' was created.")
+                else:
+                    print(f"The category '{new_category_name}' already exists.")
+
             post.save()
             return redirect('post_detail', slug=post.slug)
-# The user is redirected to the post detail page for the newly created post.
+            # The user is redirected to the post detail page for the newly created post.
     else:
         form = PostForm()
-# If there is no POST request, an empty form is created.
+        # If there is no POST request, an empty form is created.
+    
     return render(request, 'post_hub/create_post.html', {'form': form})
 
     
