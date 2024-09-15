@@ -24,9 +24,10 @@ class CommentForm(forms.ModelForm):
         return super(CommentForm, self).save(*args, **kwargs)
     
 class PostForm(forms.ModelForm):
+    new_category = forms.CharField(required=False, max_length=100, label='New Category')
     class Meta:
         model = Post
-        fields = ('title', 'blurb', 'banner_image', 'content', 'category')
+        fields = ('title', 'blurb', 'banner_image', 'content', 'category', 'new_category')
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'blurb': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'cols': 40}),
