@@ -86,6 +86,11 @@ def create_post(request):
             post.save()
             return redirect('post_detail', slug=post.slug)
 # The user is redirected to the post detail page for the newly created post.
+    else:
+        form = PostForm()
+# If there is no POST request, an empty form is created.
+    return render(request, 'create_post.html', {'form': form})
+
     
 def category_list(request):
     categories = Category.objects.all()
