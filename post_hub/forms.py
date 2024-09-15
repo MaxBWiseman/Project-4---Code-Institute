@@ -1,6 +1,7 @@
 from django import forms
 from mptt.forms import TreeNodeChoiceField
 from .models import Comment, Post, Category
+from spellchecker import SpellChecker
 
 class CommentForm(forms.ModelForm):
     parent = TreeNodeChoiceField(queryset=Comment.objects.all())
@@ -42,4 +43,16 @@ class PostForm(forms.ModelForm):
             existing_categories = Category.objects.filter(category_name=new_category_name)
             if existing_categories.count() >= 2:
                 raise forms.ValidationError('There cannot be more than 2 categories with the same name.')
+            
+            spell = SpellChecker()
+# I reasearched a way to spell check my categories and came across the spellchecker library.
+# First, I imported the SpellChecker class from the spellchecker module.
+# Then, I created a SpellChecker object called spell.
+            misspelled = spell.unknown([new_category_name])
+# I used the unknown method to check if the category name is misspelled.
+            if misspelled:
+                corrected = spell.correction(new_category_name)
+# If the category name is misspelled, I used the correction method to get the correct spelling.
+                raise forms.ValidationError(f"Did you mean '{corrected}'?")
+# I raised a ValidationError with a message that suggests the correct spelling.
         return new_category_name

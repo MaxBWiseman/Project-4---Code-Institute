@@ -12,4 +12,5 @@ django-mptt==0.16.0
 django-summernote==0.8.20.0
 docstring_parser==0.16
 psycopg2==2.9.9
+pyspellchecker==0.8.1
 sqlparse==0.5.1
