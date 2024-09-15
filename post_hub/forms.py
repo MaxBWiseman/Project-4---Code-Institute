@@ -29,7 +29,7 @@ class PostForm(forms.ModelForm):
         fields = ('title', 'blurb', 'banner_image', 'content', 'category')
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'blurb': forms.Textarea(attrs={'class': 'form-control'}),
+            'blurb': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'cols': 40}),
             'banner_image': forms.FileInput(attrs={'class': 'form-control'}),
             'content': forms.Textarea(attrs={'class': 'form-control'}),
             'category': forms.Select(attrs={'class': 'form-control'}),

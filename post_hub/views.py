@@ -89,7 +89,7 @@ def create_post(request):
     else:
         form = PostForm()
 # If there is no POST request, an empty form is created.
-    return render(request, 'create_post.html', {'form': form})
+    return render(request, 'post_hub/create_post.html', {'form': form})
 
     
 def category_list(request):
