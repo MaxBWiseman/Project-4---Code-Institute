@@ -6,7 +6,8 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8 offset-md-2 mt-3">
-            <h1 class="fw-bolder">Create a Post</h1>
+            <h1 class="fw-bolder">Post a Toot!</h1>
+            <p class="lead">Let em' know what's on your mind!</p>
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form|crispy }}
