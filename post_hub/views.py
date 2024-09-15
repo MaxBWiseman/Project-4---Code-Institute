@@ -33,23 +33,47 @@ class PostList(generic.ListView):
  
 
 def post_detail(request, slug):
-    post = get_object_or_404(Post, slug=slug, status='1')
+    post = get_object_or_404(Post, slug=slug, status=True)
+# Grab all comments related to the post with status approved
 
     allcomments = post.comments.filter(status=True)
+# The comments are filtered to only include approved comments.
+# "comments" is the related name of the ForeignKey in the Comment model.
     page = request.GET.get('page', 1)
+# This line of code retrieves the page number from the GET request.
+# Djangos pagination system includes the page paramenter in the URL, so the page number can be retrieved
+    paginator = Paginator(allcomments, 10)
+# The comments are paginated with 10 comments per page. Using the Paginator class from Django.
+    try:
+        comments = paginator.page(page)
+# The page method is called on the paginator object to retrieve the comments for the requested page. 
+    except PageNotAnInteger:
+        comments = paginator.page(1)
+    except EmptyPage:
+        comments = paginator.page(paginator.num_pages)
+# The PageNotAnInteger and EmptyPage exceptions are handled to ensure that the page number is valid.
     user_comment = None
+# this is to store the comment that the user is going to post
 
     if request.method == 'POST':
         comment_form = CommentForm(request.POST)
+# The data from the form is retrieved and stored in the comment_form variable.
         if comment_form.is_valid():
             user_comment = comment_form.save(commit=False)
+# The comment is saved to the database but not committed.
+# so we may manipulate the comment before saving it to the database
             user_comment.post = post
+# This is to associate the comment with the post.
             user_comment.author = request.user
+# This is to associate the comment with the user that posted it.
             user_comment.save()
             return HttpResponseRedirect(reverse('post_detail', args=[post.slug]))
+#We use args to pass the slug of the post to the URL pattern. To redirect to the correct post detail page.
     else:
         comment_form = CommentForm()
+# If there is no POST request, an empty comment form is created.
     return render(request, 'post_hub/post_detail.html', {'post': post, 'comments': comments, 'comment_form': comment_form, 'allcomments': allcomments})
+# The post, comments, comment_form, and allcomments are passed to the template.
 
 
     

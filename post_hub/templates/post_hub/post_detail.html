@@ -36,7 +36,7 @@
                 <div>{{ node.content }}</div>
                 <hr />
                 {% if node.level < 3 %}
-                <button class="button" onclick="myFunction({{ node.id }})">Reply</button>
+                <button class="button" onclick="grabOne({{ node.id }})">Reply</button>
                 {% endif %}
             </div>
             {% if not node.is_leaf_node %}
@@ -85,6 +85,46 @@
         <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
     </form>
 </div>
+<script>
+    function formExit() {
+        $("#newForm").remove();
+    }
+/*This function removes the form when formExit is invoked */
+
+    function grabOne(id) {
+        if ($("#newForm").length) {
+            $("#newForm").remove();
+        }
+/*This is to make sure only one reply form can be viewed at one time
+This function is attached to the reply button */
+
+        var formHtml = `
+            <form id="newForm" class="form-insert py-2" method="post">
+                <div class="d-flex justify-content-between">
+                    <h2>You are Replying to: {{ node.author }}</h2>
+                    <div>
+                        <button type="button" class="btn btn-outline-secondary" onclick="formExit()">Close</button>
+                    </div>
+                </div>
+                <select name="parent" class="d-none" id="id_parentt">
+                    <option value="${id}" selected>${id}</option>
+                </select>
+                <label for="id_content">Content:</label>
+                <textarea name="content" cols="40" rows="5" class="form-control" required id="id_content"></textarea>
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
+            </form>
+        `;
+/* This is the form that will be inserted after the comment that is being replied to when the reply button is clicked */
+
+        $(`#${id}`).after(formHtml);
+/* This is to insert the form after the comment that is being replied to
+using the id we grabbed in the grabOne function to associate the reply with the comment */
+    }
+
+    $('#myForm').trigger("reset");
+/* This is to reset the form after submission */
+</script>
 
 </div>
 </div>
