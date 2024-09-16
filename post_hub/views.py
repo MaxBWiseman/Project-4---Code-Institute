@@ -14,7 +14,7 @@ class PostList(generic.ListView):
     # This line of code tells Django to retrieve all posts with a status of 1 (approved) and order them
     # by the created_on field in descending order.
     template_name = "post_hub/index.html"
-    paginate_by = 3
+    paginate_by = 8
     
  # django automatically sets the context_object_name attribute to object_list.
     # e.g "post_list" is the context_object_name, this becomes our iterator
