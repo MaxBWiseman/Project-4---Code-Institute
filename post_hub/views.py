@@ -1,13 +1,15 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponseRedirect
-from django.template.loader import render_to_string
+from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
 from django.views import generic
+from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.views.generic import DetailView
+from django.views.generic.edit import DeleteView
 from django.contrib import messages
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from .models import Post, Comment, Category  
 from .forms import CommentForm, PostForm
+import json
 
 
 class PostList(generic.ListView):
@@ -75,6 +77,41 @@ def post_detail(request, slug):
 # If there is no POST request, an empty comment form is created.
     return render(request, 'post_hub/post_detail.html', {'post': post, 'comments': comments, 'comment_form': comment_form, 'allcomments': allcomments})
 # The post, comments, comment_form, and allcomments are passed to the template.
+
+@csrf_exempt
+# Exempt view from cross sit request forgery protection
+def edit_comment(request, comment_id):
+    if request.method == 'POST':
+        try:
+            comment = Comment.objects.get(id=comment_id, author=request.user)
+# The comment the user is trying to edit is retrieved from the database.
+            data = json.loads(request.body)
+# The data from the request is loaded into a JSON object.
+            comment.content = data['content']
+# Comment content is updated with the new content from the request.
+            comment.save()
+            return JsonResponse({'success': True})
+# A JSON response is returned to indicate that the comment was updated successfully.
+        except Comment.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Comment not found or not authorized'})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+# If the request method is not POST, a JSON response is returned to indicate that the request is invalid.
+# I chose to use JSON responses for this view because it is an AJAX request and JSON is a common format for AJAX responses.
+
+
+class DeleteComment(DeleteView):
+    model = Comment
+    success_url = reverse_lazy('home')
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(author=self.request.user)
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        return JsonResponse({'success': True})
+
 
 def create_post(request):
     if request.method == 'POST':
