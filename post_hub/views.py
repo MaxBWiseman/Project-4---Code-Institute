@@ -101,6 +101,9 @@ def create_post(request):
             messages.success(request, 'Your post has been tooted out successfully!')
             return redirect('post_detail', slug=post.slug)
             # The user is redirected to the post detail page for the newly created post.
+        else:
+            messages.error(request, 'There was an error creating your post. Please try again.')
+            # If the form is not valid, an error message is displayed to the user.
     else:
         form = PostForm()
         # If there is no POST request, an empty form is created.
