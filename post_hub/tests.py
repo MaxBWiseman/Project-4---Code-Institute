@@ -82,7 +82,7 @@ class CommentFormTest(TestCase):
         self.assertIn('content', form.errors)
         
 class PostFormTest(TestCase):
-    def setup(self):
+    def setUp(self):
         # Create a user for the author
         self.user = User.objects.create_user(username='testuser', password='12345')
         
@@ -101,5 +101,20 @@ class PostFormTest(TestCase):
         form = PostForm(data=form_data)
         self.assertTrue(form.is_valid())
         
-    
+    def test_post_form_no_category(self):
+        # Test with valid data but no category
+        form_data = {
+            'title': 'Test Post',
+            'blurb': 'This is a test post.',
+            'content': 'Content of the test post.',
+            'author': self.user.id,
+            'category': ''
+        }
+        form = PostForm(data=form_data)
+        self.assertTrue(form.is_valid())
+
+# In Django forms, when you are dealing with model instances,
+# you need to provide the primary key (ID) of the related objects
+# rather than the objects themselves. This is because the form expects
+# the ID to associate the form data with the correct database records.
         
