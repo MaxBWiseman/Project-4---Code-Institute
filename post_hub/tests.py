@@ -80,3 +80,26 @@ class CommentFormTest(TestCase):
         form = CommentForm(data=form_data)
         self.assertFalse(form.is_valid())
         self.assertIn('content', form.errors)
+        
+class PostFormTest(TestCase):
+    def setup(self):
+        # Create a user for the author
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        
+        # Create a Category for the post
+        self.category = Category.objects.create(category_name='Test Category')
+        
+    def test_post_form_valid(self):
+        # Test with valid data
+        form_data = {
+            'title': 'Test Post',
+            'blurb': 'This is a test post.',
+            'content': 'Content of the test post.',
+            'category': self.category.id,
+            'author': self.user.id
+        }
+        form = PostForm(data=form_data)
+        self.assertTrue(form.is_valid())
+        
+    
+        
