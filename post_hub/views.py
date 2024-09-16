@@ -4,6 +4,7 @@ from django.template.loader import render_to_string
 from django.views import generic
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.views.generic import DetailView
+from django.contrib import messages
 from django.urls import reverse
 from .models import Post, Comment, Category  
 from .forms import CommentForm, PostForm
@@ -94,11 +95,10 @@ def create_post(request):
 # This line of code retrieves the category object from the database or creates a new category if it does not already exist.
                 post.category = category
                 if created:
-                    print(f"A new category '{new_category_name}' was created.")
-                else:
-                    print(f"The category '{new_category_name}' already exists.")
+                    messages.success(request, f"A new category '{new_category_name}' was created.")
 
             post.save()
+            messages.success(request, 'Your post has been tooted out successfully!')
             return redirect('post_detail', slug=post.slug)
             # The user is redirected to the post detail page for the newly created post.
     else:
