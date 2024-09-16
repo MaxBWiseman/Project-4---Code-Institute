@@ -31,12 +31,27 @@
 
         <div>
             {% recursetree comments %}
-            <div id="{{ node.id }}" class="my-2 p-2" style="border: 1px solid grey">
-                <div class="d-flex justify-content-between">By {{ node.author }}<div></div>{{ node.created_at }}</div>
-                <div>{{ node.content }}</div>
+            <div id="comment-{{ node.id }}" class="my-2 p-2" style="border: 1px solid grey">
+                <div class="d-flex justify-content-between">
+                    By {{ node.author }}
+                    <div>{{ node.created_at }}</div>
+                </div>
+                <div id="comment-content-{{ node.id }}">{{ node.content }}</div>
+                <div id="edit-comment-{{ node.id }}" style="display: none;">
+                    <form method="post" onsubmit="return submitEditComment({{ node.id }});">
+                        {% csrf_token %}
+                        <textarea name="content" id="edit-content-{{ node.id }}">{{ node.content }}</textarea>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-secondary" onclick="cancelEditComment({{ node.id }})">Cancel</button>
+                    </form>
+                </div>
                 <hr />
                 {% if node.level < 3 %}
                 <button class="button" onclick="grabOne({{ node.id }})">Reply</button>
+                {% endif %}
+                {% if request.user == node.author %}
+                <button class="btn btn-primary" onclick="editComment({{ node.id }})">Edit</button>
+                <a href="{% url 'comment_delete' node.pk %}" class="btn btn-danger">Delete</a>
                 {% endif %}
             </div>
             {% if not node.is_leaf_node %}
