@@ -56,6 +56,24 @@ function editComment(commentId) {
     commentBox.focus();
     commentBox.scrollIntoView({ behaviour: 'smotth', block: 'center' });
 
+    const data = JSON.stringify({ content: commentText });
+/*This converts a javascript object to a JSON string  */
+    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+/* This is to get the csrf token from the form */
+
+    fetch(`/edit_comment/${commentId}/`, {
+/* This is to make a fetch request to the edit_comment view by using the URL */
+        method: 'POST',
+/* This is to make a POST request */
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': `${csrfToken}`
+        },
+/* This is to set the headers for the request, type is to set the data being sents format
+and the session token for validations */
+        body: data
+    })
+    .then(response => response.json())
 
 }
 
