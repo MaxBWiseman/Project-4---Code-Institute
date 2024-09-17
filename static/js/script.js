@@ -45,7 +45,7 @@ function confirmDelete(commentId) {
     modal.style.display = 'block';
     confirmBtn.onclick = function() {
     deleteComment(commentId);
-};
+    };
 }
 
 function editComment(commentId) {
@@ -54,27 +54,39 @@ function editComment(commentId) {
     const commentText = commentContent.value;
     commentBox.value = commentText;
     commentBox.focus();
-    commentBox.scrollIntoView({ behaviour: 'smotth', block: 'center' });
+    commentBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-    const data = JSON.stringify({ content: commentText });
-/*This converts a javascript object to a JSON string  */
+    // Store the commentId in the hidden input field
+    document.getElementById('comment-id').value = commentId;
+
+    // Change the form's submit event handler to update the comment
+    const editCommentForm = document.getElementById('edit-comment-form');
+    editCommentForm.removeEventListener('submit', defaultFormSubmission);
+    editCommentForm.addEventListener('submit', submitEditComment);
+}
+
+function submitEditComment(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    const commentBox = document.getElementById('id_content');
+    const commentText = commentBox.value;
+    const commentId = document.getElementById('comment-id').value; // Retrieve the commentId
+
     const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-/* This is to get the csrf token from the form */
 
     fetch(`/edit_comment/${commentId}/`, {
-/* This is to make a fetch request to the edit_comment view by using the URL */
         method: 'POST',
-/* This is to make a POST request */
         headers: {
             'Content-Type': 'application/json',
             'X-CSRFToken': `${csrfToken}`
         },
-/* This is to set the headers for the request, type is to set the data being sents format
-and the session token for validations */
-        body: data
+        body: JSON.stringify({ content: commentText })
     })
     .then(response => response.json())
-
+    
+}
+function defaultFormSubmission(event) {
+    // This function is empty as the form submission is handled by the server
 }
 
 function closeModal() {

@@ -50,8 +50,8 @@
                 <button class="button" onclick="grabOne({{ node.id }})">Reply</button>
                 {% endif %}
                 {% if request.user == node.author %}
-                <button class="btn btn-primary" onclick="editComment({{ node.id }})">Edit</button>
-                <button onclick="confirmDelete({{ node.id }})" class="btn btn-danger">Delete</button>
+                <button class="button" onclick="editComment({{ node.id }})">Edit</button>
+                <button onclick="confirmDelete({{ node.id }})" class="button">Delete</button>
                 {% endif %}
             </div>
             {% if not node.is_leaf_node %}
@@ -93,10 +93,11 @@
 </div>
 
 <div id="myDIV" style="display:block;">
-    <form id="myForm" method="post">
+    <form id="edit-comment-form" method="post">
         <h2>Create new comment</h2>
         {% csrf_token %}
         {{ comment_form.as_p }}
+        <input type="hidden" id="comment-id" name="comment-id">
         <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
     </form>
 </div>

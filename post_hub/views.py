@@ -7,6 +7,7 @@ from django.views.generic import DetailView
 from django.views.generic.edit import DeleteView
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
+from django.utils import timezone
 from .models import Post, Comment, Category  
 from .forms import CommentForm, PostForm
 import json
@@ -89,6 +90,7 @@ def edit_comment(request, comment_id):
 # The data from the request is loaded into a JSON object.
             comment.content = data['content']
 # Comment content is updated with the new content from the request.
+            comment.updated_at = timezone.now()
             comment.save()
             return JsonResponse({'success': True})
 # A JSON response is returned to indicate that the comment was updated successfully.
