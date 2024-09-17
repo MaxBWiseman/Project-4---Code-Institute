@@ -49,10 +49,14 @@ function confirmDelete(commentId) {
 }
 
 function editComment(commentId) {
-    const commentBox = document.getElementById('id_comment');
+    const commentBox = document.getElementById('id_content');
     const commentContent = document.getElementById('edit-content-' + commentId);
-    const commentText = commentContent.innerText;
+    const commentText = commentContent.value;
     commentBox.value = commentText;
+    commentBox.focus();
+    commentBox.scrollIntoView({ behaviour: 'smotth', block: 'center' });
+
+
 }
 
 function closeModal() {
