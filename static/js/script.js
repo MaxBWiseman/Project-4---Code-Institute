@@ -13,20 +13,22 @@ function grabOne(id) {
     // Extract the author information from the comment-author span
     var author = $(`#comment-${id} .comment-author`).text().replace('By ', '');
 
+    var csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
     var formHtml = `
-        <form id="newForm" class="form-insert py-2" method="post">
+       <form id="newForm" class="form-insert py-2" method="post">
             <div class="d-flex justify-content-between">
                 <h2>You are Replying to: ${author}</h2>
                 <div>
                     <button type="button" class="btn btn-outline-secondary" onclick="formExit()">Close</button>
                 </div>
             </div>
+            <input type="hidden" name="csrfmiddlewaretoken" value="${ csrfToken }">
             <select name="parent" class="d-none" id="id_parentt">
                 <option value="${id}" selected>${id}</option>
             </select>
             <label for="id_content">Content:</label>
             <textarea name="content" cols="40" rows="5" class="form-control" required id="id_content"></textarea>
-            {% csrf_token %}
             <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
         </form>
     `;
@@ -36,11 +38,6 @@ function grabOne(id) {
     /* This is to insert the form after the comment that is being replied to
     using the id we grabbed in the grabOne function to associate the reply with the comment */
 }
-
-// Reset the form on submit
-$('#myForm').on('submit', function() {
-    $(this).trigger("reset");
-});
 
 function confirmDelete(commentId) {
 const modal = document.getElementById('deleteModal');

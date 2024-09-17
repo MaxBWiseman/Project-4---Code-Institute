@@ -1,5 +1,5 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse, HttpResponseRedirect
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage

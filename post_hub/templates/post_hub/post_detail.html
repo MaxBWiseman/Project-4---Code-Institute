@@ -95,8 +95,8 @@
 <div id="myDIV" style="display:block;">
     <form id="myForm" method="post">
         <h2>Create new comment</h2>
-        {{ comment_form.as_p }}
         {% csrf_token %}
+        {{ comment_form.as_p }}
         <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
     </form>
 </div>
