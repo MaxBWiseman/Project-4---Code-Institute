@@ -40,36 +40,43 @@ function grabOne(id) {
 }
 
 function confirmDelete(commentId) {
-const modal = document.getElementById('deleteModal');
-const confirmBtn = document.getElementById('confirmDeleteBtn');
-modal.style.display = 'block';
-confirmBtn.onclick = function() {
+    const modal = document.getElementById('deleteModal');
+    const confirmBtn = document.getElementById('confirmDeleteBtn');
+    modal.style.display = 'block';
+    confirmBtn.onclick = function() {
     deleteComment(commentId);
 };
 }
 
+function editComment(commentId) {
+    const commentBox = document.getElementById('id_comment');
+    const commentContent = document.getElementById('edit-content-' + commentId);
+    const commentText = commentContent.innerText;
+    commentBox.value = commentText;
+}
+
 function closeModal() {
-const modal = document.getElementById('deleteModal');
-modal.style.display = 'none';
+    const modal = document.getElementById('deleteModal');
+    modal.style.display = 'none';
 }
 
 function deleteComment(commentId) {
-const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 
-fetch(`/comment/${commentId}/delete/`, {
-    method: 'DELETE',
-    headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': csrfToken
-    }
-})
-.then(response => response.json())
-.then(data => {
-    if (data.success) {
-        document.getElementById('comment-' + commentId).remove();
-        closeModal();
-    } else {
-        alert('Error deleting comment');
-    }
-});
+    fetch(`/comment/${commentId}/delete/`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('comment-' + commentId).remove();
+            closeModal();
+        } else {
+            alert('Error deleting comment');
+        }
+    });
 }

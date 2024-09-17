@@ -14,7 +14,7 @@ class CommentForm(forms.ModelForm):
 
     class Meta:
         model = Comment
-        fields = ('parent', 'content')  # Only include the fields you want to display in the form
+        fields = ('parent', 'content')
 
         widgets = {
             'content': forms.Textarea(attrs={'class': 'form-control'}),
