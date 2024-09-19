@@ -75,14 +75,39 @@ function submitEditComment(event) {
     const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 
     fetch(`/edit_comment/${commentId}/`, {
+// This is the URL to send the request to
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'X-CSRFToken': `${csrfToken}`
         },
+// headers are used to send additional information to the server,
+// like the content type and the CSRF token
         body: JSON.stringify({ content: commentText })
+// we use the body property to send the data to the server
+// we use JSON.stringify to convert the data to a JSON string
     })
     .then(response => response.json())
+// we use the .then method to handle the response from the server
+// we use the .json method to convert the response to a JSON object
+    .then(data => {
+        if (data.success) {
+            alert('Comment updated successfully, please refresh the page to see changes');
+            // Revert the form's submit event handler back to default behavior
+            const editCommentForm = document.getElementById('edit-comment-form');
+            editCommentForm.removeEventListener('submit', submitEditComment);
+            editCommentForm.addEventListener('submit', defaultFormSubmission);
+            // Clear the comment box
+            commentBox.value = '';
+            // Clear the hidden input field
+            document.getElementById('comment-id').value = '';
+        } else {
+            alert('Error updating comment: ' + data.error);
+    }
+})
+.catch((error) => {
+    console.error('Error:', error);
+});
     
 }
 function defaultFormSubmission(event) {
