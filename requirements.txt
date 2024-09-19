@@ -11,6 +11,7 @@ django-js-asset==2.2.0
 django-mptt==0.16.0
 django-summernote==0.8.20.0
 docstring_parser==0.16
+gunicorn==20.1.0
 psycopg2==2.9.9
 pyspellchecker==0.8.1
 sqlparse==0.5.1
