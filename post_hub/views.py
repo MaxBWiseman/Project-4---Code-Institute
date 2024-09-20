@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponseRedirect
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
@@ -35,7 +36,6 @@ class PostList(generic.ListView):
 # standard and efficient way. This approach ensures that the categories are available in the template
 # without creating a separate method for retrieving category data.
  
-
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug, status=True)
 # Grab all comments related to the post with status approved
@@ -60,6 +60,9 @@ def post_detail(request, slug):
 # this is to store the comment that the user is going to post
 
     if request.method == 'POST':
+        if not request.user.is_authenticated:
+            messages.error(request, 'You must be logged in to post a comment.')
+            return redirect('account_login')
         comment_form = CommentForm(request.POST)
 # The data from the form is retrieved and stored in the comment_form variable.
         if comment_form.is_valid():
@@ -83,7 +86,6 @@ def post_detail(request, slug):
     return render(request, 'post_hub/post_detail.html', {'post': post, 'comments': comments, 'comment_form': comment_form, 'allcomments': allcomments})
 # The post, comments, comment_form, and allcomments are passed to the template.
 
-@csrf_exempt
 # Exempt view from cross sit request forgery protection
 def edit_comment(request, comment_id):
     if request.method == 'POST':
@@ -104,7 +106,6 @@ def edit_comment(request, comment_id):
 # If the request method is not POST, a JSON response is returned to indicate that the request is invalid.
 # I chose to use JSON responses for this view because it is an AJAX request and JSON is a common format for AJAX responses.
 
-
 class DeleteComment(DeleteView):
     model = Comment
     success_url = reverse_lazy('home')
@@ -124,7 +125,7 @@ class DeleteComment(DeleteView):
 # The delete method is called on the comment object to delete the comment from the database.
         return JsonResponse({'success': True})
 
-
+@login_required
 def create_post(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)

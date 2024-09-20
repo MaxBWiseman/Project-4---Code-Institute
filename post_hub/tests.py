@@ -137,6 +137,20 @@ class PostFormTest(TestCase):
 # I used the assertIn method to check if the error message is in the __all__ key of the errors dictionary.
 # I learned that errors are stored in __all__ key when they are not associated with a specific field.
 
+class PostDetailViewTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.category = Category.objects.create(category_name='Test Category')
+        self.post = Post.objects.create(title='Test Post', blurb='Test Blurb', content='Test Content', category=self.category, author=self.user)
+
+    def test_post_detail_page(self):
+        url = reverse('post_detail', args=[self.post.slug])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'post_hub/post_detail.html')
+        self.assertContains(response, self.post.title)
+        self.assertContains(response, self.post.content)
 
 
 # In Django forms, when you are dealing with model instances,

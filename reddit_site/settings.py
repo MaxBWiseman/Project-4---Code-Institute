@@ -15,13 +15,12 @@ import os
 import sys
 import dj_database_url
 import django_heroku
-if os.path.exists("env.py"):
-    import env
-# the code above imports the env.py file if it exists. due to not pushing the env.py file to github.
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+load_dotenv(os.path.join(BASE_DIR, '.env'))
+# the code above imports the env.py file if it exists. due to not pushing the env.py file to github.
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
 
@@ -103,12 +102,15 @@ WSGI_APPLICATION = 'reddit_site.wsgi.application'
 DATABASES = {
     'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
-# parsed the DATABASE_URL environment variable using dj_database_url.parse() method.
-# This method returns a dictionary that Django can use to connect to the database.
-# The DATABASE_URL environment variable is set in the env.py file.
 
 if 'test' in sys.argv:
-    DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+        }
+    }
+
 # This code checks if the test command is in the sys.argv list. If it is, the database engine is set to sqlite3.
 # This is because Django uses an in-memory database when running tests, which is faster than using a real database.
 
