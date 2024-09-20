@@ -50,6 +50,8 @@
                 <hr />
                 {% if node.level < 3 %}
                 <button class="button" onclick="grabOne({{ node.id }})">Reply</button>
+<!-- grabOne collects the assocoaited parent id of the comment so the comment reply knows what comment to call its parent,
+  this js function also makes sure only one reply form can be visible at one time-->
                 {% endif %}
                 {% if request.user == node.author %}
                 <button class="button" onclick="editComment({{ node.id }})">Edit</button>
@@ -66,7 +68,7 @@
 
     </div>
 </section>
-<div class="py-4">
+<div class="py-4 d-flex justify-content-center">
     <nav aria-label="Page navigation example">
         {% if comments.has_other_pages %}
         <ul class="pagination">

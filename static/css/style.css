@@ -95,7 +95,7 @@ header {
     text-align:center;
     z-index: 2000;
     width: 50%;
-    margin-left: 39%;
+    margin-left: 25%;
 }
 
 .alert-error {
@@ -105,7 +105,7 @@ header {
     text-align: center;
     z-index: 2000;
     width: 50%;
-    margin-left: 39%;
+    margin-left: 25%;
 }
 /* End Modal */
 /* dynamic classes */

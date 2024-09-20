@@ -74,16 +74,6 @@
             </div>
         </nav>
     </header>
-    {% if messages %}
-    <div class="container mt-3">
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
     <div class="container mt-4">
         <div class="row">
             <div class="col-md-2">
@@ -144,6 +134,17 @@
                 <footer class="footer fixed-bottom d-none d-sm-block">
                     <div class="row row-style">
                         <div class="col-12">
+                            {% if messages %}
+                            <div class="container mt-1">
+                                {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
                             <div class="row row-style-2">
                                 <div class="col-sm-3 text-md-center mt-3">
                                     <h5>

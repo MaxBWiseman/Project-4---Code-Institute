@@ -71,6 +71,10 @@ def post_detail(request, slug):
             user_comment.author = request.user
 # This is to associate the comment with the user that posted it.
             user_comment.save()
+            messages.success(request, 'Your comment has been posted successfully!')
+            return HttpResponseRedirect(reverse('post_detail', args=[post.slug]))
+        else:
+            messages.error(request, 'There was an error posting your comment. Please try again.')
             return HttpResponseRedirect(reverse('post_detail', args=[post.slug]))
 #We use args to pass the slug of the post to the URL pattern. To redirect to the correct post detail page.
     else:

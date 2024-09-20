@@ -39,6 +39,16 @@ function grabOne(id) {
     using the id we grabbed in the grabOne function to associate the reply with the comment */
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    // Hide messages modals inside the footer after 5 seconds
+    setTimeout(function() {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(function(alert) {
+            alert.style.display = 'none';
+        });
+    }, 5000);
+});
+
 function confirmDelete(commentId) {
     const modal = document.getElementById('deleteModal');
     const confirmBtn = document.getElementById('confirmDeleteBtn');
