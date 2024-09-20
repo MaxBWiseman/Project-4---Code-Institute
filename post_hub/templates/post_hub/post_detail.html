@@ -41,9 +41,9 @@
                     <form method="post" id="edit-comment-form-{{ node.id }}"
                         onsubmit="return submitEditComment({{ node.id }})(event);">
                         {% csrf_token %}
-                        <textarea name="content" id="edit-content-{{ node.id }}">{{ node.content }}</textarea>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
-                        <button type="button" class="btn btn-secondary"
+                        <textarea name="content" id="edit-content-{{ node.id }}" class="form-control">{{ node.content }}</textarea>
+                        <button type="submit" class="btn btn-primary mt-2">Save changes</button>
+                        <button type="button" class="btn btn-secondary mt-2"
                             onclick="cancelEditComment({{ node.id }})">Cancel</button>
                     </form>
                 </div>
