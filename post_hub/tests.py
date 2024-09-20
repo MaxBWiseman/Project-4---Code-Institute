@@ -157,4 +157,10 @@ class PostDetailViewTest(TestCase):
 # you need to provide the primary key (ID) of the related objects
 # rather than the objects themselves. This is because the form expects
 # the ID to associate the form data with the correct database records.
+
+# ALL UNITTEST IS BROKEN DUE TO THIS ERROR = 
+# gitpod /workspace/Project-4---Code-Institute (main) $ $ pyth manage.py test
+# Found 8 test(s).
+# Creating test database for alias 'default'...
+# Got an error creating the test database: permission denied to create database
         
