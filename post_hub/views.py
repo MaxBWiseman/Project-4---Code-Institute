@@ -107,11 +107,17 @@ class DeleteComment(DeleteView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+# This line of code calls the get_queryset method of the parent class to retrieve the queryset.
+# The queryset is used to filter the comments to only include comments by the current user.
         return queryset.filter(author=self.request.user)
-    
+# The author field of the comment is compared to the current user to filter the comments.
+# The current user is retrieved from the request object and compared to the author field of the comment.
+# This ensures that only the comments by the current user can be deleted.
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
+# The get_object method is called to retrieve the comment to be deleted when the view is called.
         self.object.delete()
+# The delete method is called on the comment object to delete the comment from the database.
         return JsonResponse({'success': True})
 
 

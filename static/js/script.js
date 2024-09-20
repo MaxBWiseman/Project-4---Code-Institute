@@ -12,9 +12,9 @@ function grabOne(id) {
 
     // Extract the author information from the comment-author span
     var author = $(`#comment-${id} .comment-author`).text().replace('By ', '');
-
     var csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 
+/* Reply form */
     var formHtml = `
        <form id="newForm" class="form-insert py-2" method="post">
             <div class="d-flex justify-content-between">
@@ -48,67 +48,74 @@ function confirmDelete(commentId) {
     };
 }
 
-function editComment(commentId) {
-    const commentBox = document.getElementById('id_content');
-    const commentContent = document.getElementById('edit-content-' + commentId);
-    const commentText = commentContent.value;
-    commentBox.value = commentText;
-    commentBox.focus();
-    commentBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+function successModal() {
+    const modal = document.getElementById('successModal');
+    modal.style.display = 'block';
+}
 
+function cancelEditComment(commentId) {
+    const commentContent = document.getElementById('comment-content-' + commentId);
+    const editForm = document.getElementById('edit-comment-' + commentId);
+
+    commentContent.style.display = 'block';
+    editForm.style.display = 'none';
+}
+
+function editComment(commentId) {
+    const commentContent = document.getElementById('comment-content-' + commentId);
+    const editForm = document.getElementById("edit-comment-" + commentId);
+
+    commentContent.style.display = 'none';
+    editForm.style.display = 'block';
     // Store the commentId in the hidden input field
     document.getElementById('comment-id').value = commentId;
-
     // Change the form's submit event handler to update the comment
     const editCommentForm = document.getElementById('edit-comment-form');
     editCommentForm.removeEventListener('submit', defaultFormSubmission);
     editCommentForm.addEventListener('submit', submitEditComment);
 }
 
-function submitEditComment(event) {
-    event.preventDefault(); // Prevent the default form submission
+function submitEditComment(commentId) {
+    return function(event) {
+        event.preventDefault(); // Prevent the default form submission
 
-    const commentBox = document.getElementById('id_content');
-    const commentText = commentBox.value;
-    const commentId = document.getElementById('comment-id').value; // Retrieve the commentId
+        const commentBox = document.getElementById('edit-content-' + commentId);
+        const commentText = commentBox.value;
+        const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 
-    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-
-    fetch(`/edit_comment/${commentId}/`, {
+        fetch(`/edit_comment/${commentId}/`, {
 // This is the URL to send the request to
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': `${csrfToken}`
-        },
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
 // headers are used to send additional information to the server,
 // like the content type and the CSRF token
-        body: JSON.stringify({ content: commentText })
+            body: JSON.stringify({ content: commentText })
 // we use the body property to send the data to the server
 // we use JSON.stringify to convert the data to a JSON string
-    })
-    .then(response => response.json())
+        })
+        .then(response => response.json())
 // we use the .then method to handle the response from the server
 // we use the .json method to convert the response to a JSON object
-    .then(data => {
-        if (data.success) {
-            alert('Comment updated successfully, please refresh the page to see changes');
-            // Revert the form's submit event handler back to default behavior
-            const editCommentForm = document.getElementById('edit-comment-form');
-            editCommentForm.removeEventListener('submit', submitEditComment);
-            editCommentForm.addEventListener('submit', defaultFormSubmission);
-            // Clear the comment box
-            commentBox.value = '';
-            // Clear the hidden input field
-            document.getElementById('comment-id').value = '';
-        } else {
-            alert('Error updating comment: ' + data.error);
-    }
-})
-.catch((error) => {
-    console.error('Error:', error);
-});
-    
+        .then(data => {
+            if (data.success) {
+                alert('Comment updated successfully, please refresh the page to see changes');
+                // Clear the comment box
+                commentBox.value = '';
+                // Revert the form's submit event handler back to default behavior
+                const editCommentForm = document.getElementById('edit-comment-form');
+                editCommentForm.removeEventListener('submit', submitEditComment(commentId));
+                editCommentForm.addEventListener('submit', defaultFormSubmission);
+            } else {
+                alert('Error updating comment: ' + data.error);
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    };
 }
 function defaultFormSubmission(event) {
     // This function is empty as the form submission is handled by the server
@@ -116,7 +123,9 @@ function defaultFormSubmission(event) {
 
 function closeModal() {
     const modal = document.getElementById('deleteModal');
+    const modal2 = document.getElementById('successModal');
     modal.style.display = 'none';
+    modal2.style.display = 'none';
 }
 
 function deleteComment(commentId) {
@@ -134,6 +143,7 @@ function deleteComment(commentId) {
         if (data.success) {
             document.getElementById('comment-' + commentId).remove();
             closeModal();
+            successModal();
         } else {
             alert('Error deleting comment');
         }

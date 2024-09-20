@@ -78,6 +78,9 @@ class Comment(MPTTModel):
     updated_at = models.DateTimeField(auto_now=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
 # The parent field references the comment model iteself, the related name allowes to access child comments
+# MPTTModel is used to create a tree structure for the comments. This allows for easy retrieval of the comments
+# and their children. Making easy nesting of comments. Here where i learnt it - 
+# https://blog.martinfitzpatrick.com/django-threaded-comments/
 # Comment model has a many to one relationship with the Post and User models,
 # this is to store the comments of the users on the posts.
     

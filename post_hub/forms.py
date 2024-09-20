@@ -4,13 +4,7 @@ from .models import Comment, Post, Category
 from spellchecker import SpellChecker
 
 class CommentForm(forms.ModelForm):
-    parent = TreeNodeChoiceField(queryset=Comment.objects.all())
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['parent'].widget.attrs.update({'class': 'd-none'})
-        self.fields['parent'].label = ''
-        self.fields['parent'].required = False
+    parent = TreeNodeChoiceField(queryset=Comment.objects.all(), required=False, widget=forms.HiddenInput())
 
     class Meta:
         model = Comment
@@ -41,7 +35,7 @@ class PostForm(forms.ModelForm):
         
     def clean(self):
         cleaned_data = super().clean()
-# super is used to call the parent class (forms.ModelForm)
+# super is used to call the parent class (forms.ModelForm) and use its data.
 # clean is used to validate the form data and return the cleaned data
         new_category_name = cleaned_data.get('new_category')
 # I used the get method to get the value of the new_category field from the cleaned_data dictionary.
@@ -73,7 +67,7 @@ class PostForm(forms.ModelForm):
     def save(self, commit=True):
 # I overrode the save method to handle the new_category field.
         post = super().save(commit=False)
-# This line calls the save method of the parent class with super (forms.ModelForm)
+# This line calls the save method of the parent class with super (forms.ModelForm) and use its data.
 # and sets commit to False.
         new_category_name = self.cleaned_data.get('new_category')
 # I used the get method to get the value of the new_category field from the cleaned_data dictionary.
