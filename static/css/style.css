@@ -94,6 +94,8 @@ header {
     color: #155724;
     text-align:center;
     z-index: 2000;
+    width: 50%;
+    margin-left: 39%;
 }
 
 .alert-error {
@@ -102,8 +104,15 @@ header {
     color: #721c24;
     text-align: center;
     z-index: 2000;
+    width: 50%;
+    margin-left: 39%;
 }
 /* End Modal */
+/* dynamic classes */
+.active {
+    color: white;
+}
+/* End dynamic classes */
 /* Footer */
 footer {
     position: relative;
