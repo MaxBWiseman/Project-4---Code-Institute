@@ -103,9 +103,9 @@
                 <!-- Confirmation Modals -->
                 <div id="deleteModal" class="modal" style="display:none;">
                     <div class="modal-dialog" role="document">
-                        <div class="modal-content background-modal">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Success</h5>
+                        <div class="modal-content">
+                            <div class="modal-header background-modal">
+                                <h5 class="modal-title text-light">Delete</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"
                                     onclick="closeModal()">
                                     <span aria-hidden="true">&times;</span>
@@ -114,7 +114,7 @@
                             <div class="modal-body">
                                 <p class="text-center"><b>Are you sure you want to delete this comment?</b></p>
                             </div>
-                            <div class="modal-footer">
+                            <div class="modal-footer background-modal">
                                 <button id="confirmDeleteBtn" class="btn btn-danger">Delete</button>
                                 <button onclick="closeModal()" class="btn btn-secondary">Cancel</button>
                             </div>
@@ -123,19 +123,19 @@
                 </div>
                 <div id="successModal" class="modal" style="display:none;">
                     <div class="modal-dialog" role="document">
-                        <div class="modal-content background-modal">
-                            <div class="modal-header">
-                                <h5 class="modal-title"><b>Success</b></h5>
+                        <div class="modal-content">
+                            <div class="modal-header background-modal">
+                                <h5 class="modal-title text-light"><b>Success</b></h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"
                                     onclick="closeModal()">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <p>Your post has been created successfully!</p>
+                                <p class="text-center fw-large"><strong>Your action has been successfull!</strong></p>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" onclick="closeModal()">Close</button>
+                            <div class="modal-footer background-modal">
+                                <button type="button" class="btn btn-success" onclick="closeModal()">Close</button>
                             </div>
                         </div>
                     </div>

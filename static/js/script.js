@@ -101,13 +101,16 @@ function submitEditComment(commentId) {
 // we use the .json method to convert the response to a JSON object
         .then(data => {
             if (data.success) {
-                alert('Comment updated successfully, please refresh the page to see changes');
-                // Clear the comment box
-                commentBox.value = '';
-                // Revert the form's submit event handler back to default behavior
+                const commentNew = document.getElementById('edit-content-' + commentId);
+                const commentOld = document.getElementById('comment-content-' + commentId);
+                commentOld.innerText = commentNew.value;
+// Update the original comment box with the new content
+// Revert the form's submit event handler back to default behavior
                 const editCommentForm = document.getElementById('edit-comment-form');
                 editCommentForm.removeEventListener('submit', submitEditComment(commentId));
                 editCommentForm.addEventListener('submit', defaultFormSubmission);
+                cancelEditComment(commentId);
+                successModal();
             } else {
                 alert('Error updating comment: ' + data.error);
             }
