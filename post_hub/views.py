@@ -149,10 +149,10 @@ def create_post(request):
         else:
             messages.error(request, 'There was an error creating your post. Please try again.')
             # If the form is not valid, an error message is displayed to the user.
+            return redirect('create_post')
     else:
         form = PostForm()
         # If there is no POST request, an empty form is created.
-    
     return render(request, 'post_hub/create_post.html', {'form': form})
 
     
