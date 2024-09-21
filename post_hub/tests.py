@@ -97,6 +97,7 @@ class PostFormTest(TestCase):
         
         
     def test_post_form_get(self):
+        self.client.login(username='testuser', password='12345')
         response = self.client.get(reverse('create_post'))
 # response is the response from the view function when it is called with a GET request.
 # we use the reverse function to get the URL of the create_post view.

@@ -1,0 +1,179 @@
+/* Cards */
+.post-card {
+    width: 75%;
+    height: 75%;
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden; 
+}
+
+.post-picture {
+    width: 100%; 
+    height: 100px;
+}
+
+.card-header {
+   background-color: #28323C !important;
+    color: #caced1 !important;
+}
+
+.card {
+    border-radius: 30px;
+    background: #e0e0e0;
+    box-shadow: 15px 15px 30px #bebebe,
+               -15px -15px 30px #ffffff;
+}
+/* End Cards */
+/* Row Styles */
+.row-style {
+    background-color:#1E242A !important;
+}
+
+.row-style-2 {
+    
+    background-color: #28323C !important;
+}
+/* End Row Styles */
+/* Content padding for fixed footer clearance */
+.content-padding {
+    padding-bottom: 9rem;
+}
+/* End Content padding*/
+/* Navbar */
+header {
+    position: relative;
+    z-index: 1000;
+}
+
+/* Side navbar */
+.sidebar {
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color: #f1f1f1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    overflow: auto;
+    z-index: 10;
+}
+
+
+.sidebar a {
+    display: block;
+    color: black;
+    padding: 16px;
+    text-decoration: none;
+}
+
+
+.sidebar a.active {
+    background-color: #04AA6D;
+    color: white;
+}
+
+
+.sidebar a:hover:not(.active) {
+    background-color: #555;
+    color: white;
+}
+/* End Navbar */
+/* Modal */
+.background-modal {
+    background-color: #28323C;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+    text-align:center;
+    z-index: 2000;
+    width: 50%;
+    margin-left: 25%;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+    text-align: center;
+    z-index: 2000;
+    width: 50%;
+    margin-left: 25%;
+}
+/* End Modal */
+/* dynamic classes */
+.active {
+    color: white;
+}
+/* End dynamic classes */
+/* Footer */
+footer {
+    position: relative;
+    bottom: 0;
+    z-index: 1000;
+    background-color: #28323C;
+    color: #caced1;
+    text-align: center;
+    width: 100%;
+    margin-bottom: -20px;
+    padding: 7px;
+}
+/* End Footer */
+/* Comments */
+.comment {
+    margin-left: 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+
+.nested-comment {
+    margin-left: 20px;
+    background-color: #f9f9f9;
+    border-left: 3px solid #ccc;
+    padding-left: 10px;
+}
+/* End Comments */
+/* Media queries */
+@media screen and (max-width: 700px) {
+    .sidebar {
+        display: none;
+    }
+    footer {
+        position: relative;
+        bottom: 0;
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .sidebar {
+        display: none;
+    }
+    footer {
+        position: relative;
+        bottom: 0;
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .phone-center {
+        text-align: center;
+        margin-left: 0 !important;
+    }
+    footer {
+        position: relative;
+        bottom: 0;
+        width: 100%;
+    }
+}
