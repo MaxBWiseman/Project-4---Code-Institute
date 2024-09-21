@@ -11,6 +11,11 @@
 <div class="col-12">
     <h1 class="fw-bolder mb-2 mt-2">{{ post.title }}</h1>
     <p class="text-muted mb-1">{{ post.author }} | {{ post.created_at|date:"F d, Y" }}</p>
+    {% if node.updated_at and node.updated_at.date != node.created_at.date %}
+    <!-- Displays only if updated_at and created_at become different as they are both set the same
+             creation date-->
+    <span id="updated-at-{{ node.id}}">Edited: {{ node.updated_at|date:"Y-m-d H:i:s" }}<span>
+    {% endif %}
     <p class="fw-lighter">Category: {{ post.category }}</p>
 </div>
 </header>
@@ -35,11 +40,11 @@
                 <div class="d-flex justify-content-between">
                     <span class="comment-author">By {{ node.author }} </span>
                     <div><span id="created-at-{{ node.id }}">{{ node.created_at|date:"Y-m-d H:i:s" }}</span>
-                    {% if node.updated_at and node.updated_at.date != node.created_at.date %}
-            <!-- Displays only if updated_at and created_at become different as they are both set the same
+                        {% if node.updated_at and node.updated_at.date != node.created_at.date %}
+                        <!-- Displays only if updated_at and created_at become different as they are both set the same
              creation date-->
-                    <span id="updated-at-{{ node.id}}">Edited: {{ node.updated_at|date:"Y-m-d H:i:s" }}<span>
-                    {% endif %}
+                        <span id="updated-at-{{ node.id}}">Edited: {{ node.updated_at|date:"Y-m-d H:i:s" }}<span>
+                                {% endif %}
                     </div>
                     <div id="reply-count">Total Replies: {{ node.get_descendant_count }}</div>
                 </div>
@@ -48,7 +53,8 @@
                     <form method="post" id="edit-comment-form-{{ node.id }}"
                         onsubmit="return submitEditComment({{ node.id }})(event);">
                         {% csrf_token %}
-                        <textarea name="content" id="edit-content-{{ node.id }}" class="form-control">{{ node.content }}</textarea>
+                        <textarea name="content" id="edit-content-{{ node.id }}"
+                            class="form-control">{{ node.content }}</textarea>
                         <button type="submit" class="btn btn-primary mt-2">Save changes</button>
                         <button type="button" class="btn btn-secondary mt-2"
                             onclick="cancelEditComment({{ node.id }})">Cancel</button>
@@ -57,7 +63,7 @@
                 <hr />
                 {% if node.level < 3 %}
                 <button class="button" onclick="grabOne({{ node.id }})">Reply</button>
-<!-- grabOne collects the assocoaited parent id of the comment so the comment reply knows what comment to call its parent,
+                <!-- grabOne collects the assocoaited parent id of the comment so the comment reply knows what comment to call its parent,
   this js function also makes sure only one reply form can be visible at one time-->
                 {% endif %}
                 {% if request.user == node.author %}
