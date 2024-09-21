@@ -178,9 +178,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const updatedAt = document.getElementById('updated-at-' + commentId);
 
             if (updatedAt) {
-                const createdAtDate = Date(createdAt.textContent.trim());
+                const createdAtDate = new Date(createdAt.textContent.trim());
     // We convert the text content of the element to a date object, trimming any whitespace
-                const updatedAtDate = Date(updatedAt.textContent.replace('Edited: ', '').trim());
+                const updatedAtDate = new Date(updatedAt.textContent.replace('Edited: ', '').trim());
 
                 console.log(`Comment ID: ${commentId}`);
                 console.log(`Created At: ${createdAtDate}`);
