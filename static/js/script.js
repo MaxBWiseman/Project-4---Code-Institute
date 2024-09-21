@@ -167,11 +167,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function hideCreatedAtIfUpdated() {
         const comments = document.querySelectorAll("[id^='created-at-']");
+// Grabs all elements with an id starting with 'created-at-'. id^ means to
+// select all elements with an id that starts with the specified value
 
         comments.forEach(comment => {
+// Our iterator function
             const commentId = comment.id.split('-')[2];
+// We split the id of the comment to get the comment id, example: 'created-at-1'
             const createdAt = document.getElementById('created-at-' + commentId);
             const updatedAt = document.getElementById('updated-at-' + commentId);
-        })
+
+            if (updatedAt) {
+                const createdAtDate = Date(createdAt.textContent.trim());
+    // We convert the text content of the element to a date object, trimming any whitespace
+                const updatedAtDate = Date(updatedAt.textContent.replace('Edited: ', '').trim());
+
+                console.log(`Comment ID: ${commentId}`);
+                console.log(`Created At: ${createdAtDate}`);
+                console.log(`Updated At: ${updatedAtDate}`);
+// remove the 'Edited: ' text so a clear date can be parsed by the date constructor
+                if (createdAtDate.toDateString() !== updatedAtDate.toDateString()) {
+// Check if dates are not the same
+                    createdAt.style.display = 'none';
+// Hide the element if the dates are not the same for good UX
+                }
+            }
+        });
     }
-})
+    hideCreatedAtIfUpdated();
+});
