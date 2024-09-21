@@ -8,7 +8,7 @@ from django.views.generic import DetailView
 from django.views.generic.edit import DeleteView
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
-from .models import Post, Comment, Category  
+from .models import Post, Comment, Category, Vote
 from .forms import CommentForm, PostForm
 import json
 
@@ -47,7 +47,7 @@ def vote(request):
 # The post object is retrieved from the database using the post_id.
         user = request.user
         vote = post.votes.filter(user=user).first()
-# The vote object is retrieved from the database using the post and user.
+# The vote object is retrieved from the database using the post and user relationship.
         if vote:
             if vote.is_upvote == is_upvote:
                 vote.delete()
@@ -58,7 +58,7 @@ def vote(request):
 # If the vote exists and the is_upvote field is different from the request, the is_upvote field is updated.
         else:
             post.votes.create(user=user, is_upvote=is_upvote)
-# If the vote does not exist, a new vote object is created.
+# If the vote does not exist, a new vote is created with the user and is_upvote field.
         return JsonResponse({'success': True})
 # A JSON response is returned to indicate that the vote was successful.
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
@@ -113,8 +113,20 @@ def post_detail(request, slug):
     else:
         comment_form = CommentForm()
 # If there is no POST request, an empty comment form is created.
-    return render(request, 'post_hub/post_detail.html', {'post': post, 'comments': comments, 'comment_form': comment_form, 'allcomments': allcomments})
-# The post, comments, comment_form, and allcomments are passed to the template.
+    context = {
+    'post': post,
+    'comments': comments,
+    'comment_form': comment_form,
+    'allcomments': allcomments,
+    'total_upvotes': post.total_upvotes(),
+    'total_downvotes': post.total_downvotes(),
+    'comment_votes': {comment.id: {'upvotes': comment.totalUpvotes(),
+                                   'downvotes': comment.totalDownvotes()}
+                      for comment in allcomments}
+}
+    return render(request, 'post_hub/post_detail.html', context)
+# total_upvotes and total_downvotes are added to the context to display the total number of upvotes and downvotes for the post.
+# comment_votes is added to the context to display the total number of upvotes and downvotes for each comment using a dictionary comprehension.
 
 # Exempt view from cross sit request forgery protection
 def edit_comment(request, comment_id):

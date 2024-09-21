@@ -86,12 +86,19 @@ class Comment(MPTTModel):
     
     class MPTTMeta:
         order_insertion_by = ['created_at']
+        
+    def total_upvotes(self):
+        return self.votes.filter(is_upvote=True).count()
+    
+    def total_downvotes(self):
+        return self.votes.filter(is_upvote=False).count()
     
     def __str__(self):
         return f'Comment by {self.author} on {self.post}'
     
 class Vote(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='votes')
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='votes', null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='voter')
     is_upvote = models.BooleanField()
 # Vote model has a many to one relationship with the Post and User models,

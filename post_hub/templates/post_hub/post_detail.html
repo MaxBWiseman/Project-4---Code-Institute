@@ -17,6 +17,9 @@
     <span id="updated-at-{{ node.id}}">Edited: {{ node.updated_at|date:"Y-m-d H:i:s" }}<span>
     {% endif %}
     <p class="fw-lighter">Category: {{ post.category }}</p>
+    <p class="fw-lighter">Upvotes: {{ total_upvotes }}</p>
+    <p class="fw-lighter">Downvotes: {{ total_downvotes }}</p>
+    <button class="button" onclick="votePost({{ post.id }}, true)">Upvote</button> <button class="button" onclick="votePost({{ post.id }}, false)">Downvote</button>
 </div>
 </header>
 <section class="mb-5">
@@ -61,6 +64,10 @@
                     </form>
                 </div>
                 <hr />
+                <p> Upvotes : {{ commentvotes.node.id.upvotes }} </p>
+                <button class="button" onclick="voteComment({{ node.id }})">Upvote</button>
+                <button class="button" onclick="voteComment({{ node.id }})">Downvote</button>
+                <p> Downvotes : {{ commentvotes.node.id.downvotes }} </p>
                 {% if node.level < 3 %}
                 <button class="button" onclick="grabOne({{ node.id }})">Reply</button>
                 <!-- grabOne collects the assocoaited parent id of the comment so the comment reply knows what comment to call its parent,
