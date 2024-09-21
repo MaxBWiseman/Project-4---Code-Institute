@@ -87,9 +87,6 @@ class Comment(MPTTModel):
     class MPTTMeta:
         order_insertion_by = ['created_at']
     
-    def reply_count(self):
-        return self.get_children().count()
-
     def __str__(self):
         return f'Comment by {self.author} on {self.post}'
     

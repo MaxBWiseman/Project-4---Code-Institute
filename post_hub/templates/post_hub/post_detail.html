@@ -35,6 +35,7 @@
                 <div class="d-flex justify-content-between">
                     <span class="comment-author">By {{ node.author }} </span>
                     <div>{{ node.created_at }}</div>
+                    <div id="reply-count">Total Replies: {{ node.get_descendant_count }}</div>
                 </div>
                 <div id="comment-content-{{ node.id }}">{{ node.content }}</div>
                 <div id="edit-comment-{{ node.id }}" style="display: none;">
