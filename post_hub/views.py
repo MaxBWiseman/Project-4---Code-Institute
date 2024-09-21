@@ -34,7 +34,38 @@ class PostList(generic.ListView):
 # By overriding the get_context_data method, you can add the categories to the context in a more
 # standard and efficient way. This approach ensures that the categories are available in the template
 # without creating a separate method for retrieving category data.
- 
+
+@login_required
+def vote(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+# The data from the request is loaded into a JSON object.
+        post_id = data['post_id']   
+        is_upvote = data['is_upvote']
+# The post_id and is_upvote fields are retrieved from the JSON object.
+        post = get_object_or_404(Post, id=post_id)
+# The post object is retrieved from the database using the post_id.
+        user = request.user
+        vote = post.votes.filter(user=user).first()
+# The vote object is retrieved from the database using the post and user.
+        if vote:
+            if vote.is_upvote == is_upvote:
+                vote.delete()
+# If the vote exists and the is_upvote field is the same as the request, the vote is deleted.
+            else:
+                vote.is_upvote = is_upvote
+                vote.save()
+# If the vote exists and the is_upvote field is different from the request, the is_upvote field is updated.
+        else:
+            post.votes.create(user=user, is_upvote=is_upvote)
+# If the vote does not exist, a new vote object is created.
+        return JsonResponse({'success': True})
+# A JSON response is returned to indicate that the vote was successful.
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+# If the request method is not POST, a JSON response is returned to indicate that the request is invalid.
+
+
+
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug, status=True)
 # Grab all comments related to the post with status approved
