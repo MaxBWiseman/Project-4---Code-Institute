@@ -152,6 +152,44 @@ class PostDetailViewTest(TestCase):
         self.assertTemplateUsed(response, 'post_hub/post_detail.html')
         self.assertContains(response, self.post.title)
         self.assertContains(response, self.post.content)
+        
+        
+class CommentModelTest(TestCase):
+
+    def setUp(self):
+        # Create a user
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
+
+        # Create a category
+        self.category = Category.objects.create(category_name='Test Category')
+
+        # Create a post
+        self.post = Post.objects.create(
+            title='Test Post',
+            content='This is a test post.',
+            author=self.user,
+            category=self.category,
+            status=1
+        )
+
+        # Create a comment
+        self.comment = Comment.objects.create(
+            post=self.post,
+            author=self.user,
+            content='This is a test comment.',
+            status=True
+        )
+
+    def test_comment_creation(self):
+        # Test that the comment was created successfully
+        self.assertEqual(self.comment.content, 'This is a test comment.')
+        self.assertEqual(self.comment.author.username, 'testuser')
+        self.assertEqual(self.comment.post.title, 'Test Post')
+        self.assertTrue(self.comment.status)
+
+    def test_comment_str_method(self):
+        # Test the __str__ method of the Comment model
+        self.assertEqual(str(self.comment), f'Comment by {self.user} on {self.post}')
 
 
 # In Django forms, when you are dealing with model instances,
