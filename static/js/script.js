@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (createdAtDate.toDateString() !== updatedAtDate.toDateString()) {
 // Check if dates are not the same
                     createdAt.style.display = 'none';
-// Hide the element if the dates are not the same for good UX
+// Hide the created at date if the comment has been updated for good UX
                 }
             }
         });

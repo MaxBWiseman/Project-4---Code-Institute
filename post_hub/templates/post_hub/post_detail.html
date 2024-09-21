@@ -34,11 +34,11 @@
             <div id="comment-{{ node.id }}" class="my-2 p-2" style="border: 1px solid grey">
                 <div class="d-flex justify-content-between">
                     <span class="comment-author">By {{ node.author }} </span>
-                    <div><span id="created-at-{{ node.id }}">{{ node.created_at }}</span>
+                    <div><span id="created-at-{{ node.id }}">{{ node.created_at|date:"Y-m-d H:i:s" }}</span>
                     {% if node.updated_at and node.updated_at.date != node.created_at.date %}
             <!-- Displays only if updated_at and created_at become different as they are both set the same
              creation date-->
-                    <span id="updated-at-{{ node.id}}">Edited: {{ node.updated_at }}<span>
+                    <span id="updated-at-{{ node.id}}">Edited: {{ node.updated_at|date:"Y-m-d H:i:s" }}<span>
                     {% endif %}
                     </div>
                     <div id="reply-count">Total Replies: {{ node.get_descendant_count }}</div>
