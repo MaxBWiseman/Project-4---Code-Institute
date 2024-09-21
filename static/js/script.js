@@ -162,3 +162,16 @@ function deleteComment(commentId) {
         }
     });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    function hideCreatedAtIfUpdated() {
+        const comments = document.querySelectorAll("[id^='created-at-']");
+
+        comments.forEach(comment => {
+            const commentId = comment.id.split('-')[2];
+            const createdAt = document.getElementById('created-at-' + commentId);
+            const updatedAt = document.getElementById('updated-at-' + commentId);
+        })
+    }
+})

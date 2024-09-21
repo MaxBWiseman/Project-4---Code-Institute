@@ -36,6 +36,8 @@
                     <span class="comment-author">By {{ node.author }} </span>
                     <div><span id="created-at-{{ node.id }}">{{ node.created_at }}</span>
                     {% if node.updated_at and node.updated_at.date != node.created_at.date %}
+            <!-- Displays only if updated_at and created_at become different as they are both set the same
+             creation date-->
                     <span id="updated-at-{{ node.id}}">Edited: {{ node.updated_at }}<span>
                     {% endif %}
                     </div>
