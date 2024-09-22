@@ -10,4 +10,5 @@ urlpatterns = [
     path('post/<slug:slug>/', views.post_detail, name='post_detail'),
     path('categories/', views.category_list, name='category_list'),
     path('category/<slug:slug>/', CategoryDetailView.as_view(), name='category_detail'),
+    path('vote/', views.vote, name='vote'),
 ]

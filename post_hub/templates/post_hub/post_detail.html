@@ -19,7 +19,8 @@
     <p class="fw-lighter">Category: {{ post.category }}</p>
     <p class="fw-lighter">Upvotes: {{ total_upvotes }}</p>
     <p class="fw-lighter">Downvotes: {{ total_downvotes }}</p>
-    <button class="button" onclick="votePost({{ post.id }}, true)">Upvote</button> <button class="button" onclick="votePost({{ post.id }}, false)">Downvote</button>
+    <button class="button" onclick="votePost({{ post.id }}, true)">Upvote</button>
+    <button class="button" onclick="votePost({{ post.id }}, false)">Downvote</button>
 </div>
 </header>
 <section class="mb-5">
@@ -65,8 +66,8 @@
                 </div>
                 <hr />
                 <p> Upvotes : {{ commentvotes.node.id.upvotes }} </p>
-                <button class="button" onclick="voteComment({{ node.id }})">Upvote</button>
-                <button class="button" onclick="voteComment({{ node.id }})">Downvote</button>
+                <button class="button" onclick="voteComment({{ node.id }}), true">Upvote</button>
+                <button class="button" onclick="voteComment({{ node.id }}), false">Downvote</button>
                 <p> Downvotes : {{ commentvotes.node.id.downvotes }} </p>
                 {% if node.level < 3 %}
                 <button class="button" onclick="grabOne({{ node.id }})">Reply</button>
