@@ -65,10 +65,10 @@
                     </form>
                 </div>
                 <hr />
-                <p> Upvotes : {{ commentvotes.node.id.upvotes }} </p>
+                <p> Upvotes : {{ node.total_upvotes }} </p>
                 <button class="button" onclick="voteComment({{ node.id }}, true)">Upvote</button>
                 <button class="button" onclick="voteComment({{ node.id }}, false)">Downvote</button>
-                <p> Downvotes : {{ commentvotes.node.id.downvotes }} </p>
+                <p> Downvotes : {{ node.total_downvotes }} </p>
                 {% if node.level < 3 %}
                 <button class="button" onclick="grabOne({{ node.id }})">Reply</button>
                 <!-- grabOne collects the assocoaited parent id of the comment so the comment reply knows what comment to call its parent,
