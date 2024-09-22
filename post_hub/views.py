@@ -40,11 +40,12 @@ def vote(request):
     if request.method == 'POST':
         data = json.loads(request.body)
 # The data from the request is loaded into a JSON object.
-        post_id = data['post_id']
+        post_id = data.get('post_id')
         comment_id = data.get('comment_id')
-        is_upvote = data['is_upvote']
+        is_upvote = data.get('is_upvote')
 # post_id, comment_id, and is_upvote are retrieved from the JSON object.
 # comment_id is retrieved using the get method to handle when the request isnt for a comment.
+# updated all to .get to avoid keyError
         user = request.user
 # I have learnt that json formats are very easy to work with in AJAX requests.
         if post_id:
