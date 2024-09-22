@@ -27,6 +27,7 @@
                                 {% endif %}
                                 <div class="image-flash">
                                     <p class="author ms-1">Author: {{ post.author }}</p>
+                                   
                                 </div>
                             </div>
                             <a href="{% url 'post_detail' post.slug %}" class="post-link">
@@ -41,7 +42,7 @@
                             <p class="card-subtitle ms-1">{{ post.blurb|truncatewords:30 }}</p>
                             <hr />
                             <p class="card-text text-muted h6 ms-4 mb-2 phone-center">
-                                {{ post.created_at|date:"F d, Y" }}</p>
+                                {{ post.created_at|date:"F d, Y" }}  | Upvotes: {{ post.total_upvotes }} | Downvotes: {{ post.total_downvotes }}</p>
                         </div>
                     </div>
                 </div>
