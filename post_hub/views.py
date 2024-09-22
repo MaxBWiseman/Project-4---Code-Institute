@@ -37,6 +37,11 @@ class PostList(generic.ListView):
 
 @login_required
 def vote(request):
+    """
+     This view function interacts with the Vote model to create, update, or delete
+     vote records in the database based on the data received from the AJAX requests in script.js
+     linked with the urls.py file.
+    """
     if request.method == 'POST':
         data = json.loads(request.body)
 # The data from the request is loaded into a JSON object.

@@ -97,7 +97,7 @@ class Comment(MPTTModel):
         return f'Comment by {self.author} on {self.post}'
     
 class Vote(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='votes')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='votes', null=True, blank=True)
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='votes', null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='voter')
     is_upvote = models.BooleanField()
