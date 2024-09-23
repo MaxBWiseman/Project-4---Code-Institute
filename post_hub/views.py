@@ -45,17 +45,17 @@ def vote(request):
     """
     if request.method == 'POST':
         data = json.loads(request.body)
-        # The data from the request is loaded into a JSON object.
+# The data from the request is loaded into a JSON object.
         post_id = data.get('post_id')
         comment_id = data.get('comment_id')
         is_upvote = data.get('is_upvote')
-        # post_id, comment_id, and is_upvote are retrieved from the JSON object.
-        # comment_id is retrieved using the get method to handle when the request isnt for a comment.
-        # updated all to .get to avoid keyError
+# post_id, comment_id, and is_upvote are retrieved from the JSON object.
+# comment_id is retrieved using the get method to handle when the request isnt for a comment.
+# updated all to .get to avoid keyError
         if is_upvote is None:
             messages.error(request, 'A vote choice is required')
             return JsonResponse({'success': False})
-        # If is_upvote is not provided, a JSON response is returned to indicate that the request has failed.
+# If is_upvote is not provided, a JSON response is returned to indicate that the request has failed.
         user = request.user
         try:
             with transaction.atomic():
@@ -65,42 +65,42 @@ def vote(request):
 # I learned of this here when browsing for ways to make sure votes are not placed multiple times
 # https://dev.to/rockandnull/atomic-transactions-in-django-19m5
                 if post_id:
-                    # If post_id exists, the vote is for a post.
+# If post_id exists, the vote is for a post.
                     post = get_object_or_404(Post, id=post_id)
-                    # The post object to associate with is retrieved from the database using the post_id.
+# The post object to associate with is retrieved from the database using the post_id.
                     vote = post.votes.filter(user=user).first()
-                    # The vote object is retrieved from the database using the post_id.
-                    # The first method is used to retrieve the first vote object for the user
-                    # because there should only be one vote per user.
+# The vote object is retrieved from the database using the post_id.
+# The first method is used to retrieve the first vote object for the user
+# because there should only be one vote per user.
                 elif comment_id:
-                    # If comment_id exists, the vote is for a comment.
-                    comment = get_object_or_404(Comment, id=comment_id)
+# If comment_id exists, the vote is for a comment.
+                    comment = get_object_or_404(Comment, id=comment)
                     vote = comment.votes.filter(user=user).first()
-                    # The vote object is retrieved from the database using the comment_id.
+# The vote object is retrieved from the database using the comment_id.
                 else:
                     messages.error(request, 'Invalid request')
                     return JsonResponse({'success': False})
-                # If neither post_id nor comment_id exists, a JSON response is returned to indicate that the request has failed.
+# If neither post_id nor comment_id exists, a JSON response is returned to indicate that the request has failed.
 
                 if vote:
-                    # The vote we grabbed above
+# The vote we grabbed above
                     if vote.is_upvote == is_upvote:
                         vote.delete()
-                        # If the vote exists and the is_upvote field is the same as the request, the vote is deleted.
+# If the vote exists and the is_upvote field is the same as the request, the vote is deleted.
                     else:
                         vote.is_upvote = is_upvote
                         vote.save()
-                        # If the vote exists and the is_upvote field is different from the request, the is_upvote field is updated.
-                        # This is for if the user wants to change their vote.
+# If the vote exists and the is_upvote field is different from the request, the is_upvote field is updated.
+# This is for if the user wants to change their vote.
                 else:
                     if post_id:
                         post.votes.create(user=user, is_upvote=is_upvote)
-                        # If the vote does not exist, a new vote is created with the user and is_upvote field.
+# If the vote does not exist, a new vote is created with the user and is_upvote field.
                     elif comment_id:
                         comment.votes.create(user=user, is_upvote=is_upvote)
-                        # .create() is a great way to create a new object and save it to the database in one step.
-                        # The new vote object is saved to the database with the user and is_upvote values.
-                        # https://stackoverflow.com/questions/54493476/how-to-save-object-in-django-database
+# .create() is a great way to create a new object and save it to the database in one step.
+# The new vote object is saved to the database with the user and is_upvote values.
+# https://stackoverflow.com/questions/54493476/how-to-save-object-in-django-database
             messages.success(request, 'Your vote has been recorded.')
             return JsonResponse({'success': True})
         except IntegrityError:
@@ -118,7 +118,6 @@ def vote(request):
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug, status=True)
 # Grab all comments related to the post with status approved
-
     allcomments = post.comments.filter(status=True)
 # The comments are filtered to only include approved comments.
 # "comments" is the related name of the ForeignKey in the Comment model.
@@ -143,37 +142,35 @@ def post_detail(request, slug):
             messages.error(request, 'You must be logged in to post a comment.')
             return redirect('account_login')
         comment_form = CommentForm(request.POST)
-        # The data from the form is retrieved and stored in the comment_form variable.
+# The data from the form is retrieved and stored in the comment_form variable.
         if comment_form.is_valid():
             try:
                 with transaction.atomic():
 # I have learned above that transaction.atomic() is great to keep the database in a consistent state.
 # The method is used to ensure that either all of the code encapsulated in this view succeeds or none of it does.
                     user_comment = comment_form.save(commit=False)
-                    # The comment is saved to the database but not committed.
-                    # so we may manipulate the comment before saving it to the database
+# The comment is saved to the database but not committed.
+# so we may manipulate the comment before saving it to the database
                     user_comment.post = post
-                    # This is to associate the comment with the post.
+# This is to associate the comment with the post.
                     user_comment.author = request.user
-                    # This is to associate the comment with the user that posted it.
+# This is to associate the comment with the user that posted it.
                     user_comment.save()
                     messages.success(request, 'Your comment has been posted successfully!')
                     return HttpResponseRedirect(reverse('post_detail', args=[post.slug]) + '?comment_posted=true#comments-section')
-                    # The user is redirected to the same page their comment is posted with a query parameter to indicate that the
-                    # screen should scroll to the comment section for good user experience. The + '?comment_posted=true#comments-section' is added to the URL.
-                    # If it exists, the page will scroll to the comments section when the page is loaded through "script.js".
-                    # the question mark is used to add a query parameter to the URL.
+# The user is redirected to the same page their comment is posted with a query parameter to indicate that the
+# screen should scroll to the comment section for good user experience. The + '?comment_posted=true#comments-section' is added to the URL.
+# If it exists, the page will scroll to the comments section when the page is loaded through "script.js".
+# the question mark is used to add a query parameter to the URL.
             except IntegrityError:
 # This exception comes from transaction.atomic() and is raised when there is an integrity error in the database.
                 messages.error(request, 'There was an error posting your comment. Please try again.')
                 return HttpResponseRedirect(reverse('post_detail', args=[post.slug]))
-        else:
-            messages.error(request, 'There was an error posting your comment. Please try again.')
-            return HttpResponseRedirect(reverse('post_detail', args=[post.slug]))
-#We use args to pass the slug of the post to the URL pattern. To redirect to the correct post detail page.
+# The user is redirected to the post detail page with an error message if there is an integrity error
     else:
         comment_form = CommentForm()
 # If there is no POST request, an empty comment form is created.
+
     context = {
         'post': post,
         'comments': comments,
@@ -195,15 +192,15 @@ def edit_comment(request, comment_id):
             with transaction.atomic():
 # The transaction.atomic() method is used to ensure that either all of the code in this view succeeds or none of it does.
                 comment = Comment.objects.get(id=comment_id, author=request.user)
-                # The comment the user is trying to edit is retrieved from the database.
+# The comment the user is trying to edit is retrieved from the database.
                 data = json.loads(request.body)
-                # The data from the request is loaded into a JSON object.
+# The data from the request is loaded into a JSON object.
                 comment.content = data['content']
-                # Comment content is updated with the new content from the request.
+# Comment content is updated with the new content from the request.
                 comment.save()
                 messages.success(request, 'Your comment has been updated.')
                 return JsonResponse({'success': True})
-                # A JSON response is returned to indicate that the comment was updated successfully.
+# A JSON response is returned to indicate that the comment was updated successfully.
         except Comment.DoesNotExist:
             messages.error(request, 'Comment not found or not authorized')
             return JsonResponse({'success': False})
@@ -235,8 +232,8 @@ class DeleteComment(DeleteView):
 def create_post(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
-        # The data from the form is retrieved and stored in the form variable.
-        # The request.FILES attribute is used to handle image uploads.
+# The data from the form is retrieved and stored in the form variable.
+# The request.FILES attribute is used to handle image uploads.
         
         if form.is_valid():
             post = form.save(commit=False)
@@ -256,14 +253,14 @@ def create_post(request):
             post.save()
             messages.success(request, 'Your post has been tooted out successfully!')
             return redirect('post_detail', slug=post.slug)
-            # The user is redirected to the post detail page for the newly created post.
+# The user is redirected to the post detail page for the newly created post.
         else:
             messages.error(request, 'There was an error creating your post. Please try again.')
-            # If the form is not valid, an error message is displayed to the user.
+# If the form is not valid, an error message is displayed to the user.
             return redirect('create_post')
     else:
         form = PostForm()
-        # If there is no POST request, an empty form is created.
+# If there is no POST request, an empty form is created.
     return render(request, 'post_hub/create_post.html', {'form': form})
 
     
