@@ -209,6 +209,7 @@ class VoteFunctionalityTest(TestCase):
         self.client = Client()
         self.user = User.objects.create_user(username='testuser', password='12345') 
         self.category = Category.objects.create(category_name='test category')
+        self.author = User.objects.create_user(username='author', password='12345')
         self.post = Post.objects.create(title='Test Post', blurb='Test Blurb', content='Test Content', category=self.category, author=self.author)
         self.comment = Comment.objects.create(post=self.post, author=self.user, content='Test Comment')
         self.client.login(username='testuser', password='12345')
@@ -220,6 +221,33 @@ class VoteFunctionalityTest(TestCase):
             'is_upvote': True
         }
         
-        response = self.client.post(url, data=json.dumps(data), content_type='application/json')
+        json_data = json.dumps(data)
         # json.dumps() is used to convert a python dictionary to a JSON string.
+        
+        response = self.client.post(url, data=json_data, content_type='application/json')
         self.assertEqual(response.status_code, 200)
+        self.assertTrue(Vote.objects.filter(post=self.post, user=self.user).exists())
+        # Check if the vote was created successfully
+        
+        response = self.client.post(url, data=json.dumps(data), content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Vote.objects.filter(post=self.post, user=self.user).exists())
+        # Check if the vote was deleted successfully, this works as the view functionality
+        # is set to delete the vote if it already exists in the same vote category
+        
+    def test_vote_comment(self):
+        url = reverse('vote')
+        data = {
+            'comment_id': self.comment.id,
+            'is_upvote': True
+        }
+        
+        json_data = json.dumps(data)
+        
+        response = self.client.post(url, data=json_data, content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(Vote.objects.filter(comment=self.comment, user=self.user).exists())
+        
+        response = self.client.post(url, data=json.dumps(data), content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Vote.objects.filter(comment=self.comment, user=self.user).exists())

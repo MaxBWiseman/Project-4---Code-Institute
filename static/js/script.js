@@ -251,13 +251,3 @@ function voteComment(commentId, isUpvote) {
         }
     });
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-// The URLSearchParams object is a way to grab the URL and search for specific parameters
-    if (urlParams.has('comment_posted') && window.location.hash === '#comments-section') {
-// We check if the URL has the parameter 'comment_posted' and if the hash is '#comments-section'
-        document.getElementById('comments-section').scrollIntoView();
-// If so, we know the user has just posted a comment, so scroll to the comments section
-    }
-});
