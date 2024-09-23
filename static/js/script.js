@@ -181,10 +181,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const createdAtDate = new Date(createdAt.textContent.trim());
     // We convert the text content of the element to a date object, trimming any whitespace
                 const updatedAtDate = new Date(updatedAt.textContent.replace('Edited: ', '').trim());
-
-                console.log(`Comment ID: ${commentId}`);
-                console.log(`Created At: ${createdAtDate}`);
-                console.log(`Updated At: ${updatedAtDate}`);
 // remove the 'Edited: ' text so a clear date can be parsed by the date constructor
                 if (createdAtDate.toDateString() !== updatedAtDate.toDateString()) {
 // Check if dates are not the same

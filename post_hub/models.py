@@ -104,8 +104,13 @@ class Vote(models.Model):
 # Vote model has a many to one relationship with the Post and User models,
 # this is to store the votes of the users on the posts.
     
+    class Meta:
+        unique_together = (('user', 'post'), ('user', 'comment'))
+# I learned that unique_together is a class Meta option, this is used to ensure that the combination of the user and post
+# or the user and comment is unique. This is to help prevent a user from voting on a post or comment more than once.
+    
     def __str__(self):
-        return self.post.title
+        return f"Vote by {self.user} on {self.post or self.comment}"
     
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_profile')

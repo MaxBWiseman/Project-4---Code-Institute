@@ -72,7 +72,7 @@ class PostForm(forms.ModelForm):
         new_category_name = self.cleaned_data.get('new_category')
 # I used the get method to get the value of the new_category field from the cleaned_data dictionary.
         if new_category_name:
-            category = Category.objects.get_or_create(category_name=new_category_name)
+            category, created = Category.objects.get_or_create(category_name=new_category_name)
 # get_or_create is a method that tries to get a Category object with the specified category_name.
 # If the Category object does not exist, it creates a new one, if it does, it returns the existing one.
             post.category = category

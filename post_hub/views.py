@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponseRedirect
+from django.db import IntegrityError, transaction
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -38,61 +39,77 @@ class PostList(generic.ListView):
 @login_required
 def vote(request):
     """
-     This view function interacts with the Vote model to create, update, or delete
-     vote records in the database based on the data received from the AJAX requests in script.js
-     linked with the urls.py file.
+    This view function interacts with the Vote model to create, update, or delete
+    vote records in the database based on the data received from the AJAX requests in script.js
+    linked with the urls.py file.
     """
     if request.method == 'POST':
         data = json.loads(request.body)
-# The data from the request is loaded into a JSON object.
+        # The data from the request is loaded into a JSON object.
         post_id = data.get('post_id')
         comment_id = data.get('comment_id')
         is_upvote = data.get('is_upvote')
-# post_id, comment_id, and is_upvote are retrieved from the JSON object.
-# comment_id is retrieved using the get method to handle when the request isnt for a comment.
-# updated all to .get to avoid keyError
+        # post_id, comment_id, and is_upvote are retrieved from the JSON object.
+        # comment_id is retrieved using the get method to handle when the request isnt for a comment.
+        # updated all to .get to avoid keyError
+        if is_upvote is None:
+            messages.error(request, 'A vote choice is required')
+            return JsonResponse({'success': False})
+        # If is_upvote is not provided, a JSON response is returned to indicate that the request has failed.
         user = request.user
-# I have learnt that json formats are very easy to work with in AJAX requests.
-        if post_id:
-# If post_id exists, the vote is for a post.
-            post = get_object_or_404(Post, id=post_id)
-# The post object to associate with is retrieved from the database using the post_id.
-            vote = post.votes.filter(user=user).first()
-# The vote object is retrieved from the database using the post_id.
-# The first method is used to retrieve the first vote object for the user
-# because there should only be one vote per user.
-        elif comment_id:
-# If comment_id exists, the vote is for a comment.
-            comment = get_object_or_404(Comment, id=comment_id)
-            vote = comment.votes.filter(user=user).first()
-# The vote object is retrieved from the database using the comment_id.
-        else:
-            return JsonResponse({'success': False, 'error': 'Invalid request'})
-# If neither post_id nor comment_id exists, a JSON response is returned to indicate that the request has failed.
+        try:
+            with transaction.atomic():
+# The transaction.atomic() method is used to ensure that either all of the code in this view succeeds or none of it does.
+# This ensures that all operations are either committed or rolled back together. If an error occurs during the view function,
+# the transaction is rolled back and the database is restored to its previous state. This ensures data integrity.
+                if post_id:
+                    # If post_id exists, the vote is for a post.
+                    post = get_object_or_404(Post, id=post_id)
+                    # The post object to associate with is retrieved from the database using the post_id.
+                    vote = post.votes.filter(user=user).first()
+                    # The vote object is retrieved from the database using the post_id.
+                    # The first method is used to retrieve the first vote object for the user
+                    # because there should only be one vote per user.
+                elif comment_id:
+                    # If comment_id exists, the vote is for a comment.
+                    comment = get_object_or_404(Comment, id=comment_id)
+                    vote = comment.votes.filter(user=user).first()
+                    # The vote object is retrieved from the database using the comment_id.
+                else:
+                    messages.error(request, 'Invalid request')
+                    return JsonResponse({'success': False})
+                # If neither post_id nor comment_id exists, a JSON response is returned to indicate that the request has failed.
 
-        if vote:
-# The vote we grabbed above
-            if vote.is_upvote == is_upvote:
-                vote.delete()
-# If the vote exists and the is_upvote field is the same as the request, the vote is deleted.
-            else:
-                vote.is_upvote = is_upvote
-                vote.save()
-# If the vote exists and the is_upvote field is different from the request, the is_upvote field is updated.
-# This is for if the user wants to change their vote.
-        else:
-            if post_id:
-                post.votes.create(user=user, is_upvote=is_upvote)
-# If the vote does not exist, a new vote is created with the user and is_upvote field.
-            elif comment_id:
-                comment.votes.create(user=user, is_upvote=is_upvote)
-# .create() is a great way to create a new object and save it to the database in one step.
-# The new vote object is saved to the database with the user and is_upvote values.
-# https://stackoverflow.com/questions/54493476/how-to-save-object-in-django-database
-        return JsonResponse({'success': True})
-# A JSON response is returned to indicate that the vote was successful.
-    return JsonResponse({'success': False, 'error': 'Invalid request method'})
-# If the request method is not POST, a JSON response is returned to indicate that the request is invalid.
+                if vote:
+                    # The vote we grabbed above
+                    if vote.is_upvote == is_upvote:
+                        vote.delete()
+                        # If the vote exists and the is_upvote field is the same as the request, the vote is deleted.
+                    else:
+                        vote.is_upvote = is_upvote
+                        vote.save()
+                        # If the vote exists and the is_upvote field is different from the request, the is_upvote field is updated.
+                        # This is for if the user wants to change their vote.
+                else:
+                    if post_id:
+                        post.votes.create(user=user, is_upvote=is_upvote)
+                        # If the vote does not exist, a new vote is created with the user and is_upvote field.
+                    elif comment_id:
+                        comment.votes.create(user=user, is_upvote=is_upvote)
+                        # .create() is a great way to create a new object and save it to the database in one step.
+                        # The new vote object is saved to the database with the user and is_upvote values.
+                        # https://stackoverflow.com/questions/54493476/how-to-save-object-in-django-database
+            messages.success(request, 'Your vote has been recorded.')
+            return JsonResponse({'success': True})
+        except IntegrityError:
+            messages.error(request, 'You have already voted on this item.')
+            return JsonResponse({'success': False})
+        except Exception as e:
+            messages.error(request, str(e))
+            return JsonResponse({'success': False})
+
+    messages.error(request, 'Invalid request method')
+    return JsonResponse({'success': False})
 
 
 
@@ -169,11 +186,14 @@ def edit_comment(request, comment_id):
             comment.content = data['content']
 # Comment content is updated with the new content from the request.
             comment.save()
+            messages.success(request, 'Your comment has been updated.')
             return JsonResponse({'success': True})
 # A JSON response is returned to indicate that the comment was updated successfully.
         except Comment.DoesNotExist:
-            return JsonResponse({'success': False, 'error': 'Comment not found or not authorized'})
-    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+            messages.error(request, 'Comment not found or not authorized')
+            return JsonResponse({'success': False})
+    messages.error(request, 'Invalid request method')
+    return JsonResponse({'success': False})
 # If the request method is not POST, a JSON response is returned to indicate that the request is invalid.
 # I chose to use JSON responses for this view because it is an AJAX request and JSON is a common format for AJAX responses.
 
