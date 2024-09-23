@@ -256,4 +256,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    document.querySelectorAll('.vote-post-button').forEach(button => {
+// We use querySelectorAll to grab all elements with the class 'vote-post-button' and iterate with forEach
+// We then use an arrow function and attach an event listener to each button iterated.
+        button.onclick = function() {
+            const postId = button.dataset.postId;
+// We use the dataset property to grab the data-post-id attribute from the button
+            votePost(postId, isUpvote);
+        };
+    });
+    document.querySelectorAll('.vote-comment-button').forEach(button => {
+        button.onclick = function() {
+            const commentId = button.dataset.commentId;
+            voteComment(commentId, isUpvote);
+        };
+    });
 });
