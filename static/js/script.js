@@ -196,79 +196,62 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     hideCreatedAtIfUpdated();
 });
-document.addEventListener('DOMContentLoaded', function() {
     
-    function votePost(postId, isUpvote) {
-        const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+function votePost(postId, isUpvote) {
+    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 // Easily grab the CSRF token from the form
-        fetch('/vote/', {
+    fetch('/vote/', {
 // sends a POST request to the /vote/ URL with the post_id and is_upvote
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken,
-            },
-            body: JSON.stringify({
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken,
+        },
+        body: JSON.stringify({
 // We use JSON.stringify to convert the data to a JSON string because fetch only accepts strings
-                post_id: postId,
-                is_upvote: isUpvote
-            })
+            post_id: postId,
+            is_upvote: isUpvote
         })
-        .then(response => response.json())
+    })
+    .then(response => response.json())
 // we use the .then method to handle the response from the server and turn to a JSON object
 // the fetch request returns a promise that turns into the response object
-        .then(data => {
+    .then(data => {
 // data comes out as JSON and we can use it to update the page
-            if (data.success) {
-                location.reload();
+        if (data.success) {
+            location.reload();
 // I have only learnt of the reload method today and it is very useful
 // https://stackoverflow.com/questions/3715047/how-to-reload-a-page-using-javascript
-            } else {
-                alert('Error voting on post');
-            }
-        });
-    }
+        } else {
+            alert('Error voting on post');
+        }
+    });
+}
 
 // AJAX requests are easy to use and prepare when used a couple times. They send a POST request to their
 // associated URL (/vote/) with the relavant data, the view processes the data and sends a response
 // back to javascript as "response" this is our first promise, we then turn this into JSON object.
 // Our second promise then uses the response to update the page
 
-    function voteComment(commentId, isUpvote) {
-        const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-        fetch('/vote/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
-            },
-            body: JSON.stringify({
-                comment_id: commentId,
-                is_upvote: isUpvote
-            })
+function voteComment(commentId, isUpvote) {
+    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+    fetch('/vote/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify({
+            comment_id: commentId,
+            is_upvote: isUpvote
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                location.reload();
-            } else {
-                alert('Error voting on comment');
-            }
-        });
-    }
-    document.querySelectorAll('.vote-post-button').forEach(button => {
-// We use querySelectorAll to grab all elements with the class 'vote-post-button' and iterate with forEach
-// We then use an arrow function and attach an event listener to each button iterated.
-        button.onclick = function() {
-            const postId = button.dataset.postId;
-// We use the dataset property to grab the data-post-id attribute from the button
-            votePost(postId, isUpvote);
-        };
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Error voting on comment');
+        }
     });
-    document.querySelectorAll('.vote-comment-button').forEach(button => {
-        button.onclick = function() {
-            const commentId = button.dataset.commentId;
-            voteComment(commentId, isUpvote);
-        };
-    });
-});
+}
