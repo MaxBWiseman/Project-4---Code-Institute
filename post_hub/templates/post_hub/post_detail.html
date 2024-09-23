@@ -39,6 +39,7 @@
         {% load mptt_tags %}
 
         <div>
+            <a id="comments-section"></a>
             {% recursetree comments %}
             <div id="comment-{{ node.id }}" class="my-2 p-2" style="border: 1px solid grey">
                 <div class="d-flex justify-content-between">

@@ -59,9 +59,11 @@ def vote(request):
         user = request.user
         try:
             with transaction.atomic():
-# The transaction.atomic() method is used to ensure that either all of the code in this view succeeds or none of it does.
+# The transaction.atomic() method is used to ensure that either all of the code encapsulated in this view succeeds or none of it does.
 # This ensures that all operations are either committed or rolled back together. If an error occurs during the view function,
 # the transaction is rolled back and the database is restored to its previous state. This ensures data integrity.
+# I learned of this here when browsing for ways to make sure votes are not placed multiple times
+# https://dev.to/rockandnull/atomic-transactions-in-django-19m5
                 if post_id:
                     # If post_id exists, the vote is for a post.
                     post = get_object_or_404(Post, id=post_id)
@@ -141,18 +143,30 @@ def post_detail(request, slug):
             messages.error(request, 'You must be logged in to post a comment.')
             return redirect('account_login')
         comment_form = CommentForm(request.POST)
-# The data from the form is retrieved and stored in the comment_form variable.
+        # The data from the form is retrieved and stored in the comment_form variable.
         if comment_form.is_valid():
-            user_comment = comment_form.save(commit=False)
-# The comment is saved to the database but not committed.
-# so we may manipulate the comment before saving it to the database
-            user_comment.post = post
-# This is to associate the comment with the post.
-            user_comment.author = request.user
-# This is to associate the comment with the user that posted it.
-            user_comment.save()
-            messages.success(request, 'Your comment has been posted successfully!')
-            return HttpResponseRedirect(reverse('post_detail', args=[post.slug]))
+            try:
+                with transaction.atomic():
+# I have learned above that transaction.atomic() is great to keep the database in a consistent state.
+# The method is used to ensure that either all of the code encapsulated in this view succeeds or none of it does.
+                    user_comment = comment_form.save(commit=False)
+                    # The comment is saved to the database but not committed.
+                    # so we may manipulate the comment before saving it to the database
+                    user_comment.post = post
+                    # This is to associate the comment with the post.
+                    user_comment.author = request.user
+                    # This is to associate the comment with the user that posted it.
+                    user_comment.save()
+                    messages.success(request, 'Your comment has been posted successfully!')
+                    return HttpResponseRedirect(reverse('post_detail', args=[post.slug]) + '?comment_posted=true#comments-section')
+                    # The user is redirected to the same page their comment is posted with a query parameter to indicate that the
+                    # screen should scroll to the comment section for good user experience. The + '?comment_posted=true#comments-section' is added to the URL.
+                    # If it exists, the page will scroll to the comments section when the page is loaded through "script.js".
+                    # the question mark is used to add a query parameter to the URL.
+            except IntegrityError:
+# This exception comes from transaction.atomic() and is raised when there is an integrity error in the database.
+                messages.error(request, 'There was an error posting your comment. Please try again.')
+                return HttpResponseRedirect(reverse('post_detail', args=[post.slug]))
         else:
             messages.error(request, 'There was an error posting your comment. Please try again.')
             return HttpResponseRedirect(reverse('post_detail', args=[post.slug]))
@@ -161,34 +175,35 @@ def post_detail(request, slug):
         comment_form = CommentForm()
 # If there is no POST request, an empty comment form is created.
     context = {
-    'post': post,
-    'comments': comments,
-    'comment_form': comment_form,
-    'allcomments': allcomments,
-    'total_upvotes': post.total_upvotes(),
-    'total_downvotes': post.total_downvotes(),
-    'comment_votes': {comment.id: {'upvotes': comment.total_upvotes(),
-                                   'downvotes': comment.total_downvotes()}
-                      for comment in allcomments}
-}
+        'post': post,
+        'comments': comments,
+        'comment_form': comment_form,
+        'allcomments': allcomments,
+        'total_upvotes': post.total_upvotes(),
+        'total_downvotes': post.total_downvotes(),
+        'comment_votes': {comment.id: {'upvotes': comment.total_upvotes(),
+                                       'downvotes': comment.total_downvotes()}
+                          for comment in allcomments}
+    }
     return render(request, 'post_hub/post_detail.html', context)
 # total_upvotes and total_downvotes are added to the context to display the total number of upvotes and downvotes for the post.
 # comment_votes is added to the context to display the total number of upvotes and downvotes for each comment using a dictionary comprehension.
 
-# Exempt view from cross sit request forgery protection
 def edit_comment(request, comment_id):
     if request.method == 'POST':
         try:
-            comment = Comment.objects.get(id=comment_id, author=request.user)
-# The comment the user is trying to edit is retrieved from the database.
-            data = json.loads(request.body)
-# The data from the request is loaded into a JSON object.
-            comment.content = data['content']
-# Comment content is updated with the new content from the request.
-            comment.save()
-            messages.success(request, 'Your comment has been updated.')
-            return JsonResponse({'success': True})
-# A JSON response is returned to indicate that the comment was updated successfully.
+            with transaction.atomic():
+# The transaction.atomic() method is used to ensure that either all of the code in this view succeeds or none of it does.
+                comment = Comment.objects.get(id=comment_id, author=request.user)
+                # The comment the user is trying to edit is retrieved from the database.
+                data = json.loads(request.body)
+                # The data from the request is loaded into a JSON object.
+                comment.content = data['content']
+                # Comment content is updated with the new content from the request.
+                comment.save()
+                messages.success(request, 'Your comment has been updated.')
+                return JsonResponse({'success': True})
+                # A JSON response is returned to indicate that the comment was updated successfully.
         except Comment.DoesNotExist:
             messages.error(request, 'Comment not found or not authorized')
             return JsonResponse({'success': False})
