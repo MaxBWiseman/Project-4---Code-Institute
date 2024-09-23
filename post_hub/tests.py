@@ -2,7 +2,8 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
 from .forms import PostForm, CommentForm
-from .models import Comment, Post, Category
+from .models import Comment, Post, Category, Vote
+import json
 
 class PostFormTest4SpellChecker(TestCase):
     def test_spell_checker(self):
@@ -197,9 +198,28 @@ class CommentModelTest(TestCase):
 # rather than the objects themselves. This is because the form expects
 # the ID to associate the form data with the correct database records.
 
-# ALL UNITTEST IS BROKEN DUE TO THIS ERROR = 
+# FIXED - ALL UNITTEST IS BROKEN DUE TO THIS ERROR = 
 # gitpod /workspace/Project-4---Code-Institute (main) $ $ pyth manage.py test
 # Found 8 test(s).
 # Creating test database for alias 'default'...
 # Got an error creating the test database: permission denied to create database
+
+class VoteFunctionalityTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(username='testuser', password='12345') 
+        self.category = Category.objects.create(category_name='test category')
+        self.post = Post.objects.create(title='Test Post', blurb='Test Blurb', content='Test Content', category=self.category, author=self.author)
+        self.comment = Comment.objects.create(post=self.post, author=self.user, content='Test Comment')
+        self.client.login(username='testuser', password='12345')
         
+    def test_vote_post(self):
+        url = reverse('vote')
+        data = {
+            'post_id': self.post.id,
+            'is_upvote': True
+        }
+        
+        response = self.client.post(url, data=json.dumps(data), content_type='application/json')
+        # json.dumps() is used to convert a python dictionary to a JSON string.
+        self.assertEqual(response.status_code, 200)
