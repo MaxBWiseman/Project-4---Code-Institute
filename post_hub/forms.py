@@ -1,5 +1,6 @@
 from django import forms
 from mptt.forms import TreeNodeChoiceField
+from ckeditor.widgets import CKEditorWidget
 from .models import Comment, Post, Category
 from spellchecker import SpellChecker
 
@@ -22,6 +23,7 @@ class CommentForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     new_category = forms.CharField(required=False, max_length=100, label='New Category')
     category = forms.ModelChoiceField(queryset=Category.objects.all(), required=False, widget=forms.Select(attrs={'class': 'form-control'}))
+    content = forms.CharField(widget=CKEditorWidget())
     
     class Meta:
         model = Post
@@ -30,7 +32,13 @@ class PostForm(forms.ModelForm):
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'blurb': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'cols': 40}),
             'banner_image': forms.FileInput(attrs={'class': 'form-control'}),
-            'content': forms.Textarea(attrs={'class': 'form-control'}),
+        }
+        
+        labels = {
+            'title': 'Post Title',
+            'blurb': 'Short Description',
+            'banner_image': 'Upload Banner Image',
+            'content': 'Post Content',
         }
         
     def clean(self):
