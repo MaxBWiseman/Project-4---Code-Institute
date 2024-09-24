@@ -243,6 +243,34 @@ def category_list(request):
     categories = Category.objects.all()
     return render(request, 'post_hub/category_list.html', {'categories': categories})
 
+@login_required
+def edit_post(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+# I used the get_object_or_404 function to retrieve the post object from the database or 404 if not.
+    if request.user != post.author:
+        return redirect('post_detail', slug=slug)
+# If user is not the author of the post, they are redirected to the post detail page.
+
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES, instance=post)
+# The data from the form is retrieved and stored in the form variable.
+# request.FILES attribute is used to handle image uploads.
+# instance=post is used to update the existing post object because the user is editing an existing post.
+        if form.is_valid():
+            form.save()
+# The form is saved to update the post object in the database.
+            messages.success(request, 'Your post has been updated successfully!')
+            return redirect('post_detail', slug=slug)
+        else:
+            messages.error(request, 'There was an error updating your post. Please try again.')
+    else:
+        form = PostForm(instance=post)
+# If no POST request is made, the form is created with the existing post object.
+
+    return render(request, 'post_hub/edit_post.html', {'form': form, 'post': post})
+# We need to pass the post object to the template so that the user can see the current posts content and make their edits.
+    
+
 class CategoryDetailView(DetailView):
     model = Category
     template_name = 'post_hub/category_detail.html'

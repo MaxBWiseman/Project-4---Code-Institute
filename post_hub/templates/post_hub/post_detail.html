@@ -21,6 +21,10 @@
     <p class="fw-lighter">Downvotes: {{ total_downvotes }}</p>
     <button class="button" onclick="votePost({{ post.id }}, true)">Upvote</button>
     <button class="button" onclick="votePost({{ post.id }}, false)">Downvote</button>
+    {% if request.user == post.author %}
+    <a href="{% url 'edit_post' post.slug %}" class="btn btn-primary">Edit</a>
+    
+    {% endif %}
 </div>
 </header>
 <section class="mb-5">
