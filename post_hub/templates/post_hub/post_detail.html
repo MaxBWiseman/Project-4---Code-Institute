@@ -21,13 +21,13 @@
     <p class="fw-lighter">Downvotes: {{ total_downvotes }}</p>
     <button class="button" onclick="votePost({{ post.id }}, true)">Upvote</button>
     <button class="button" onclick="votePost({{ post.id }}, false)">Downvote</button>
-    {% if request.user == post.author %}
-    <a href="{% url 'edit_post' post.slug %}" class="btn btn-primary">Edit</a>
-    
-    {% endif %}
 </div>
 </header>
-<section class="mb-5">
+<section class="mb-5 mt-2">
+    {% if request.user == post.author %}
+    <a href="{% url 'edit_post' post.slug %}" class="btn btn-primary {% if request.user != post.author %}d-none{% else %}d-inline{% endif %}">Edit</a>
+    
+    {% endif %}
     <p class="fs-5">{{ post.content | safe }}</p>
 </section>
 {% load mptt_tags %}
