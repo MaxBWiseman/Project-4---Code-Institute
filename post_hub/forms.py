@@ -1,7 +1,7 @@
 from django import forms
 from mptt.forms import TreeNodeChoiceField
 from ckeditor.widgets import CKEditorWidget
-from .models import Comment, Post, Category
+from .models import Comment, Post, Category, Group
 from spellchecker import SpellChecker
 
 class CommentForm(forms.ModelForm):
@@ -23,11 +23,12 @@ class CommentForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     new_category = forms.CharField(required=False, max_length=100, label='New Category')
     category = forms.ModelChoiceField(queryset=Category.objects.all(), required=False, widget=forms.Select(attrs={'class': 'form-control'}))
+    group = forms.ModelChoiceField(queryset=Group.objects.all(), required=False, widhget=forms.Select(attrs={'class': 'form-control'}))
     content = forms.CharField(widget=CKEditorWidget())
     
     class Meta:
         model = Post
-        fields = ('title', 'blurb', 'banner_image', 'content', 'category', 'new_category')
+        fields = ('title', 'blurb', 'banner_image', 'content', 'category', 'new_category', 'group')
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'blurb': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'cols': 40}),
@@ -97,3 +98,19 @@ class PostForm(forms.ModelForm):
 # The code above checks if a new category name was provided. If so, it either gets the existing
 # category or creates a new one and assigns it to the post.category field. If no new category
 # name is provided, it assigns the selected category from the dropdown menu to the post.category field.
+
+class GroupForm(forms.ModelForm):
+     description = forms.CharField(widget=CKEditorWidget())
+    class Meta:
+        model = Group
+        fields = ('name', 'description', 'group_image')
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'group_image': forms.FileInput(attrs={'class': 'form-control'}),
+        }
+        
+        labels = {
+            'group_name': 'Group Name',
+            'description': 'Group Description',
+            'group_image': 'Upload Group Image',
+        }

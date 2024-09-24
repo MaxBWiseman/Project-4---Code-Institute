@@ -224,7 +224,7 @@ def create_post(request):
                 post.category = category
                 if created:
                     messages.success(request, f"A new category '{new_category_name}' was created.")
-
+            group.members.add(request.user)
             post.save()
             messages.success(request, 'Your post has been tooted out successfully!')
             return redirect('post_detail', slug=post.slug)
@@ -269,7 +269,40 @@ def edit_post(request, slug):
 
     return render(request, 'post_hub/edit_post.html', {'form': form, 'post': post})
 # We need to pass the post object to the template so that the user can see the current posts content and make their edits.
+
+@login_required
+def create_group(request):
+    if request.method == 'POST':
+        form = GroupForm(request.POST)
+        if form.is_valid():
+            group = form.save(commit=False)
+            group.admin = request.user
+# Admin is set to group creator
+            group.save()
+            messages.success(request, 'Your group has been created successfully!')
+            return redirect('group_detail', slug=group.slug)
+        else:
+            messages.error(request, 'There was an error creating your group. Please try again.')
+    else:
+        form = GroupForm()
+    return render(request, 'post_hub/create_group.html', {'form': form})
     
+def group_detail(request, slug):
+    group = get_object_or_404(Group, slug=slug)
+    posts = group.group_posts.filter(status=1).order_by("-created_at")
+# Using the group model and the post models related name group_posts to retrieve the posts in the group from the post model.
+    return render(request, 'post_hub/group_detail.html', {'group': group, 'posts': posts})
+
+@login_required
+def join_group(request, slug):
+    group = get_object_or_404(Group, slug=slug)
+    if request.user not in group.members.all():
+# The user is added to the group if they are not already a member if a join request is made.
+        group.members.add(request.user)
+        messages.success(request, f'You have joined the group {group.name}!')
+    else:
+        messages.info(request, f'You are already a member of the group {group.name}.')
+    return redirect('group_detail', slug=slug)
 
 class CategoryDetailView(DetailView):
     model = Category

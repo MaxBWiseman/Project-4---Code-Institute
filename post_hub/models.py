@@ -128,6 +128,7 @@ class Profile(models.Model):
 class Group(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
+    group_image = CloudinaryField('image', default='placeholder')
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
