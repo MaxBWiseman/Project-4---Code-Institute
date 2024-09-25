@@ -224,7 +224,6 @@ def create_post(request):
                 post.category = category
                 if created:
                     messages.success(request, f"A new category '{new_category_name}' was created.")
-            group.members.add(request.user)
             post.save()
             messages.success(request, 'Your post has been tooted out successfully!')
             return redirect('post_detail', slug=post.slug)
@@ -291,12 +290,40 @@ def group_detail(request, slug):
     group = get_object_or_404(UserGroup, slug=slug)
     posts = group.group_posts.filter(status=1).order_by("-created_at")
 # Using the group model and the post models related name group_posts to retrieve the posts in the group from the post model.
+    comments = Comment.objects.filter(post__in=posts, status=True)
 
     paginator = Paginator(posts, 4)
     page_numer = request.GET.get('page')
     page_obj = paginator.get_page(page_numer)
     
-    return render(request, 'post_hub/group_detail.html', {'usergroup': group, 'group_only_post': posts, 'page_obj': page_obj, 'is_paginated': page_obj.has_other_pages()})
+    comment_form = CommentForm()
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            messages.error(request, 'Youmuyst be logged in to post a comment.')
+            return redirect('account_login')
+        comment_form = CommentForm(request.POST)
+# The data from the comment is retrieved and stored in the comment_form variable.
+        if comment_form.is_valid():
+            user_comment = comment_form.save(commit=False)
+            user_comment.author = request.user
+            user_comment.save()
+            messages.success(request, 'Your comment has been posted successfully!')
+            return HttpResponseRedirect(reverse('group_detail', args=[group.slug]))
+        else:
+            messages.error(request, 'There was an error posting your comment. Please try again.')
+            return HttpResponseRedirect(reverse('group_detail', args=[group.slug]))
+        
+    context = {
+        'usergroup' : group,
+        'group_only_post': posts,
+        'page_obj': page_obj,
+        'is_paginated': page_obj.has_other_pages(),
+        'comments': comments,
+        'comment_form': comment_form,
+        'allcomments' : comments,
+    }
+    
+    return render(request, 'post_hub/group_detail.html', context)
 
 @login_required
 def join_group(request, slug):
