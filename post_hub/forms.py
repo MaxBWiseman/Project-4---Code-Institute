@@ -6,7 +6,8 @@ from spellchecker import SpellChecker
 
 class CommentForm(forms.ModelForm):
     parent = TreeNodeChoiceField(queryset=Comment.objects.all(), required=False, widget=forms.HiddenInput())
-
+    group = forms.ModelChoiceField(queryset=UserGroup.objects.all(), required=False, widget=forms.HiddenInput())
+    
     class Meta:
         model = Comment
         fields = ('parent', 'content', 'group')

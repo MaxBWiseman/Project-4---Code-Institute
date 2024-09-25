@@ -97,10 +97,8 @@
                     <span class="comment-author">By {{ node.author }} </span>
                     <div><span id="created-at-{{ node.id }}">{{ node.created_at|date:"Y-m-d H:i:s" }}</span>
                         {% if node.updated_at and node.updated_at.date != node.created_at.date %}
-                        <!-- Displays only if updated_at and created_at become different as they are both set the same
-             creation date-->
                         <span id="updated-at-{{ node.id}}">Edited: {{ node.updated_at|date:"Y-m-d H:i:s" }}<span>
-                                {% endif %}
+                        {% endif %}
                     </div>
                     <div id="reply-count">Total Replies: {{ node.get_descendant_count }}</div>
                 </div>
@@ -123,8 +121,6 @@
                 <p> Downvotes : {{ node.total_downvotes }} </p>
                 {% if node.level < 3 %}
                 <button class="button" onclick="grabOne({{ node.id }})">Reply</button>
-                <!-- grabOne collects the assocoaited parent id of the comment so the comment reply knows what comment to call its parent,
-  this js function also makes sure only one reply form can be visible at one time-->
                 {% endif %}
                 {% if request.user == node.author %}
                 <button class="button" onclick="editComment({{ node.id }})">Edit</button>
@@ -138,7 +134,6 @@
             {% endif %}
             {% endrecursetree %}
         </div>
-
     </div>
 </section>
 <div class="py-4 d-flex justify-content-center">
@@ -152,7 +147,7 @@
             <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
             {% endif %}
             {% for num in comments.paginator.page_range %}
-            {% if comments.number == l %}
+            {% if comments.number == num %}
             <li class="page-item active"><span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
             </li>
             {% else %}
@@ -179,39 +174,15 @@
     </form>
 </div>
 
-</div>
-</div>
-</div>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const postCommentButton = document.getElementById('post-comment-button');
         postCommentButton.addEventListener('click', function() {
             const urlParams = new URLSearchParams(window.location.search);
-            // The URLSearchParams object is a way to grab the URL and search for specific parameters
             if (urlParams.has('comment_posted') && window.location.hash === '#comments-section') {
-                // We check if the URL has the parameter 'comment_posted' and if the hash is '#comments-section'
                 document.getElementById('comments-section').scrollIntoView();
-                // If so, we know the user has just posted a comment, so scroll to the comments section
             }
         });
     });
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         {% endblock %}

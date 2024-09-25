@@ -313,6 +313,7 @@ def group_detail(request, slug):
         if comment_form.is_valid():
             user_comment = comment_form.save(commit=False)
             user_comment.author = request.user
+            user_comment.group = group
             user_comment.save()
             messages.success(request, 'Your comment has been posted successfully!')
             return HttpResponseRedirect(reverse('group_detail', args=[group.slug]))
