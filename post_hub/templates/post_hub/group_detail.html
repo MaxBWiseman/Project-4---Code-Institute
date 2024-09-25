@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<h2>{{ group.name }}</h2>
+<p>{{ group.description }}</p>
+{% if user.is_authenticated %}
+    {% if user in group.members.all %}
+        <p>You are a member of this group.</p>
+    {% else %}
+        <form method="post" action="{% url 'join_group' group.slug %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Join Group</button>
+        </form>
+    {% endif %}
+{% endif %}
+<h3>Posts</h3>
+<ul>
+    {% for post in posts %}
+    <li><a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a> by {{ post.author.username }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

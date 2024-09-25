@@ -10,6 +10,28 @@ from mptt.models import MPTTModel, TreeForeignKey
 STATUS = ((0, "Blocked"), (1, "Approved"))
 # Create your models here.
 
+class Group(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
+    group_image = CloudinaryField('image', default='placeholder')
+    description = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    admin = models.ForeignKey(User, on_delete=models.CASCADE, related_name='admin_groups')
+    members = models.ManyToManyField(User, related_name='groups', blank=True)
+# Group model has a many to many relationship with the User model, this is so groups can have multiple members,
+# and users can be in multiple groups.
+# The admin field is a foreign key to the User model, this is so the group has an admin. this relationship is one to many.
+    
+    def __str__(self):
+        return self.name
+    
+@receiver(pre_save, sender=Group)
+def add_slug_to_group(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = slugify(instance.name)
+
+
 class Category(models.Model):
     category_name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
@@ -24,6 +46,7 @@ class Category(models.Model):
 def add_slug_to_category(sender, instance, *args, **kwargs):
     if not instance.slug:
         instance.slug = slugify(instance.category_name)
+
 
 class Post(models.Model):
     title = models.CharField(max_length=100)
@@ -44,7 +67,6 @@ class Post(models.Model):
     def __str__(self):
         return f"{self.title} by {self.author.username}"
 
-    
     def total_upvotes(self):
         return self.votes.filter(is_upvote=True).count()
 # I learned that count() is a method that returns the number of items in a queryset from
@@ -69,6 +91,7 @@ def add_slug_to_post(sender, instance, *args, **kwargs):
 # for this case, I used the pre_save signal, this signal is sent just before the object is saved.
 # This decorator is used to connect the function to the signal.
 # https://stackoverflow.com/questions/8170704/execute-code-on-model-creation-in-django#:~:text=You%20can%20use%20django%20signals%20%27%20post_save%3A%20%23,MyModel%28models.Model%29%3A%20pass%20def%20my_model_post_save%28sender%2C%20instance%2C%20created%2C%20%2Aargs%2C%20%2A%2Akwargs%29%3A
+
 
 class Comment(MPTTModel):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
@@ -97,6 +120,7 @@ class Comment(MPTTModel):
     def __str__(self):
         return f'Comment by {self.author} on {self.post}'
     
+    
 class Vote(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='votes', null=True, blank=True)
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='votes', null=True, blank=True)
@@ -113,6 +137,7 @@ class Vote(models.Model):
     def __str__(self):
         return f"Vote by {self.user} on {self.post or self.comment}"
     
+    
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_profile')
     bio = models.TextField()
@@ -124,24 +149,3 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 # Profile model added as I included it in my database diagram, this is a suggestion.
-
-class Group(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=255, unique=True, blank=True)
-    group_image = CloudinaryField('image', default='placeholder')
-    description = models.TextField(blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    admin = models.ForeignKey(User, on_delete=models.CASCADE, related_name='admin_groups')
-    members = models.ManyToManyField(User, related_name='groups', blank=True)
-# Group model has a many to many relationship with the User model, this is so groups can have multiple members,
-# and users can be in multiple groups.
-# The admin field is a foreign key to the User model, this is so the group has an admin. this relationship is one to many.
-    
-    def __str__(self):
-        return self.name
-    
-@receiver(pre_save, sender=Group)
-def add_slug_to_group(sender, instance, *args, **kwargs):
-    if not instance.slug:
-        instance.slug = slugify(instance.name)

@@ -23,7 +23,7 @@ class CommentForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     new_category = forms.CharField(required=False, max_length=100, label='New Category')
     category = forms.ModelChoiceField(queryset=Category.objects.all(), required=False, widget=forms.Select(attrs={'class': 'form-control'}))
-    group = forms.ModelChoiceField(queryset=Group.objects.all(), required=False, widhget=forms.Select(attrs={'class': 'form-control'}))
+    group = forms.ModelChoiceField(queryset=Group.objects.all(), required=False, widget=forms.Select(attrs={'class': 'form-control'}))
     content = forms.CharField(widget=CKEditorWidget())
     
     class Meta:
@@ -100,7 +100,7 @@ class PostForm(forms.ModelForm):
 # name is provided, it assigns the selected category from the dropdown menu to the post.category field.
 
 class GroupForm(forms.ModelForm):
-     description = forms.CharField(widget=CKEditorWidget())
+    description = forms.CharField(widget=CKEditorWidget())
     class Meta:
         model = Group
         fields = ('name', 'description', 'group_image')
