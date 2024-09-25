@@ -4,19 +4,19 @@
 <div class="container">
     <h1 class="fw-bolder">Groups</h1>
     <div class="row">
-        {% for group, post in group_posts %}
+        {% for usergroup, post in group_posts %}
         <div class="col-md-4">
             <div class="card mb-4">
                 <div class="card-body">
-                    <h5 class="card-title">{{ group.name }}</h5>
-                    <p class="card-text">{{ group.description }}</p>
+                    <h5 class="card-title">{{ usergroup.name }}</h5>
+                    <p class="card-text">{{ usergroup.description }}</p>
                     {% if post %}
                     <h6>Latest Post</h6>
                     <p><a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a> by {{ post.author.username }}</p>
                     {% else %}
                     <p>No posts yet.</p>
                     {% endif %}
-                    <a href="{% url 'group_detail' group.slug %}" class="btn btn-primary">View Group</a>
+                    <a href="{% url 'group_detail' usergroup.slug %}" class="btn btn-primary">View Group</a>
                 </div>
             </div>
         </div>
@@ -26,17 +26,17 @@
 
 <div class="container mt-4">
     <h1 class="text-center">Search Groups</h1>
-    <form method="GET" action="{% url 'group_search' %}" class="mb-4">
+    <form method="GET" action="" class="mb-4">
         <input type="text" name="q" class="form-control" placeholder="Search for groups...">
     </form>
     <div class="row">
-        {% for group in groups %}
+        {% for usergroup in usergroups %}
         <div class="col-md-4">
             <div class="card mb-4 shadow">
                 <div class="card-body">
-                    <h5 class="card-title">{{ group.name }}</h5>
-                    <p class="card-text">{{ group.description }}</p>
-                    <a href="{% url 'group_detail' group.slug %}" class="btn btn-primary">View Group</a>
+                    <h5 class="card-title">{{ usergroup.name }}</h5>
+                    <p class="card-text">{{ usergroup.description }}</p>
+                    <a href="{% url 'group_detail' usergroup.slug %}" class="btn btn-primary">View Group</a>
                 </div>
             </div>
         </div>

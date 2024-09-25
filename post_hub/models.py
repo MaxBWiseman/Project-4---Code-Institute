@@ -10,7 +10,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 STATUS = ((0, "Blocked"), (1, "Approved"))
 # Create your models here.
 
-class Group(models.Model):
+class UserGroup(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     group_image = CloudinaryField('image', default='placeholder')
@@ -18,7 +18,7 @@ class Group(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     admin = models.ForeignKey(User, on_delete=models.CASCADE, related_name='admin_groups')
-    members = models.ManyToManyField(User, related_name='groups', blank=True)
+    members = models.ManyToManyField(User, related_name='groups_members', blank=True)
 # Group model has a many to many relationship with the User model, this is so groups can have multiple members,
 # and users can be in multiple groups.
 # The admin field is a foreign key to the User model, this is so the group has an admin. this relationship is one to many.
@@ -26,7 +26,7 @@ class Group(models.Model):
     def __str__(self):
         return self.name
     
-@receiver(pre_save, sender=Group)
+@receiver(pre_save, sender=UserGroup)
 def add_slug_to_group(sender, instance, *args, **kwargs):
     if not instance.slug:
         instance.slug = slugify(instance.name)
@@ -57,7 +57,7 @@ class Post(models.Model):
     status = models.IntegerField(choices=STATUS, default=1)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_posts')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category')
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='group_posts', null=True, blank=True)
+    group = models.ForeignKey(UserGroup, on_delete=models.CASCADE, related_name='group_posts', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 # Post model has a many to one relationship with the User and Category models,

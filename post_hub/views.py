@@ -9,7 +9,7 @@ from django.views.generic import DetailView
 from django.views.generic.edit import DeleteView
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
-from .models import Post, Comment, Category, Vote, Group
+from .models import Post, Comment, Category, Vote, UserGroup
 from .forms import CommentForm, PostForm, GroupForm
 import json
 
@@ -288,14 +288,14 @@ def create_group(request):
     return render(request, 'post_hub/create_group.html', {'form': form})
     
 def group_detail(request, slug):
-    group = get_object_or_404(Group, slug=slug)
+    group = get_object_or_404(UserGroup, slug=slug)
     posts = group.group_posts.filter(status=1).order_by("-created_at")
 # Using the group model and the post models related name group_posts to retrieve the posts in the group from the post model.
     return render(request, 'post_hub/group_detail.html', {'group': group, 'posts': posts})
 
 @login_required
 def join_group(request, slug):
-    group = get_object_or_404(Group, slug=slug)
+    group = get_object_or_404(UserGroup, slug=slug)
     if request.user not in group.members.all():
 # The user is added to the group if they are not already a member if a join request is made.
         group.members.add(request.user)
@@ -305,7 +305,7 @@ def join_group(request, slug):
     return redirect('group_detail', slug=slug)
 
 def group_index(request):
-    groups = Group.objects.all()
+    groups = UserGroup.objects.all()
     group_posts = []
     for group in groups:
         post = group.group_posts.filter(status=1).order_by('-created_at').first()

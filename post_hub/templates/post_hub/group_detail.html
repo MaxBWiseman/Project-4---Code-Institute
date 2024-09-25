@@ -2,13 +2,13 @@
 {% load static %}
 
 {% block content %}
-<h2>{{ group.name }}</h2>
-<p>{{ group.description }}</p>
+<h2>{{ usergroup.name }}</h2>
+<p>{{ usergroup.description }}</p>
 {% if user.is_authenticated %}
-    {% if user in group.members.all %}
+    {% if user in usergroup.members.all %}
         <p>You are a member of this group.</p>
     {% else %}
-        <form method="post" action="{% url 'join_group' group.slug %}">
+        <form method="post" action="{% url 'join_group' usergroup.slug %}">
             {% csrf_token %}
             <button type="submit" class="btn btn-primary">Join Group</button>
         </form>

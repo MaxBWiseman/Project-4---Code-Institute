@@ -1,7 +1,7 @@
 from django import forms
 from mptt.forms import TreeNodeChoiceField
 from ckeditor.widgets import CKEditorWidget
-from .models import Comment, Post, Category, Group
+from .models import Comment, Post, Category, UserGroup
 from spellchecker import SpellChecker
 
 class CommentForm(forms.ModelForm):
@@ -23,7 +23,7 @@ class CommentForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     new_category = forms.CharField(required=False, max_length=100, label='New Category')
     category = forms.ModelChoiceField(queryset=Category.objects.all(), required=False, widget=forms.Select(attrs={'class': 'form-control'}))
-    group = forms.ModelChoiceField(queryset=Group.objects.all(), required=False, widget=forms.Select(attrs={'class': 'form-control'}))
+    group = forms.ModelChoiceField(queryset=UserGroup.objects.all(), required=False, widget=forms.Select(attrs={'class': 'form-control'}))
     content = forms.CharField(widget=CKEditorWidget())
     
     class Meta:
@@ -102,7 +102,7 @@ class PostForm(forms.ModelForm):
 class GroupForm(forms.ModelForm):
     description = forms.CharField(widget=CKEditorWidget())
     class Meta:
-        model = Group
+        model = UserGroup
         fields = ('name', 'description', 'group_image')
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),

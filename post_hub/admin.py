@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post, Comment, Category
+from .models import Post, Comment, Category, UserGroup
 from django_summernote.admin import SummernoteModelAdmin
 from mptt.admin import MPTTModelAdmin
 
@@ -28,3 +28,5 @@ class PostAdmin(SummernoteModelAdmin):
 admin.site.register(Comment, MPTTModelAdmin)
 
 admin.site.register(Category)
+
+admin.site.register(UserGroup)
