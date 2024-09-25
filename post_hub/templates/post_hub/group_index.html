@@ -9,18 +9,39 @@
     </form>
     <div class="row">
         {% for usergroup in usergroups %}
-        <div class="col-md-4">
-            <div class="card mb-4 shadow">
+        <div class="col-md-6 mt-2">
+            <div class="card mb-4">
+                <div class="card-img-top">
+                    {% if "placeholder" in usergroup.group_image.url %}
+                    <img class="post-picture" src="{% static 'images/default.jpg' %}" alt="placeholder image">
+                    {% else %}
+                    <img class="post-picture" src="{{ usergroup.group_image.url }}" alt="{{ usergroup.name }}">
+                    {% endif %}
+                </div>
                 <div class="card-body">
                     <h5 class="card-title">{{ usergroup.name }}</h5>
-                    <p class="card-text">{{ usergroup.description }}</p>
-                    <a href="{% url 'group_detail' usergroup.slug %}" class="btn btn-primary">View Group</a>
+                    <p class="card-subtitle">{{ usergroup.description }}</p>
                 </div>
+                <div class="card-footer d-flex justify-content-between">
+                    {% if post %}
+                    <div>
+                        <h6>Latest Post</h6>
+                        <p><a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a> by
+                            {{ post.author.username }}</p>
+                        {% else %}
+                        <p>No posts yet.</p>
+                        {% endif %}
+                    </div>
+                    <p>Members: {{ usergroup.members.count }}</p>
+                </div>
+                <a href="{% url 'group_detail' usergroup.slug %}" class="btn btn-primary">View Group</a>
             </div>
         </div>
         {% endfor %}
     </div>
 </div>
+       
+
 
 <div class="container">
     <h1 class="fw-bolder">Groups</h1>

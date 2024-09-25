@@ -2,22 +2,108 @@
 {% load static %}
 
 {% block content %}
-<h2>{{ usergroup.name }}</h2>
-<p>{{ usergroup.description }}</p>
-{% if user.is_authenticated %}
-    {% if user in usergroup.members.all %}
-        <p>You are a member of this group.</p>
-    {% else %}
-        <form method="post" action="{% url 'join_group' usergroup.slug %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary">Join Group</button>
-        </form>
-    {% endif %}
-{% endif %}
-<h3>Posts</h3>
-<ul>
-    {% for post in posts %}
-    <li><a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a> by {{ post.author.username }}</li>
-    {% endfor %}
-</ul>
-{% endblock %}
+
+<div class="container">
+    <div class="row align-items-center my-5">
+        <div class="col-lg-7">
+            {% if "placeholder" in usergroup.group_image.url %}
+            <img class="post-picture" src="{% static 'images/default.jpg' %}" alt="placeholder image">
+            {% else %}
+            <img class="post-picture" src="{{ usergroup.group_image.url }}" alt="{{ usergroup.name }}">
+            {% endif %}
+        </div>
+        <div class="col-lg-5 mt-4 mt-lg-0">
+            <h1 class="font-weight-light">{{ usergroup.name}} </h1>
+            <p class="image-flash"> Admin: {{ usergroup.admin }} | Members: {{usergroup.members.count}}</p>
+            <p>{{ usergroup.description}}</p>
+            {% if user.is_authenticated %}
+            {% if user in usergroup.members.all %}
+            <p>You are a member of this group.</p>
+            {% else %}
+            <form method="post" action="">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Join Group</button>
+            </form>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="card my-5 py-4 text-center">
+        <div class="card-body">
+            <p class="m-0">group admin area</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {% for post in group_only_post %}
+            {% if not forloop.first %}
+            <hr>
+            {% endif %}
+            <a href="{% url 'post_detail' post.slug %}" class="post-link" style="text-decoration: none; color: inherit;">
+    <div class="card mb-3 shadow">
+        <div class="col-md-4 col-lg-12">
+            <div class="card">
+                <div class="card-img-top">
+                    {% if "placeholder" in post.banner_image.url %}
+                    <img class="post-picture" src="{% static 'images/default.jpg' %}" alt="placeholder image">
+                    {% else %}
+                    <img class="post-picture" src="{{ post.banner_image.url }}" alt="{{ post.title }}">
+                    {% endif %}
+                    <div class="image-flash">
+                        <p class="author ms-1">Author: {{ post.author }} | Category:
+                            {{ post.category }}</p>
+                    </div>
+                </div>
+                <div class="card-title">
+                    <h2 class="card-title ms-1">
+                    <a href="{% url 'post_detail' post.slug %}" class="title-link">{{ post.title }}</a>
+                    </h2>
+                    <p class="card-subtitle ms-1">{% if post.group %}From Group: {{post.group}}
+                        {% endif %} </p>
+                </div>
+                <div class="card-body">
+                    <p class="card-subtitle ms-1">{{ post.blurb|truncatewords:30 }}</p>
+                </div>
+                <div class="card-footer">
+                    <p class="text-muted h6 phone-center">
+                        {{ post.created_at|date:"F d, Y" }} | Upvotes: {{ post.total_upvotes }} | Downvotes:
+                        {{ post.total_downvotes }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</a>
+                {% endfor %}
+
+                {% if is_paginated %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                        <li><a href="?page={{ page_obj.previous_page_number }}" class="page-link">&laquo; PREV</a>
+                        </li>
+                        {% endif %}
+                        {% if page_obj.has_next %}
+                        <li><a href="?page={{ page_obj.next_page_number }}" class="page-link"> NEXT &raquo;</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+            {% endblock %}

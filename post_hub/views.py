@@ -291,7 +291,12 @@ def group_detail(request, slug):
     group = get_object_or_404(UserGroup, slug=slug)
     posts = group.group_posts.filter(status=1).order_by("-created_at")
 # Using the group model and the post models related name group_posts to retrieve the posts in the group from the post model.
-    return render(request, 'post_hub/group_detail.html', {'group': group, 'posts': posts})
+
+    paginator = Paginator(posts, 4)
+    page_numer = request.GET.get('page')
+    page_obj = paginator.get_page(page_numer)
+    
+    return render(request, 'post_hub/group_detail.html', {'usergroup': group, 'group_only_post': posts, 'page_obj': page_obj, 'is_paginated': page_obj.has_other_pages()})
 
 @login_required
 def join_group(request, slug):
