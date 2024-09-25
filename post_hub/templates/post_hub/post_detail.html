@@ -16,7 +16,7 @@
              creation date-->
     <span id="updated-at-{{ node.id}}">Edited: {{ node.updated_at|date:"Y-m-d H:i:s" }}<span>
     {% endif %}
-    <p class="fw-lighter">Category: {{ post.category }}</p>
+    <p class="fw-lighter">Category: {{ post.category }}{% if post.group %} | From Group: {{post.group}} {% endif %}</p>
     <p class="fw-lighter">Upvotes: {{ total_upvotes }}</p>
     <p class="fw-lighter">Downvotes: {{ total_downvotes }}</p>
     <button class="button" onclick="votePost({{ post.id }}, true)">Upvote</button>
