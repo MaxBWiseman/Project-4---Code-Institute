@@ -9,8 +9,8 @@ from django.views.generic import DetailView
 from django.views.generic.edit import DeleteView
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
-from .models import Post, Comment, Category, Vote
-from .forms import CommentForm, PostForm
+from .models import Post, Comment, Category, Vote, Group
+from .forms import CommentForm, PostForm, GroupForm
 import json
 
 
@@ -303,6 +303,14 @@ def join_group(request, slug):
     else:
         messages.info(request, f'You are already a member of the group {group.name}.')
     return redirect('group_detail', slug=slug)
+
+def group_index(request):
+    groups = Group.objects.all()
+    group_posts = []
+    for group in groups:
+        post = group.group_posts.filter(status=1).order_by('-created_at').first()
+        group_posts.append((group, post))
+    return render(request, 'post_hub/group_index.html', {'group_posts': group_posts})
 
 class CategoryDetailView(DetailView):
     model = Category
