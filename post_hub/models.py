@@ -22,7 +22,7 @@ class UserGroup(models.Model):
 # Group model has a many to many relationship with the User model, this is so groups can have multiple members,
 # and users can be in multiple groups.
 # The admin field is a foreign key to the User model, this is so the group has an admin. this relationship is one to many.
-    
+# post
     def __str__(self):
         return self.name
     
@@ -63,6 +63,8 @@ class Post(models.Model):
 # Post model has a many to one relationship with the User and Category models,
 # this is to store the posts of the users in the categories.
 # Each Post belongs to a single User and Category.
+# The group field is a foreign key to the UserGroup model, this is so the post can belong to a group.
+# This relationship is many to one.
     
     def __str__(self):
         return f"{self.title} by {self.author.username}"
@@ -94,12 +96,13 @@ def add_slug_to_post(sender, instance, *args, **kwargs):
 
 
 class Comment(MPTTModel):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments', null=True, blank=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='commenter')
     content = models.TextField()
     status = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    group = models.ForeignKey(UserGroup, on_delete=models.CASCADE, related_name='group_comments', null=True, blank=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
 # The parent field references the comment model iteself, the related name allowes to access child comments
 # MPTTModel is used to create a tree structure for the comments. This allows for easy retrieval of the comments

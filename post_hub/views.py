@@ -290,7 +290,12 @@ def group_detail(request, slug):
     group = get_object_or_404(UserGroup, slug=slug)
     posts = group.group_posts.filter(status=1).order_by("-created_at")
 # Using the group model and the post models related name group_posts to retrieve the posts in the group from the post model.
-    comments = Comment.objects.filter(post__in=posts, status=True)
+    comments = Comment.objects.filter(group=group, post__isnull=True)
+# Only comments that are related to the group and not to a specific post are retrieved.
+# post__isnull=True can be used to filter comments that are not related to a post.
+# This is useful for comments that are related to a group or a category.
+# this is part of the Django ORM and is used to filter objects based on the presence or absence of a related object.
+# In this case, it is used to filter comments that are not related to a post.
 
     paginator = Paginator(posts, 4)
     page_numer = request.GET.get('page')
@@ -298,10 +303,12 @@ def group_detail(request, slug):
     
     comment_form = CommentForm()
     if request.method == 'POST':
+# if a post request is made whilst a user is using the group detail view,
         if not request.user.is_authenticated:
             messages.error(request, 'Youmuyst be logged in to post a comment.')
             return redirect('account_login')
         comment_form = CommentForm(request.POST)
+# The data the user has sent through the request is stored in the comment_form variable.
 # The data from the comment is retrieved and stored in the comment_form variable.
         if comment_form.is_valid():
             user_comment = comment_form.save(commit=False)
@@ -322,7 +329,7 @@ def group_detail(request, slug):
         'comment_form': comment_form,
         'allcomments' : comments,
     }
-    
+# A context dicitonary is used to pass what is needed to the template for rendering to the user.
     return render(request, 'post_hub/group_detail.html', context)
 
 @login_required

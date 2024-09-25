@@ -34,59 +34,169 @@
         </div>
     </div>
     <div class="row">
+        {% for post in group_only_post %}
         <div class="col-md-6 mb-3">
-            {% for post in group_only_post %}
-            {% if not forloop.first %}
-            <hr>
-            {% endif %}
             <a href="{% url 'post_detail' post.slug %}" class="post-link" style="text-decoration: none; color: inherit;">
-    <div class="card mb-3 shadow card-hover">
-        <div class="col-md-4 col-lg-12">
-            <div class="card">
-                <div class="card-img-top">
-                    {% if "placeholder" in post.banner_image.url %}
-                    <img class="post-picture" src="{% static 'images/default.jpg' %}" alt="placeholder image">
-                    {% else %}
-                    <img class="post-picture" src="{{ post.banner_image.url }}" alt="{{ post.title }}">
-                    {% endif %}
-                    <div class="image-flash">
-                        <p class="author ms-1">Author: {{ post.author }} | Category:
-                            {{ post.category }}</p>
+                <div class="card mb-3 shadow card-hover">
+                    <div class="card-img-top">
+                        {% if "placeholder" in post.banner_image.url %}
+                        <img class="post-picture" src="{% static 'images/default.jpg' %}" alt="placeholder image">
+                        {% else %}
+                        <img class="post-picture" src="{{ post.banner_image.url }}" alt="{{ post.title }}">
+                        {% endif %}
+                        <div class="image-flash">
+                            <p class="author ms-1">Author: {{ post.author }} | Category: {{ post.category }}</p>
+                        </div>
+                    </div>
+                    <div class="card-title">
+                        <h2 class="card-title ms-1 title-link">{{ post.title }}</h2>
+                        <p class="card-subtitle ms-1">{% if post.group %}From Group: {{post.group}}{% endif %}</p>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-subtitle ms-1">{{ post.blurb|truncatewords:30 }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <p class="text-muted h6 custom-center">
+                            {{ post.created_at|date:"F d, Y" }} | Upvotes: {{ post.total_upvotes }} | Downvotes: {{ post.total_downvotes }}
+                        </p>
                     </div>
                 </div>
-                <div class="card-title">
-                    <h2 class="card-title ms-1 title-link">{{ post.title }}</h2>
-                    <p class="card-subtitle ms-1">{% if post.group %}From Group: {{post.group}}
-                        {% endif %} </p>
-                </div>
-                <div class="card-body">
-                    <p class="card-subtitle ms-1">{{ post.blurb|truncatewords:30 }}</p>
-                </div>
-                <div class="card-footer">
-                    <p class="text-muted h6 custom-center">
-                        {{ post.created_at|date:"F d, Y" }} | Upvotes: {{ post.total_upvotes }} | Downvotes:
-                        {{ post.total_downvotes }}</p>
-                </div>
-            </div>
+            </a>
         </div>
+        {% endfor %}
     </div>
-</a>
-                {% endfor %}
+    {% if is_paginated %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li><a href="?page={{ page_obj.previous_page_number }}" class="page-link">&laquo; PREV</a></li>
+            {% endif %}
+            {% if page_obj.has_next %}
+            <li><a href="?page={{ page_obj.next_page_number }}" class="page-link">NEXT &raquo;</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+        {% load mptt_tags %}
+<section>
+    <hr>
+    <div class="comment-container">
+        {% with allcomments.count as total_comments %}
+        <h2>
+            {{ total_comments }} comment{{ total_comments|pluralize }}
+        </h2>
+        {% endwith %}
 
-                {% if is_paginated %}
-                <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center">
-                        {% if page_obj.has_previous %}
-                        <li><a href="?page={{ page_obj.previous_page_number }}" class="page-link">&laquo; PREV</a>
-                        </li>
-                        {% endif %}
-                        {% if page_obj.has_next %}
-                        <li><a href="?page={{ page_obj.next_page_number }}" class="page-link"> NEXT &raquo;</a></li>
-                        {% endif %}
-                    </ul>
-                </nav>
+        {% load mptt_tags %}
+
+        <div>
+            <a id="comments-section"></a>
+            {% recursetree comments %}
+            <div id="comment-{{ node.id }}" class="my-2 p-2" style="border: 1px solid grey">
+                <div class="d-flex justify-content-between">
+                    <span class="comment-author">By {{ node.author }} </span>
+                    <div><span id="created-at-{{ node.id }}">{{ node.created_at|date:"Y-m-d H:i:s" }}</span>
+                        {% if node.updated_at and node.updated_at.date != node.created_at.date %}
+                        <!-- Displays only if updated_at and created_at become different as they are both set the same
+             creation date-->
+                        <span id="updated-at-{{ node.id}}">Edited: {{ node.updated_at|date:"Y-m-d H:i:s" }}<span>
+                                {% endif %}
+                    </div>
+                    <div id="reply-count">Total Replies: {{ node.get_descendant_count }}</div>
+                </div>
+                <div id="comment-content-{{ node.id }}">{{ node.content }}</div>
+                <div id="edit-comment-{{ node.id }}" style="display: none;">
+                    <form method="post" id="edit-comment-form-{{ node.id }}"
+                        onsubmit="return submitEditComment({{ node.id }})(event);">
+                        {% csrf_token %}
+                        <textarea name="content" id="edit-content-{{ node.id }}"
+                            class="form-control">{{ node.content }}</textarea>
+                        <button type="submit" class="btn btn-primary mt-2">Save changes</button>
+                        <button type="button" class="btn btn-secondary mt-2"
+                            onclick="cancelEditComment({{ node.id }})">Cancel</button>
+                    </form>
+                </div>
+                <hr />
+                <p> Upvotes : {{ node.total_upvotes }} </p>
+                <button class="button" onclick="voteComment({{ node.id }}, true)">Upvote</button>
+                <button class="button" onclick="voteComment({{ node.id }}, false)">Downvote</button>
+                <p> Downvotes : {{ node.total_downvotes }} </p>
+                {% if node.level < 3 %}
+                <button class="button" onclick="grabOne({{ node.id }})">Reply</button>
+                <!-- grabOne collects the assocoaited parent id of the comment so the comment reply knows what comment to call its parent,
+  this js function also makes sure only one reply form can be visible at one time-->
+                {% endif %}
+                {% if request.user == node.author %}
+                <button class="button" onclick="editComment({{ node.id }})">Edit</button>
+                <button onclick="confirmDelete({{ node.id }})" class="button delete-button">Delete</button>
                 {% endif %}
             </div>
+            {% if not node.is_leaf_node %}
+            <div class="children nested-comment pl-2 pl-md-5">
+                {{ children }}
+            </div>
+            {% endif %}
+            {% endrecursetree %}
+        </div>
+
+    </div>
+</section>
+<div class="py-4 d-flex justify-content-center">
+    <nav aria-label="Page navigation example">
+        {% if comments.has_other_pages %}
+        <ul class="pagination">
+            {% if comments.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ comments.previous_page_number }}">Previous</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+            {% endif %}
+            {% for num in comments.paginator.page_range %}
+            {% if comments.number == l %}
+            <li class="page-item active"><span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
+            </li>
+            {% else %}
+            <li><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if comments.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ comments.next_page_number }}">Next</a></li>
+            {% else %}
+            <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+            {% endif %}
+        </ul>
+        {% endif %}
+    </nav>
+</div>
+
+<div id="myDIV" style="display:block;">
+    <form id="edit-comment-form" method="post">
+        <h2>Create new comment</h2>
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <input type="hidden" id="comment-id" name="comment-id">
+        <button type="submit" id="post-comment-button" class="btn btn-primary btn-lg btn-block">Submit</button>
+    </form>
+</div>
+
+</div>
+</div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const postCommentButton = document.getElementById('post-comment-button');
+        postCommentButton.addEventListener('click', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            // The URLSearchParams object is a way to grab the URL and search for specific parameters
+            if (urlParams.has('comment_posted') && window.location.hash === '#comments-section') {
+                // We check if the URL has the parameter 'comment_posted' and if the hash is '#comments-section'
+                document.getElementById('comments-section').scrollIntoView();
+                // If so, we know the user has just posted a comment, so scroll to the comments section
+            }
+        });
+    });
+</script>
 
 
 
@@ -103,5 +213,5 @@
 
 
 
-            
-            {% endblock %}
+
+        {% endblock %}

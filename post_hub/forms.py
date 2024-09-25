@@ -9,7 +9,7 @@ class CommentForm(forms.ModelForm):
 
     class Meta:
         model = Comment
-        fields = ('parent', 'content')
+        fields = ('parent', 'content', 'group')
 
         widgets = {
             'content': forms.Textarea(attrs={'class': 'form-control'}),
