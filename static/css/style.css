@@ -27,6 +27,41 @@
     box-shadow: 15px 15px 30px #bebebe,
                -15px -15px 30px #ffffff;
 }
+
+.custom-center {
+    text-align: center;
+    margin-left: 0 !important;
+}
+
+.post-link {
+    text-decoration: none;
+    color: inherit;
+}
+/*Code learnt from - https://www.bing.com/search?pglt=43&q=how+to+make+a+card+look+like+its+been+pushed+down+when+hovered&cvid=bbf905a6f64d4cdb91dcc0e60b0833c9&gs_lcrp=EgZjaHJvbWUyBggAEEUYOdIBBzI3M2owajGoAgiwAgE&FORM=ANNTA1&PC=LCTS */
+.card-hover {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+/* This class makes sure the below hover version acts smoothly over 0.2s to be visually appealing */ 
+}
+
+.card-hover:hover {
+    transform: translateY(5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+/*When element is hovered the transform property pushes the element 5px down
+  and the shadows color gets deeper color and blur */
+}
+
+.title-link {
+    text-decoration: underline;
+    color: blue;
+/* This mimics the look of a link as the whole card is clickable
+ and nesting <a> causes issues */
+}
+
+.title-link:hover {
+    color: darkblue;
+}
+/*End of code learnt from - https://www.bing.com/search?pglt=43&q=how+to+make+a+card+look+like+its+been+pushed+down+when+hovered&cvid=bbf905a6f64d4cdb91dcc0e60b0833c9&gs_lcrp=EgZjaHJvbWUyBggAEEUYOdIBBzI3M2owajGoAgiwAgE&FORM=ANNTA1&PC=LCTS */
+
 /* End Cards */
 /* Row Styles */
 .row-style {
@@ -167,10 +202,6 @@ footer {
 }
 
 @media (max-width: 576px) {
-    .phone-center {
-        text-align: center;
-        margin-left: 0 !important;
-    }
     footer {
         position: relative;
         bottom: 0;

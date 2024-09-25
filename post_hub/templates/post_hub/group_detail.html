@@ -40,7 +40,7 @@
             <hr>
             {% endif %}
             <a href="{% url 'post_detail' post.slug %}" class="post-link" style="text-decoration: none; color: inherit;">
-    <div class="card mb-3 shadow">
+    <div class="card mb-3 shadow card-hover">
         <div class="col-md-4 col-lg-12">
             <div class="card">
                 <div class="card-img-top">
@@ -55,9 +55,7 @@
                     </div>
                 </div>
                 <div class="card-title">
-                    <h2 class="card-title ms-1">
-                    <a href="{% url 'post_detail' post.slug %}" class="title-link">{{ post.title }}</a>
-                    </h2>
+                    <h2 class="card-title ms-1 title-link">{{ post.title }}</h2>
                     <p class="card-subtitle ms-1">{% if post.group %}From Group: {{post.group}}
                         {% endif %} </p>
                 </div>
@@ -65,7 +63,7 @@
                     <p class="card-subtitle ms-1">{{ post.blurb|truncatewords:30 }}</p>
                 </div>
                 <div class="card-footer">
-                    <p class="text-muted h6 phone-center">
+                    <p class="text-muted h6 custom-center">
                         {{ post.created_at|date:"F d, Y" }} | Upvotes: {{ post.total_upvotes }} | Downvotes:
                         {{ post.total_downvotes }}</p>
                 </div>

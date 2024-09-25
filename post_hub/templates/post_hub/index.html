@@ -15,37 +15,41 @@
                 {% if not forloop.first %}
                 <hr>
                 {% endif %}
-                <div class="card mb-3 shadow">
-                    <div class="col-md-4 col-lg-12">
-                        <div class="card">
-                            <div class="card-img-top">
-                                {% if "placeholder" in post.banner_image.url %}
-                                <img class="post-picture" src="{% static 'images/default.jpg' %}"
-                                    alt="placeholder image">
-                                {% else %}
-                                <img class="post-picture" src="{{ post.banner_image.url }}" alt="{{ post.title }}">
-                                {% endif %}
-                                <div class="image-flash">
-                                    <p class="author ms-1">Author: {{ post.author }} | Category: {{ post.category }}{% if post.group %} | From Group: {{post.group}} {% endif %}</p>
-                                   
+                <a href="{% url 'post_detail' post.slug %}" class="post-link"
+                    style="text-decoration: none; color: inherit;">
+                    <div class="card mb-3 shadow card-hover">
+                        <div class="col-md-4 col-lg-12">
+                            <div class="card">
+                                <div class="card-img-top">
+                                    {% if "placeholder" in post.banner_image.url %}
+                                    <img class="post-picture" src="{% static 'images/default.jpg' %}"
+                                        alt="placeholder image">
+                                    {% else %}
+                                    <img class="post-picture" src="{{ post.banner_image.url }}" alt="{{ post.title }}">
+                                    {% endif %}
+                                    <div class="image-flash">
+                                        <p class="author ms-1">Author: {{ post.author }} | Category:
+                                            {{ post.category }}</p>
+                                    </div>
+                                </div>
+                                <div class="card-title">
+                                    <h2 class="card-title ms-1 title-link">{{ post.title }}</h2>
+                                    <p class="card-subtitle ms-1">{% if post.group %}From Group: {{post.group}}
+                                        {% endif %} </p>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-subtitle ms-1">{{ post.blurb|truncatewords:30 }}</p>
+                                </div>
+                                <div class="card-footer">
+                                    <p class="text-muted h6 custom-center align-center">
+                                        {{ post.created_at|date:"F d, Y" }} | Upvotes: {{ post.total_upvotes }} |
+                                        Downvotes:
+                                        {{ post.total_downvotes }}</p>
                                 </div>
                             </div>
-                            <a href="{% url 'post_detail' post.slug %}" class="post-link">
-                                <!--The {% url 'post_detail' post.slug %} template tag dynamically constructs the URL based on the URL
- pattern named 'post_detail' and the post.slug value. This allows for clean, readable URLs and easy
-  navigation to individual post detail pages. The DTL url tag syntax allows us to pass in an argument in
-   addition to the urlpattern name. As the anchor element is inside the for loop, we can use post.slug
-    as the argument, which gives us the slug value for the specific post in that iteration of the post_list
-     object. This syntax is the same dot notation you used to access the post author, title and excerpt.-->
-                                <h2 class="card-title ms-1">{{ post.title }}</h2>
-                            </a>
-                            <p class="card-subtitle ms-1">{{ post.blurb|truncatewords:30 }}</p>
-                            <hr />
-                            <p class="card-text text-muted h6 ms-4 mb-2 phone-center">
-                                {{ post.created_at|date:"F d, Y" }}  | Upvotes: {{ post.total_upvotes }} | Downvotes: {{ post.total_downvotes }}</p>
                         </div>
                     </div>
-                </div>
+                </a>
                 {% endfor %}
 
                 {% if is_paginated %}
@@ -87,7 +91,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-sm-6">
-                              
+
                             </div>
                         </div>
                     </div>
