@@ -34,7 +34,7 @@ SECRET_KEY = 'django-insecure-n9fa#v&dedo&5u=c2qqwl2si&ld@b&7)pf8^@$cc(7)kg_bk%8
 DEBUG = True
 # Site only runs local server if debug mode True? maybe a issue
 
-ALLOWED_HOSTS = ['localhost','.herokuapp.com', '.codeinstitute-ide.net']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.herokuapp.com', '.codeinstitute-ide.net']
 
 
 # Application definition
