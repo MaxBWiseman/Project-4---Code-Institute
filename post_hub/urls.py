@@ -4,6 +4,7 @@ from .views import CategoryDetailView, edit_comment, DeleteComment
 
 urlpatterns = [
     path('', views.PostList.as_view(), name='home'),
+    path('usergroup/<slug:slug>/admin_message/', views.admin_message, name='admin_message'),
     path('create/', views.create_post, name='create_post'),
     path('post/<slug:slug>/edit/', views.edit_post, name='edit_post'),
     path('edit_comment/<int:comment_id>/', edit_comment, name='edit_comment'),

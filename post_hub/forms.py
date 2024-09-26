@@ -115,3 +115,14 @@ class GroupForm(forms.ModelForm):
             'description': 'Group Description',
             'group_image': 'Upload Group Image',
         }
+
+class GroupAdminMessageForm(forms.ModelForm):
+    admin_message = forms.CharField(widget=CKEditorWidget())
+    
+    class Meta:
+        model = UserGroup
+        fields = ('admin_message',)
+    
+        labels = {
+            'admin_message': 'Admin Message',
+        }

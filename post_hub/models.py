@@ -19,6 +19,7 @@ class UserGroup(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     admin = models.ForeignKey(User, on_delete=models.CASCADE, related_name='admin_groups')
     members = models.ManyToManyField(User, related_name='groups_members', blank=True)
+    admin_message = models.TextField(blank=True)
 # Group model has a many to many relationship with the User model, this is so groups can have multiple members,
 # and users can be in multiple groups.
 # The admin field is a foreign key to the User model, this is so the group has an admin. this relationship is one to many.

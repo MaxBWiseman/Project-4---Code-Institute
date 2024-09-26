@@ -11,7 +11,7 @@ from django.views.generic.edit import DeleteView
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
 from .models import Post, Comment, Category, Vote, UserGroup
-from .forms import CommentForm, PostForm, GroupForm
+from .forms import CommentForm, PostForm, GroupForm, GroupAdminMessageForm
 import json
 
 
@@ -307,6 +307,8 @@ def group_detail(request, slug):
     page_obj = paginator.get_page(page_numer)
     
     comment_form = CommentForm()
+    admin_message = GroupAdminMessageForm(instance=group)
+    
     if request.method == 'POST':
 # if a post request is made whilst a user is using the group detail view,
         if not request.user.is_authenticated:
@@ -333,6 +335,7 @@ def group_detail(request, slug):
         'is_paginated': page_obj.has_other_pages(),
         'comments': comments,
         'comment_form': comment_form,
+        'admin_message': admin_message,
         'allcomments' : comments,
     }
 # A context dicitonary is used to pass what is needed to the template for rendering to the user.
@@ -356,6 +359,24 @@ def group_index(request):
         post = group.group_posts.filter(status=1).order_by('-created_at').first()
         group_posts.append((group, post))
     return render(request, 'post_hub/group_index.html', {'group_posts': group_posts})
+
+def admin_message(request, slug):
+    group = get_object_or_404(UserGroup, slug=slug)
+    if request.user != group.admin:
+        messages.error(request, 'You are not authorized to send messages to this group.')
+    
+    if request.method == 'POST':
+        form = GroupAdminMessageForm(request.POST, instance=group)
+# 
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your message has been sent to the group.')
+            return redirect('group_detail', slug=slug)
+    else:
+        form = GroupAdminMessageForm(instance=group)
+    
+    return render(request, 'post_hub/group_detail.html', {'admin_message': form, 'group': group})
+
 
 class CategoryDetailView(DetailView):
     model = Category
