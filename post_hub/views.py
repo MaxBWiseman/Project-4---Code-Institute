@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponseRedirect
 from django.db import IntegrityError, transaction
+from django.db.models import Count
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -31,6 +32,10 @@ class PostList(generic.ListView):
 # The get_context_data method is overridden to add the categories to the context.
         context['categories'] = Category.objects.all()
 # The categories are retrieved and added to the context.
+        context['top_groups'] = UserGroup.objects.annotate(num_members=Count('members')).order_by('num_members')[:8]
+# The top 8 groups are retrieved and added to the context. The annotate method is used to add a num_members field to each UserGroup object
+# which contains the count of members inside the group. Count is a django aggregation function often used in conjunction with annotate.
+# Learned from = https://stackoverflow.com/questions/3606416/django-most-efficient-way-to-count-same-field-values-in-a-query#:~:text=You%20can%20use%20Django%27s%20Count%20aggregation%20on%20a,in%20queryset%3A%20print%20%22%25s%3A%20%25s%22%20%25%20%28each.my_charfield%2C%20each.count%29
         return context
 # By overriding the get_context_data method, you can add the categories to the context in a more
 # standard and efficient way. This approach ensures that the categories are available in the template
