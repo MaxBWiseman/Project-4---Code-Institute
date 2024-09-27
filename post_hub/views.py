@@ -361,10 +361,26 @@ def join_group(request, slug):
 def group_index(request):
     groups = UserGroup.objects.all()
     group_posts = []
+    query = request.GET.get('q')
+# When a form is sent by the user with "GET" , the data is stored in the URL as a query string.
+# Example : http://example.com/search?q=search_term
+# The query string is retrieved from the URL using GET, this is a dictionary that containes the paramters from the URL.
+# Then the value assocciated with the key 'q' is stored in the request.GET dictionary.
+    
+    if query:
+        usergroups = UserGroup.objects.filter(name__icontains=query)
+# *my_field*__icontains is a field lookup that is used to perform case-insensitive containment test.
+# This is used to filter the usergroups based on the query string from the URL.
+# learned from = https://docs.djangoproject.com/en/3.2/ref/models/querysets/#icontains
+    else:
+        usergroups = UserGroup.objects.none()
+    
+        
     for group in groups:
         post = group.group_posts.filter(status=1).order_by('-created_at').first()
         group_posts.append((group, post))
-    return render(request, 'post_hub/group_index.html', {'group_posts': group_posts})
+        
+    return render(request, 'post_hub/group_index.html', {'group_posts': group_posts, 'usergroups': usergroups})
 
 
 def admin_message(request, slug):

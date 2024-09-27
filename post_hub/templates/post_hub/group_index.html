@@ -3,24 +3,40 @@
 {% block content %}
 
 <div class="container mt-4">
-    <h1 class="text-center">Search Groups</h1>
-    <form method="GET" action="" class="mb-4">
-        <input type="text" name="q" class="form-control" placeholder="Search for groups...">
-    </form>
-    <div class="row">
-        {% for usergroup in usergroups %}
-        <div class="col-md-6 mt-2">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="text-center">Search Groups</h1>
+            <form method="GET" action="{% url 'group_index' %}">
+                <input type="text" name="q" class="form-control" placeholder="Search for groups...">
+            </form>
+        </div>
+        <div class="col-md-4 mt-4">
+            <div class="card shadow w-100">
+                <div class="card-header text-center">Create a group</div>
+                <div class="card-body text-center">
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'create_group' %}" class="btn btn-success">Create a group</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5">
+        {% if usergroups %}
+        {% for group, post in group_posts %}
+        <h3 class="fw-bolder">You searched for:</h3>
+        <div class="col-md-4 mt-2">
             <div class="card mb-4">
                 <div class="card-img-top">
-                    {% if "placeholder" in usergroup.group_image.url %}
+                    {% if "placeholder" in group.group_image.url %}
                     <img class="post-picture" src="{% static 'images/default.jpg' %}" alt="placeholder image">
                     {% else %}
-                    <img class="post-picture" src="{{ usergroup.group_image.url }}" alt="{{ usergroup.name }}">
+                    <img class="post-picture" src="{{ group.group_image.url }}" alt="{{ group.name }}">
                     {% endif %}
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">{{ usergroup.name }}</h5>
-                    <p class="card-subtitle">{{ usergroup.description }}</p>
+                    <h5 class="card-title">{{ group.name }}</h5>
+                    <p class="card-subtitle">{{ group.description }}</p>
                 </div>
                 <div class="card-footer d-flex justify-content-between">
                     {% if post %}
@@ -32,12 +48,13 @@
                         <p>No posts yet.</p>
                         {% endif %}
                     </div>
-                    <p>Members: {{ usergroup.members.count }}</p>
+                    <p>Members: {{ group.members.count }}</p>
                 </div>
-                <a href="{% url 'group_detail' usergroup.slug %}" class="btn btn-primary">View Group</a>
+                <a href="{% url 'group_detail' group.slug %}" class="btn btn-primary">View Group</a>
             </div>
         </div>
         {% endfor %}
+        {% endif %}
     </div>
 </div>
        
@@ -45,7 +62,7 @@
 
 <div class="container">
     <h1 class="fw-bolder">Groups</h1>
-    <div class="row">
+    <div class="row card my-4 py-4 px-3">
         {% for usergroup, post in group_posts %}
         <div class="col-md-6 mt-2">
             <div class="card mb-4">
@@ -78,5 +95,6 @@
         {% endfor %}
     </div>
 </div>
+
 
 {% endblock %}
