@@ -6,31 +6,33 @@
 {% block content %}
 
 <div class="container">
-    <div class="row align-items-center my-5">
-        <div class="col-lg-7">
+    <div class="row my-4 py-2">
+        <div class="group-image-container col-lg-7 position-relative d-flex align-items-center justify-content-center container-fluid group-image" style="height: 400px; width: 100%">
             {% if "placeholder" in usergroup.group_image.url %}
-            <img class="post-picture" src="{% static 'images/default.jpg' %}" alt="placeholder image">
+            <img class="img-fluid w-100 h-100  border border-secondary border-4" src="{% static 'images/default.jpg' %}" alt="placeholder image" style="object-fit: cover;">
             {% else %}
-            <img class="post-picture" src="{{ usergroup.group_image.url }}" alt="{{ usergroup.name }}">
+            <img class="img-fluid w-100 h-100 border border-secondary border-3" src="{{ usergroup.group_image.url }}" alt="{{ usergroup.name }}" style="object-fit: cover;">
             {% endif %}
-        </div>
-        <div class="col-lg-5 mt-4 mt-lg-0">
-            <h1 class="font-weight-light">{{ usergroup.name}} </h1>
-            <p class="image-flash"> Admin: {{ usergroup.admin }} | Members: {{usergroup.members.count}}</p>
-            <p>{{ usergroup.description}}</p>
-            {% if user.is_authenticated %}
-            {% if user in usergroup.members.all %}
-            <p>You are a member of this group.</p>
-            {% else %}
-            <form method="post" action="{% url 'join_group' usergroup.slug %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-primary">Join Group</button>
-            </form>
-            {% endif %}
-            {% endif %}
+            <div class="card position-absolute border border-secondary border-1" style="background: rgba(255, 255, 255, 0.8); width: 80%; max-height: 50%;">
+                <div class="card-body">
+                    <h1 class="font-weight-light card-title">{{ usergroup.name }}</h1>
+                    <p class="card-subtitle">Admin: {{ usergroup.admin }} | Members: {{ usergroup.members.count }}</p>
+                    <p class="card-body">{{ usergroup.description }}</p>
+                    {% if user.is_authenticated %}
+                    {% if user in usergroup.members.all %}
+                    <p>You are a member of this group.</p>
+                    {% else %}
+                    <form method="post" action="{% url 'join_group' usergroup.slug %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Join Group</button>
+                    </form>
+                    {% endif %}
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
-    <div class="card my-5 py-4 text-center">
+    <div class="card my-2 py-2 text-center">
         <div class="card-body">
             <p class="m-0">{{ usergroup.admin_message|safe }}</p>
             {% if user.is_authenticated %}
@@ -39,13 +41,24 @@
                 {% csrf_token %}
                 {{ admin_message|crispy }}
                 <input type="hidden" name="group" value="{{ usergroup.slug }}">
-                <button type="submit" class="btn btn-primary">Update Message Board</button>
+                <button type="submit" class="btn btn-primary mt-1">Update Message Board</button>
             </form>
+            <h3 class="mt-2">Members</h3>
+            <div class="card-footer mt-1">
+            <ul class="list-unstyled">
+                {% for member in usergroup.members.all %}
+                <li>{{ member.username }}
+                    {% if member != usergroup.admin %}
+                    <a href ="{% url 'remove_member' usergroup.slug member.id %}" class="btn btn-danger btn-sm">Remove</a></li>
+                    {% endif %}
+                {% endfor %}
             {% endif %}
             {% endif %}
+            </ul>
+        </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row my-5 py-3">
         {% for post in group_only_post %}
         <div class="col-md-6 mb-3">
             <a href="{% url 'post_detail' post.slug %}" class="post-link" style="text-decoration: none; color: inherit;">

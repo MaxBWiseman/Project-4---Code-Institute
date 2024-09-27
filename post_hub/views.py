@@ -10,7 +10,7 @@ from django.views.generic import DetailView
 from django.views.generic.edit import DeleteView
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
-from .models import Post, Comment, Category, Vote, UserGroup
+from .models import Post, Comment, Category, Vote, UserGroup, User
 from .forms import CommentForm, PostForm, GroupForm, GroupAdminMessageForm
 import json
 
@@ -208,6 +208,7 @@ class DeleteComment(DeleteView):
 # The delete method is called on the comment object to delete the comment from the database.
         return JsonResponse({'success': True})
 
+
 @login_required
 def create_post(request):
     if request.method == 'POST':
@@ -247,6 +248,7 @@ def category_list(request):
     categories = Category.objects.all()
     return render(request, 'post_hub/category_list.html', {'categories': categories})
 
+
 @login_required
 def edit_post(request, slug):
     post = get_object_or_404(Post, slug=slug)
@@ -274,6 +276,7 @@ def edit_post(request, slug):
     return render(request, 'post_hub/edit_post.html', {'form': form, 'post': post})
 # We need to pass the post object to the template so that the user can see the current posts content and make their edits.
 
+
 @login_required
 def create_group(request):
     if request.method == 'POST':
@@ -290,6 +293,7 @@ def create_group(request):
     else:
         form = GroupForm()
     return render(request, 'post_hub/create_group.html', {'form': form})
+    
     
 def group_detail(request, slug):
     group = get_object_or_404(UserGroup, slug=slug)
@@ -341,6 +345,7 @@ def group_detail(request, slug):
 # A context dicitonary is used to pass what is needed to the template for rendering to the user.
     return render(request, 'post_hub/group_detail.html', context)
 
+
 @login_required
 def join_group(request, slug):
     group = get_object_or_404(UserGroup, slug=slug)
@@ -352,6 +357,7 @@ def join_group(request, slug):
         messages.info(request, f'You are already a member of the group {group.name}.')
     return redirect('group_detail', slug=slug)
 
+
 def group_index(request):
     groups = UserGroup.objects.all()
     group_posts = []
@@ -359,6 +365,7 @@ def group_index(request):
         post = group.group_posts.filter(status=1).order_by('-created_at').first()
         group_posts.append((group, post))
     return render(request, 'post_hub/group_index.html', {'group_posts': group_posts})
+
 
 def admin_message(request, slug):
     group = get_object_or_404(UserGroup, slug=slug)
@@ -376,6 +383,18 @@ def admin_message(request, slug):
         form = GroupAdminMessageForm(instance=group)
     
     return render(request, 'post_hub/group_detail.html', {'admin_message': form, 'group': group})
+
+
+def remove_member(request, slug, user_id):
+    group = get_object_or_404(UserGroup, slug=slug)
+    if request.user != group.admin:
+        messages.error(request, 'You are not authorized to remove members from this group.')
+        return redirect('group_detail', slug=slug)
+    
+    user_remove = get_object_or_404(User, id=user_id)
+    group.members.remove(user_remove)
+    messages.success(request, f'{user_remove.username} has been removed from the group.')
+    return redirect('group_detail', slug=slug)
 
 
 class CategoryDetailView(DetailView):

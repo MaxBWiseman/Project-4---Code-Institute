@@ -13,6 +13,7 @@ urlpatterns = [
     path('usergroup/create/', views.create_group, name='create_group'),
     path('usergroup/<slug:slug>/', views.group_detail, name='group_detail'),
     path('usergroup/<slug:slug>/join/', views.join_group, name='join_group'),
+    path('usergroup/<slug:slug>/remove_member/<int:user_id>/', views.remove_member, name='remove_member'),
     path('usergroups/', views.group_index, name='group_index'),
     path('categories/', views.category_list, name='category_list'),
     path('category/<slug:slug>/', CategoryDetailView.as_view(), name='category_detail'),
