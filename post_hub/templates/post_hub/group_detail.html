@@ -6,30 +6,30 @@
 {% block content %}
 
 <div class="container">
-    <div class="row my-4 py-2">
-        <div class="group-image-container col-lg-7 position-relative d-flex align-items-center justify-content-center container-fluid group-image" style="height: 400px; width: 100%">
+    <div class="row align-items-center my-5">
+        <div class="col-lg-7">
             {% if "placeholder" in usergroup.group_image.url %}
-            <img class="img-fluid w-100 h-100  border border-secondary border-4" src="{% static 'images/default.jpg' %}" alt="placeholder image" style="object-fit: cover;">
+            <img class="post-picture" src="{% static 'images/default.jpg' %}" alt="placeholder image">
             {% else %}
-            <img class="img-fluid w-100 h-100 border border-secondary border-3" src="{{ usergroup.group_image.url }}" alt="{{ usergroup.name }}" style="object-fit: cover;">
+            <img class="post-picture" src="{{ usergroup.group_image.url }}" alt="{{ usergroup.name }}">
             {% endif %}
-            <div class="card position-absolute border border-secondary border-1" style="background: rgba(255, 255, 255, 0.8); width: 80%; max-height: 50%;">
-                <div class="card-body">
-                    <h1 class="font-weight-light card-title">{{ usergroup.name }}</h1>
-                    <p class="card-subtitle">Admin: {{ usergroup.admin }} | Members: {{ usergroup.members.count }}</p>
-                    <p class="card-body">{{ usergroup.description }}</p>
-                    {% if user.is_authenticated %}
-                    {% if user in usergroup.members.all %}
-                    <p>You are a member of this group.</p>
-                    {% else %}
-                    <form method="post" action="{% url 'join_group' usergroup.slug %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-primary">Join Group</button>
-                    </form>
-                    {% endif %}
-                    {% endif %}
-                </div>
-            </div>
+        </div>
+        <div class="card my-3 py-3 col-lg-5 mt-4 mt-lg-0">
+            <h1 class="card-title">{{ usergroup.name}} </h1>
+            <p class="image-flash"> Admin: {{ usergroup.admin }} | Members: {{usergroup.members.count}}</p>
+            <div class="card-body">
+            <p class="card-text">{{ usergroup.description}}</p>
+            {% if user.is_authenticated %}
+            {% if user in usergroup.members.all %}
+            <p>You are a member of this group.</p>
+            {% else %}
+            <form method="post" action="{% url 'join_group' usergroup.slug %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Join Group</button>
+            </form>
+            {% endif %}
+            {% endif %}
+        </div>
         </div>
     </div>
     <div class="card my-2 py-2 text-center">
@@ -117,17 +117,12 @@
         <div>
             <a id="comments-section"></a>
             {% recursetree comments %}
-            <div id="comment-{{ node.id }}" class="my-2 p-2" style="border: 1px solid grey">
-                <div class="d-flex justify-content-between">
+            <div id="comment-{{ node.id }}" class="card my-1 px-sm-1 px-md-2 px-lg-3 fw-bolder mb-4" style="border: 5px solid grey">
+                <div class="d-flex card-body phone-column justify-content-between">
                     <span class="comment-author">By {{ node.author }} </span>
-                    <div><span id="created-at-{{ node.id }}">{{ node.created_at|date:"Y-m-d H:i:s" }}</span>
-                        {% if node.updated_at and node.updated_at.date != node.created_at.date %}
-                        <span id="updated-at-{{ node.id}}">Edited: {{ node.updated_at|date:"Y-m-d H:i:s" }}<span>
-                        {% endif %}
-                    </div>
                     <div id="reply-count">Total Replies: {{ node.get_descendant_count }}</div>
                 </div>
-                <div id="comment-content-{{ node.id }}">{{ node.content }}</div>
+                <div class="ms-2" id="comment-content-{{ node.id }}">{{ node.content }}</div>
                 <div id="edit-comment-{{ node.id }}" style="display: none;">
                     <form method="post" id="edit-comment-form-{{ node.id }}"
                         onsubmit="return submitEditComment({{ node.id }})(event);">
@@ -140,17 +135,27 @@
                     </form>
                 </div>
                 <hr />
-                <p> Upvotes : {{ node.total_upvotes }} </p>
-                <button class="button" onclick="voteComment({{ node.id }}, true)">Upvote</button>
-                <button class="button" onclick="voteComment({{ node.id }}, false)">Downvote</button>
-                <p> Downvotes : {{ node.total_downvotes }} </p>
+                <div class="button-container">
+                <button class="button ms-1 btn-sm-width" onclick="voteComment({{ node.id }}, true)">Upvote</button>
+                <button class="button ms-1 btn-sm-width" onclick="voteComment({{ node.id }}, false)">Downvote</button>
                 {% if node.level < 3 %}
-                <button class="button" onclick="grabOne({{ node.id }})">Reply</button>
+                <button class="button ms-1 btn-sm-width" onclick="grabOne({{ node.id }})">Reply</button>
                 {% endif %}
                 {% if request.user == node.author %}
-                <button class="button" onclick="editComment({{ node.id }})">Edit</button>
-                <button onclick="confirmDelete({{ node.id }})" class="button delete-button">Delete</button>
+                <button class="button ms-1 btn-sm-width" onclick="editComment({{ node.id }})">Edit</button>
+                <button onclick="confirmDelete({{ node.id }})" class="button delete-button ms-1 btn-sm-width">Delete</button>
                 {% endif %}
+                </div>
+                <div class="d-flex justify-content-between">
+                <div>
+                <p> Upvotes : {{ node.total_upvotes }} | Downvotes : {{ node.total_downvotes }} </p>
+                </div>
+                <div><span id="created-at-{{ node.id }}">Posted: {{ node.created_at|date:"Y-m-d H:i:s" }}</span>
+                    {% if node.updated_at and node.updated_at.date != node.created_at.date %}
+                    <span id="updated-at-{{ node.id}}">Edited: {{ node.updated_at|date:"Y-m-d H:i:s" }}<span>
+                    {% endif %}
+                </div>
+            </div>
             </div>
             {% if not node.is_leaf_node %}
             <div class="children nested-comment pl-2 pl-md-5">
