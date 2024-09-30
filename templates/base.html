@@ -69,6 +69,10 @@
                         </li>
                         {% endif %}
                     </ul>
+                    <label>
+                        <input type="checkbox" id="day-night" />
+                        Day/Night
+                    </label>
                     <form class="d-flex">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Search</button>
@@ -87,7 +91,7 @@
                     <a href="{% url 'group_index' %}">Groups</a>
                 </div>
             </div>
-            <div class="col-md-10 content-padding">
+            <div class="col-md-9 content-padding">
                 <!--Everything above is copied for every page-->
                 {% block content %}
                 <!-- the blank space where the other pages will fill there own content-->

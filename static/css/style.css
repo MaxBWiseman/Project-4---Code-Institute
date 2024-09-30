@@ -31,7 +31,6 @@
 .card2 {
     background: #e0e0e0;
     box-shadow: 15px 15px 30px #bebebe;
-    float: left;
 }
 
 .custom-center {
@@ -89,6 +88,56 @@ header {
     position: relative;
     z-index: 1000;
 }
+/* start of content from - https://www.youtube.com/watch?v=IP_rtWEMR0o&t=438s */
+/* I watched a JSconference video on youtube and learned how to create a switch with just HTML and CSS,
+   I thought thise was pretty cool as you needed zero javascript to create a switch */
+input#day-night {
+    appearance: none;
+    position: relative;
+    display: inline-block;
+    background: skyblue;
+    height: 1.65rem;
+    width: 2.75rem;
+    vertical-align: middle;
+    border-radius: 2rem;
+    box-shadow: 0px 1px 3px #0003 inset;
+    transition: 0.25s linear background;
+}
+
+input#day-night::before {
+    content : '';
+    display: block;
+    width: 1.25rem;
+    height: 1.25rem;
+    background: #dff046;
+    border-radius: 1.2rem;
+    position: absolute;
+    top: 0.2rem;
+    left: 0.2rem;
+    box-shadow: 0px 1px 3px #0003;
+    transition: 0.25s linear transform;
+    transform: translateX(0rem);
+}
+
+input#day-night:checked {
+    background: #384653;
+}
+
+input#day-night:checked::before {
+    transform: translateX(1rem);
+    background: #e4e1d5;
+}
+
+input#day-night:focus-visible {
+    outline: 2px solid dodgerblue;
+    outline-offset: 2px;
+}
+
+input#day-night:focus {
+    outline: none;
+    outline-color: transparent;
+}
+/* end of content from - https://www.youtube.com/watch?v=IP_rtWEMR0o&t=438s */
 
 /* Side navbar */
 .sidebar {
