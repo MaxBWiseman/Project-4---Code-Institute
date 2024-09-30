@@ -251,3 +251,9 @@ function voteComment(commentId, isUpvote) {
         }
     });
 }
+
+$(function() {
+    $('#day-night').on('change', function() {
+        $('body').toggleClass('night-mode', this.checked);
+    });
+});

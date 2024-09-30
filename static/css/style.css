@@ -1,3 +1,8 @@
+/* body */
+.content-padding {
+    padding-bottom: 9rem;
+}
+/* End body*/
 /* Cards */
 .post-card {
     width: 75%;
@@ -24,13 +29,13 @@
 .card {
     border-radius: 10px;
     background: #e0e0e0;
-    box-shadow: 15px 15px 30px #bebebe,
-               -15px -15px 30px #ffffff;
+    box-shadow: 10px 10px 30px#888888;
+
 }
 
 .card2 {
     background: #e0e0e0;
-    box-shadow: 15px 15px 30px #bebebe;
+    box-shadow: 10px 15px 30px #bebebe;
 }
 
 .custom-center {
@@ -50,7 +55,7 @@
 
 .card-hover:hover {
     transform: translateY(5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 16px 16px 20px 5px rgba(0, 0, 0, 0.3);
 /*When element is hovered the transform property pushes the element 5px down
   and the shadows color gets deeper color and blur */
 }
@@ -78,11 +83,6 @@
     background-color: #28323C !important;
 }
 /* End Row Styles */
-/* Content padding for fixed footer clearance */
-.content-padding {
-    padding-bottom: 9rem;
-}
-/* End Content padding*/
 /* Navbar */
 header {
     position: relative;
@@ -128,15 +128,38 @@ input#day-night:checked::before {
     background: #e4e1d5;
 }
 
+body.night-mode {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+}
+
+body.night-mode a {
+    color: #3498db;
+}
+
+body.night-mode .card {
+    background: #507091;
+    box-shadow: none;
+}
+
+body.night-mode .card-footer {
+    background: #3d566e;
+}
+
+body.night-mode .sidebar {
+    background: #43515f;
+}
+
+/*These two below are for keyboard users so its clear whats being selected */
 input#day-night:focus-visible {
     outline: 2px solid dodgerblue;
     outline-offset: 2px;
 }
 
 input#day-night:focus {
-    outline: none;
     outline-color: transparent;
 }
+/* input included at the start for specificity */
 /* end of content from - https://www.youtube.com/watch?v=IP_rtWEMR0o&t=438s */
 
 /* Side navbar */
