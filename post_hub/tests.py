@@ -1,8 +1,9 @@
 from django.test import TestCase, Client
 from django.urls import reverse
+from django.contrib.messages import get_messages
 from django.contrib.auth.models import User
 from .forms import PostForm, CommentForm
-from .models import Comment, Post, Category, Vote
+from .models import Comment, Post, Category, Vote, UserGroup
 import json
 
 class PostFormTest4SpellChecker(TestCase):
@@ -251,3 +252,72 @@ class VoteFunctionalityTest(TestCase):
         response = self.client.post(url, data=json.dumps(data), content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.assertFalse(Vote.objects.filter(comment=self.comment, user=self.user).exists())
+        
+class EditPostTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.category = Category.objects.create(category_name='test category')
+        self.post = Post.objects.create(
+            title='Test Post', 
+            blurb='Test Blurb', 
+            content='Test Content', 
+            category=self.category, 
+            author=self.user
+        )
+        self.client.login(username='testuser', password='12345')
+        
+    def test_edit_post(self):
+        url = reverse('edit_post', args=[self.post.slug])
+        data = {
+            'title': 'Edited Post',
+            'blurb': 'Edited Blurb',
+            'content': 'Edited Content',
+            'category': self.category.id
+        }
+        
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 302)
+        self.post.refresh_from_db()
+        self.assertEqual(self.post.title, 'Edited Post')
+        self.assertEqual(self.post.blurb, 'Edited Blurb')
+        self.assertEqual(self.post.content, 'Edited Content')
+        self.assertEqual(self.post.category, self.category)
+        
+
+class UserGroupTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.group = UserGroup.objects.create(name='Test Group', slug='test-group', admin=self.user)
+        self.client.login(username='testuser', password='12345')
+
+    def test_join_group(self):
+        url = reverse('join_group', args=[self.group.slug])
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(self.user, self.group.members.all())
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[0]), f'You have joined the group {self.group.name}!')
+
+
+class CategoryDetailViewTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.category = Category.objects.create(category_name='Test Category', slug='test-category')
+        self.post = Post.objects.create(
+            title='Test Post', 
+            blurb='Test Blurb', 
+            content='Test Content', 
+            category=self.category, 
+            author=self.user
+        )
+
+    def test_category_detail_view(self):
+        url = reverse('category_detail', args=[self.category.slug])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'post_hub/category_detail.html')
+        self.assertContains(response, self.category.category_name)
+        self.assertContains(response, self.post.title)

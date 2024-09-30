@@ -282,12 +282,17 @@ def create_group(request):
     if request.method == 'POST':
         form = GroupForm(request.POST)
         if form.is_valid():
-            group = form.save(commit=False)
-            group.admin = request.user
+            user_group_count = UserGroup.objects.filter(admin=request.user).count()
+            if user_group_count >= 2:
+                messages.error(request, 'You can only create up to 2 groups.')
+# Limit users to 2 groups each
+            else:
+                group = form.save(commit=False)
+                group.admin = request.user
 # Admin is set to group creator
-            group.save()
-            messages.success(request, 'Your group has been created successfully!')
-            return redirect('group_detail', slug=group.slug)
+                group.save()
+                messages.success(request, 'Your group has been created successfully!')
+                return redirect('group_detail', slug=group.slug)
         else:
             messages.error(request, 'There was an error creating your group. Please try again.')
     else:

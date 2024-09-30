@@ -40,7 +40,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-md-0">
                         <li class="nav-item">
-                            <a class="nav-link {% if request.path == home %}active{% endif %}" aria-current="page"
+                            <a class="nav-link {% if request.path == '/' %}active{% endif %}" aria-current="page"
                                 href="{% url 'home' %}">Home</a>
                             <!-- Our if statement. It compares request.path, which is our current URL, with the home_url variable.
  If they're the same, then it inserts the word active into the class names. So, we're saying that if
@@ -50,7 +50,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link
-                          {% if request.path == category_list %}active{%endif%}" aria-current="page"
+                          {% if request.path == '/categories/' %}active{%endif%}" aria-current="page"
                                 href="{% url 'category_list' %}">Categories</a>
                         </li>
                         {% if user.is_authenticated %}
@@ -85,10 +85,10 @@
         <div class="row">
             <div class="col-md-2">
                 <div class="sidebar">
-                    <a class="active" href="{% url 'home' %}">Home</a>
-                    <a href="{% url 'create_post' %}">Post a Toot!</a>
-                    <a href="{% url 'category_list' %}">Categories</a>
-                    <a href="{% url 'group_index' %}">Groups</a>
+                    <a class="nav-link{% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">Home</a>
+                    <a class="nav-link{% if request.path == '/create/' %}active{% endif %}" href="{% url 'create_post' %}">Post a Toot!</a>
+                    <a class="nav-link {% if request.path == '/categories/' %}active{% endif %}" href="{% url 'category_list' %}">Categories</a>
+                    <a class="nav-link {% if request.path == '/usergroups/' %}active{% endif %}" href="{% url 'group_index' %}">Groups</a>
                 </div>
             </div>
             <div class="col-md-9 content-padding">
