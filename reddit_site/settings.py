@@ -19,10 +19,11 @@ from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 load_dotenv(os.path.join(BASE_DIR, '.env'))
+
 # the code above imports the env.py file if it exists. due to not pushing the env.py file to github.
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -59,6 +60,15 @@ INSTALLED_APPS = [
     'post_hub',
 ]
 
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = 'your-email@gmail.com'
+
 #AllAuth
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
@@ -68,8 +78,10 @@ ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = None
 
+#Crispy Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+#CKEditor
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_CONFIGS = {
     'default': {
@@ -79,6 +91,7 @@ CKEDITOR_CONFIGS = {
         'removePlugins': 'exportpdf'
     },
 }
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
