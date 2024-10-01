@@ -28,6 +28,11 @@
         <button class="btn btn-success right" type="submit">{% trans "Sign In" %}</button>
       </form>
     </div>
+    <div class="col-md-8 mt-3 offset-md-2">
+    <a href="{% url 'account_reset_password' %}">
+    <p>{% trans "Forgot your password?" %}</P>
+    </a>
+    </div>
   </div>
 </div>
 {% endblock %}

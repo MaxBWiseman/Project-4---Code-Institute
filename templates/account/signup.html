@@ -12,6 +12,11 @@
       <br>
       <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}
       </p>
+      <div class="col-md-8 mt-3 offset-md-2">
+        <a href="{% url 'account_reset_password' %}">
+        <p>{% trans "Forgot your password?" %}</P>
+        </a>
+        </div>
     </div>
     <div class="col-md-8 mt-3 d-flex align-center justify-content-center">
       <form class="signup text-center" id="signup_form" method="post" action="{% url 'account_signup' %}">
