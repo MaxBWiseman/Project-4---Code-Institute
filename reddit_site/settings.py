@@ -14,7 +14,6 @@ from pathlib import Path
 import os
 import sys
 import dj_database_url
-import django_heroku
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -198,6 +197,3 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Activate Django-Heroku.
-# django_heroku.settings(locals())
