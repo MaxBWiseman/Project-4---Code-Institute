@@ -189,6 +189,21 @@ def edit_comment(request, comment_id):
 # If the request method is not POST, a JSON response is returned to indicate that the request is invalid.
 # I chose to use JSON responses for this view because it is an AJAX request and JSON is a common format for AJAX responses.
 
+class DeletePost(DeleteView):
+    model = Post
+    success_url = reverse_lazy('home')
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.user.is_superuser:
+            return queryset
+        return queryset.filter(auther=self.request.user)
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        return JsonResponse({'success': True})
+
 class DeleteComment(DeleteView):
     model = Comment
     success_url = reverse_lazy('home')
@@ -197,6 +212,8 @@ class DeleteComment(DeleteView):
         queryset = super().get_queryset()
 # This line of code calls the get_queryset method of the parent class to retrieve the queryset.
 # The queryset is used to filter the comments to only include comments by the current user.
+        if self.request.user.is_superuser:
+            return queryset
         return queryset.filter(author=self.request.user)
 # The author field of the comment is compared to the current user to filter the comments.
 # The current user is retrieved from the request object and compared to the author field of the comment.

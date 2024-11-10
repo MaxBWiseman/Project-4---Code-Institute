@@ -26,6 +26,9 @@
 <section class="mb-5 mt-2">
     {% if request.user == post.author %}
     <a href="{% url 'edit_post' post.slug %}" class="btn btn-primary {% if request.user != post.author %}d-none{% else %}d-inline{% endif %}">Edit</a>
+    <button onclick="confirmDeletePost({{ post.id }})" class="btn btn-danger {% if request.user != post.author and not request.user.is_superuser %}d-none{% else %}d-inline{% endif %}">Delete</button>
+    {% endif %}
+    {% if post.content %}
     
     {% endif %}
     <p class="fs-5">{{ post.content | safe }}</p>

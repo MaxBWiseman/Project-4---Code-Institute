@@ -49,12 +49,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 5000);
 });
 
+function confirmDeletePost(postId) {
+    const modal = document.getElementById('deleteModal');
+    const confirmBtn = document.getElementById('confirmDeleteBtn');
+    modal.style.display = 'block';
+    confirmBtn.onclick = function() {
+        deletePost(postId);
+    }
+}
+
 function confirmDelete(commentId) {
     const modal = document.getElementById('deleteModal');
     const confirmBtn = document.getElementById('confirmDeleteBtn');
     modal.style.display = 'block';
     confirmBtn.onclick = function() {
-    deleteComment(commentId);
+        deleteComment(commentId);
     };
 }
 
@@ -159,6 +168,30 @@ function deleteComment(commentId) {
             successModal();
         } else {
             alert('Error deleting comment');
+        }
+    });
+}
+
+function deletePost(postId) {
+    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+    fetch(`/post/${postId}/delete/`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            closeModal();
+            successModal();
+            setTimeout(() => {
+                window.location.replace('/');
+                }, 3000);
+        } else {
+            alert('Error deleting post');
         }
     });
 }
