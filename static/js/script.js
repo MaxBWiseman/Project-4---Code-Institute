@@ -310,3 +310,20 @@ $(function() {
         $('body').toggleClass('night-mode', this.checked);
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const commentActions = document.querySelectorAll('.commentAction');
+
+    commentActions.forEach(button => {
+        button.addEventListener('click', function() {
+            const target = this.getAttribute('data-bs-target');
+            const allCollapses = document.querySelectorAll('.collapse');
+
+            allCollapses.forEach(collapse => {
+                if (collapse.id !== target.substring(1)) {
+                    collapse.classList.remove('show');
+                }
+            })
+        })
+    })
+})
