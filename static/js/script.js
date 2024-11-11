@@ -47,6 +47,26 @@ document.addEventListener('DOMContentLoaded', function() {
             alert.style.display = 'none';
         });
     }, 5000);
+
+    const dayNightSwitch = document.getElementById('day-night');
+
+    // Check state of day-night switch
+    if (localStorage.getItem('dayNightSwitch') === 'true') {
+        dayNightSwitch.checked = true;
+        document.body.classList.add('night-mode');
+    } else {
+        dayNightSwitch.checked = false;
+        document.body.classList.remove('night-mode');
+    }
+
+    dayNightSwitch.addEventListener('change', function() {
+        localStorage.setItem('dayNightSwitch', dayNightSwitch.checked);
+        if (dayNightSwitch.checked) {
+            document.body.classList.add('night-mode');
+        } else {
+            document.body.classList.remove('night-mode');
+        }
+    })
 });
 
 function confirmDeletePost(postId) {
