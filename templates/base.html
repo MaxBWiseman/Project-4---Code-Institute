@@ -13,8 +13,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/676d6af4e2.js" crossorigin="anonymous"></script>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
@@ -31,7 +31,7 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
                 <a class="navbar-brand" href="{% url 'home' %}"><b>Tooter</b></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -75,7 +75,7 @@
                     </span>
                     <form class="d-flex">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
+                        <button class="button2 minttext ml-2" type="submit">Search</button>
                     </form>
                 </div>
             </div>
@@ -85,10 +85,10 @@
         <div class="row">
             <div class="col-md-2">
                 <div class="sidebar">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
-                    <a class="nav-link {% if request.resolver_match.url_name == 'create_post' %}active{% endif %}" href="{% url 'create_post' %}">Post a Toot!</a>
-                    <a class="nav-link {% if request.resolver_match.url_name == 'category_list' %}active{% endif %}" href="{% url 'category_list' %}">Categories</a>
-                    <a class="nav-link {% if request.resolver_match.url_name == 'group_index' %}active{% endif %}" href="{% url 'group_index' %}">Groups</a>
+                    <a class="nav-link minttext {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
+                    <a class="nav-link minttext {% if request.resolver_match.url_name == 'create_post' %}active{% endif %}" href="{% url 'create_post' %}">Post a Toot!</a>
+                    <a class="nav-link minttext {% if request.resolver_match.url_name == 'category_list' %}active{% endif %}" href="{% url 'category_list' %}">Categories</a>
+                    <a class="nav-link minttext {% if request.resolver_match.url_name == 'group_index' %}active{% endif %}" href="{% url 'group_index' %}">Groups</a>
                     <!-- The 'active' class is applied when the current URL name matches e.g 'home', 'create_post'.
                      Using request.resolver_match.url_name is a more reliable way to compare the current URL name with the expected URL names.-->
                 </div>
@@ -157,8 +157,7 @@
                             {% endif %}
                             <div class="row row-style-2">
                                 <div class="col-sm-3 text-md-center mt-3">
-                                    <h5>
-                                        <b> Tooter</b></h5>
+                                    <a class="navbar-brand" href="{% url 'home' %}"><h4><b>Tooter</b></h4></a>
                                 </div>
                                 <div class="col-sm-3  my-sm-0 mt-2">
                                     <ul class="list-unstyled">

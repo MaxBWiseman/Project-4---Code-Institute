@@ -19,8 +19,8 @@
     <p class="fw-lighter">Category: {{ post.category }}{% if post.group %} | From Group: {{post.group}} {% endif %}</p>
     <p class="fw-lighter">Upvotes: {{ total_upvotes }}</p>
     <p class="fw-lighter">Downvotes: {{ total_downvotes }}</p>
-    <button class="button" onclick="votePost({{ post.id }}, true)">Upvote</button>
-    <button class="button" onclick="votePost({{ post.id }}, false)">Downvote</button>
+    <button class="button d-inline" onclick="votePost({{ post.id }}, true)"><i class="fa-regular fa-thumbs-up"></i></button>
+    <button class="button d-inline" onclick="votePost({{ post.id }}, false)"><i class="fa-regular fa-thumbs-down"></i></button>
 </div>
 </header>
 <section class="mb-5 mt-2">
@@ -67,35 +67,35 @@
                 </div>
                 <hr />
                 <div class="button-container d-md-none">
-                    <button class='btn btn-primary commentAction' type='button' data-bs-toggle='collapse' data-bs-target='#buttonList-{{ node.id }}' aria-expanded='false' aria-controls='buttonList'>Actions</button>
+                    <button class='btn btn-primary commentAction text-dark' type='button' data-bs-toggle='collapse' data-bs-target='#buttonList-{{ node.id }}' aria-expanded='false' aria-controls='buttonList'>Actions</button>
                     <div class='collapse commentButtonCollapse' id='buttonList-{{ node.id }}'>
-                        <button class="button mt-1" onclick="voteComment({{ node.id }}, true)">Upvote</button>
-                        <button class="button mt-1" onclick="voteComment({{ node.id }}, false)">Downvote</button>
+                        <button class="button mt-1" onclick="voteComment({{ node.id }}, true)"><i class="fa-regular fa-thumbs-up fa-lg"></i></button>
+                        <button class="button mt-1" onclick="voteComment({{ node.id }}, false)"><i class="fa-regular fa-thumbs-down fa-lg"></i></button>
                         {% if node.level < 3 %}
-                        <button class="button mt-1" onclick="grabOne({{ node.id }})">Reply</button>
+                        <button class="button mt-1" onclick="grabOne({{ node.id }})"><i class="fa-regular fa-comment-dots fa-lg"></i></button>
                         {% endif %}
                         {% if request.user == node.author %}
-                        <button class="button mt-1" onclick="editComment({{ node.id }})">Edit</button>
-                        <button onclick="confirmDelete({{ node.id }})" class="button delete-button mt-1">Delete</button>
+                        <button class="button mt-1" onclick="editComment({{ node.id }})"><i class="fa-regular fa-pen-to-square fa-lg"></i></button>
+                        <button onclick="confirmDelete({{ node.id }})" class="button delete-button mt-1"><i class="fa-solid fa-trash fa-lg"></i></button>
                         {% endif %}
                     </div>
                 </div>
                 <div class='button-container d-none d-md-flex'>
-                    <button class="button ms-1 btn-sm-width" onclick="voteComment({{ node.id }}, true)">Upvote</button>
-                    <button class="button ms-1 btn-sm-width" onclick="voteComment({{ node.id }}, false)">Downvote</button>
+                    <button class="button ms-1 btn-sm-width" onclick="voteComment({{ node.id }}, true)"><i class="fa-regular fa-thumbs-up fa-lg"></i></button>
+                    <button class="button ms-1 btn-sm-width" onclick="voteComment({{ node.id }}, false)"><i class="fa-regular fa-thumbs-down fa-lg"></i></button>
                     {% if node.level < 3 %}
-                    <button class="button ms-1 btn-sm-width" onclick="grabOne({{ node.id }})">Reply</button>
+                    <button class="button ms-1 btn-sm-width" onclick="grabOne({{ node.id }})"><i class="fa-regular fa-comment-dots fa-lg"></i></button>
                     <!-- grabOne collects the assocoaited parent id of the comment so the comment reply knows what comment to call its parent,
                     this js function also makes sure only one reply form can be visible at one time-->
                     {% endif %}
                     {% if request.user == node.author %}
-                    <button class="button ms-1 btn-sm-width" onclick="editComment({{ node.id }})">Edit</button>
-                    <button onclick="confirmDelete({{ node.id }})" class="button delete-button ms-1 btn-sm-width">Delete</button>
+                    <button class="button ms-1 btn-sm-width" onclick="editComment({{ node.id }})"><i class="fa-regular fa-pen-to-square fa-lg"></i></button>
+                    <button onclick="confirmDelete({{ node.id }})" class="button delete-button ms-1 btn-sm-width"><i class="fa-solid fa-trash fa-lg"></i></button>
                     {% endif %}
                 </div>
-                <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-between p-1">
                 <div>
-                <p> Upvotes : {{ node.total_upvotes }} | Downvotes : {{ node.total_downvotes }} </p>
+                <p> Upvotes <i class="fa-regular fa-thumbs-up fa-lg"></i> : {{ node.total_upvotes }} | Downvotes <i class="fa-regular fa-thumbs-down fa-lg"></i> : {{ node.total_downvotes }} </p>
                 </div>
                 <div><span id="created-at-{{ node.id }}">Posted: {{ node.created_at|date:"Y-m-d H:i:s" }}</span>
                     {% if node.updated_at and node.updated_at.date != node.created_at.date %}
@@ -147,7 +147,9 @@
         {% csrf_token %}
         {{ comment_form.as_p }}
         <input type="hidden" id="comment-id" name="comment-id">
-        <button type="submit" id="post-comment-button" class="btn btn-primary btn-lg btn-block">Submit</button>
+        <div class="d-flex justify-content-center">
+            <button type="submit" id="post-comment-button" class="button">Submit</button>
+        </div>
     </form>
 </div>
 
