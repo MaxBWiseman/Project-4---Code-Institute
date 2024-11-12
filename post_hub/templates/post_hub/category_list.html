@@ -7,6 +7,11 @@
         <div class="card shadow text-center">
             <h1 class="text-center card-title mt-5">Categories</h1>
             <hr>
+            <div class='category-search'>
+                <form method='GET' action='{% url 'category_list' %}'>
+                    <input type='text' name='q' class='form-control' placeholder='Search for categories...'>
+                </form>
+            </div>
             <ul class="list-unstyled card-body">
                 {% for category in categories %}
                 <li class='pt-2'><a class='button2' href="{% url 'category_detail' category.slug %}">{{ category.category_name }}</a></li>

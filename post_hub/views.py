@@ -262,7 +262,11 @@ def create_post(request):
 
     
 def category_list(request):
-    categories = Category.objects.all()
+    query = request.GET.get('q')
+    if query:
+        categories = Category.objects.filter(category_name__icontains=query)
+    else:
+        categories = Category.objects.all()
     return render(request, 'post_hub/category_list.html', {'categories': categories})
 
 
