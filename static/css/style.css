@@ -9,8 +9,8 @@ body {
     font-weight: 1000;
 }
 
-.purpletext {
-    color: #869377!important;
+.darktext {
+    color: #23322D!important;
     font-weight: bolder;
 }
 /* End body*/
@@ -46,6 +46,11 @@ body {
 
 .card-footer {
     background-color: #93CDB6;
+}
+
+.card3 {
+    box-shadow: 10px 10px 30px#888888;
+    background: #139983;
 }
 
 .card2 {
@@ -90,12 +95,12 @@ body {
 /* End Cards */
 /* Row Styles */
 .row-style {
-    background-color: #A6F2D4 !important;
+    background-color: #555E4D !important;
 }
 
 .row-style-2 {
     
-    background-color: #555E4D !important;
+    background-color: #A6F2D4 !important;
 }
 /* End Row Styles */
 /* Navbar */
@@ -264,7 +269,7 @@ footer {
     position: relative;
     bottom: 0;
     z-index: 1000;
-    background-color: #93CDB6;
+    background-color: #869377;
     color: #23322D;
     text-align: center;
     width: 100%;
@@ -291,7 +296,7 @@ footer {
 /* End Comments */
 /* Buttons */
 .btn {
-    background-image: linear-gradient(#A6F2D4, #93CDB6);
+    background-image: linear-gradient(rgb(214, 202, 254), rgb(158, 129, 254));
     color: #23322D;
     font-weight: bolder;
 }
@@ -305,13 +310,14 @@ footer {
     border: none;
     cursor: pointer;
     transition: 400ms;
-    outline: 2px #363f44 solid;
+    outline: 2px #23322D solid;
     outline-offset: -1px;
     margin-bottom: 5px;
     padding: 15px;
     border-radius: 5px;
     transform:skewX(-15deg);
     margin-right: 5px;
+    color: #23322D;
 }
 
 .button2 {
@@ -319,11 +325,11 @@ footer {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    background-color: #869377;
+    background-color: #93CDB6;
     border: none;
     cursor: pointer;
     transition: 400ms;
-    outline: 2px #363f44 solid;
+    outline: 2px #23322D solid;
     outline-offset: -1px;
     margin-bottom: 5px;
     padding: 5px;
@@ -331,9 +337,39 @@ footer {
     transform:skewX(-15deg);
     width: 50%;
     margin: 0 auto;
+    color: #23322D;
+}
+
+.button3 {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-image: linear-gradient(rgb(214, 202, 254), rgb(158, 129, 254));
+    border: none;
+    cursor: pointer;
+    transition: 400ms;
+    color: #23322D;
+    outline: 2px #23322D solid;
+    outline-offset: -1px;
+    padding: 5px;
+    border-radius: 5px;
+    transform:skewX(-15deg);
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .button:hover {
+    background-color: #ddaf69;
+    transform: translateY(-2px);
+}
+
+.button2:hover {
+    background-color: #ddaf69;
+    transform: translateY(-2px);
+}
+
+.button3:hover {
     background-color: #ddaf69;
     transform: translateY(-2px);
 }

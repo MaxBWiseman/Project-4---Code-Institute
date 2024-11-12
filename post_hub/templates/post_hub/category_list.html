@@ -4,7 +4,7 @@
 <!-- category_list.html content starts here -->
 <div class="container-fluid">
     <div class="row">
-        <div class="card shadow text-center">
+        <div class="card card3 shadow text-center">
             <h1 class="text-center card-title mt-5">Categories</h1>
             <hr>
             <div class='category-search'>
@@ -17,7 +17,7 @@
                 <li class='pt-2'><a class='button2' href="{% url 'category_detail' category.slug %}">{{ category.category_name }}</a></li>
                 {% endfor %}
             </ul>
-            <div class="card-footer">
+            <div class="card-footer card3">
                 <a href="{% url 'home' %}" class="button">Back to Home</a>
         </div>
 {% endblock %}

@@ -11,11 +11,11 @@
             </form>
         </div>
         <div class="col-md-4 mt-4">
-            <div class="card shadow w-100">
+            <div class="card card3 shadow w-100">
                 <div class="card-header text-center">Have leadership skills?</div>
                 <div class="card-body text-center">
                     <ul class="list-unstyled">
-                        <li><a href="{% url 'create_group' %}" class="btn btn-success purpletext">Create a group</a></li>
+                        <li><a href="{% url 'create_group' %}" class="btn btn-success">Create a group</a></li>
                     </ul>
                 </div>
             </div>
@@ -50,7 +50,7 @@
                     </div>
                     <p>Members: {{ group.members.count }}</p>
                 </div>
-                <a href="{% url 'group_detail' group.slug %}" class="btn btn-primary purpletext">View Group</a>
+                <a href="{% url 'group_detail' group.slug %}" class="btn btn-primary">View Group</a>
             </div>
         </div>
         {% endfor %}
@@ -59,7 +59,7 @@
 </div>
 <div class="container">
     <h1 class="fw-bolder">Groups</h1>
-    <div class="row card my-4 py-4 px-3">
+    <div class="row card card3 my-4 py-4 px-3">
         {% for usergroup, post in group_posts %}
         <div class="col-md-6 mt-2">
             <div class="card mb-4">

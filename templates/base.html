@@ -75,7 +75,7 @@
                     </span>
                     <form class="d-flex">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="button2 minttext ml-2" type="submit">Search</button>
+                        <button class="button3 ml-2" type="submit"><i class="fa-solid fa-arrow-right fa-1x"></i></button>
                     </form>
                 </div>
             </div>
@@ -85,10 +85,10 @@
         <div class="row">
             <div class="col-md-2">
                 <div class="sidebar">
-                    <a class="nav-link minttext {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
-                    <a class="nav-link minttext {% if request.resolver_match.url_name == 'create_post' %}active{% endif %}" href="{% url 'create_post' %}">Post a Toot!</a>
-                    <a class="nav-link minttext {% if request.resolver_match.url_name == 'category_list' %}active{% endif %}" href="{% url 'category_list' %}">Categories</a>
-                    <a class="nav-link minttext {% if request.resolver_match.url_name == 'group_index' %}active{% endif %}" href="{% url 'group_index' %}">Groups</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'create_post' %}active{% endif %}" href="{% url 'create_post' %}">Post a Toot!</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'category_list' %}active{% endif %}" href="{% url 'category_list' %}">Categories</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'group_index' %}active{% endif %}" href="{% url 'group_index' %}">Groups</a>
                     <!-- The 'active' class is applied when the current URL name matches e.g 'home', 'create_post'.
                      Using request.resolver_match.url_name is a more reliable way to compare the current URL name with the expected URL names.-->
                 </div>
