@@ -10,7 +10,7 @@
     <div class="container mt-2">
         <div class="row">
             <!-- Main Content Column -->
-            <div class="col-lg-8">
+            <div class="col-12 col-sm-8">
                 {% for post in post_list %}
                 {% if not forloop.first %}
                 <hr>
@@ -18,7 +18,7 @@
                 <a href="{% url 'post_detail' post.slug %}" class="post-link"
                     style="text-decoration: none; color: inherit;">
                     <div class="card mb-3 card-hover">
-                        <div class="col-md-4 col-lg-12">
+                        <div class="col-12">
                             <div class="card">
                                 <div class="card-img-top">
                                     {% if "placeholder" in post.banner_image.url %}
@@ -67,11 +67,11 @@
             </div>
 
             <!-- Side Widgets Column -->
-            <div class="col-lg-4 d-flex flex-column align-items-end">
+            <div class="col-6 col-sm-4 d-flex flex-column align-items-end">
                 <!-- Categories widget-->
                 <div class="card card3 mb-4 shadow w-100">
                     <div class="card-header">Top Categories</div>
-                    <div class="card-body">
+                    <div class="card-body text-nowrap">
                         <div class="row">
                             <div class="col-sm-6">
                                 <ul class="list-unstyled">
@@ -90,7 +90,7 @@
                     <div class="card-header">Top Groups</div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-12">
                                 <ul>
                                     {% for group in top_groups %}
                                     <li>
