@@ -427,6 +427,10 @@ footer {
   .sidebar {
     display: none;
   }
+
+  .ms-sm-5 {
+    margin-left: calc(var(--bs-gutter-x) / -2) !important;
+    }
   
 }
 
