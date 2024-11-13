@@ -83,7 +83,7 @@
     </header>
     <div class="container">
         <div class="row">
-            <div class="col-1 me-4">
+            <div class="col-1 me-5">
                 <div class="sidebar">
                     <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
                     <a class="nav-link {% if request.resolver_match.url_name == 'create_post' %}active{% endif %}" href="{% url 'create_post' %}">Post a Toot!</a>
@@ -141,7 +141,7 @@
                     </div>
                 </div>
 
-                <footer class="footer fixed-bottom d-none d-sm-block">
+                <footer class="footer fixed-bottom">
                     <div class="row row-style">
                         <div class="col-12">
                             {% if messages %}
@@ -156,22 +156,22 @@
                             </div>
                             {% endif %}
                             <div class="row row-style-2">
-                                <div class="col-sm-3 text-md-center mt-3">
+                                <div class="col-2 col-sm-3 text-md-center mt-3">
                                     <a class="navbar-brand" href="{% url 'home' %}"><h6><b>Tooter</b></h6></a>
                                 </div>
-                                <div class="col-sm-3  my-sm-0 mt-2">
+                                <div class="col-3 col-sm-3 my-sm-0 mt-2">
                                     <ul class="list-unstyled">
                                         <li class="mt-1">something</li>
                                         <li class="mt-1">something</li>
                                     </ul>
                                 </div>
-                                <div class="col-sm-3  my-sm-0 mt-2">
+                                <div class="col-3 col-sm-3 my-sm-0 mt-2">
                                     <ul class="list-unstyled">
                                         <li class="mt-1">something</li>
                                         <li class="mt-1">something</li>
                                     </ul>
                                 </div>
-                                <div class="col-sm-3  my-sm-0 mt-2">
+                                <div class="col-3 col-sm-3 my-sm-0 mt-2">
                                     <ul class="list-unstyled">
                                         <li class="mt-1">something</li>
                                         <li class="mt-1">something</li>
