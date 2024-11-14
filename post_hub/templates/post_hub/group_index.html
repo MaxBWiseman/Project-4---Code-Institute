@@ -2,15 +2,15 @@
 {% load static %}
 {% block content %}
 
-<div class="container mt-4 ms-3">
+<div class="container mt-4 ms-sm-5">
     <div class="row mb-4">
-        <div class="col-md-8">
+        <div class="col-md-7">
             <h1 class="text-center">Search Groups</h1>
             <form method="GET" action="{% url 'group_index' %}">
                 <input type="text" name="q" class="form-control" placeholder="Search for groups...">
             </form>
         </div>
-        <div class="col-md-4 mt-4">
+        <div class="col-md-5 mt-4">
             <div class="card card3 shadow w-100">
                 <div class="card-header text-center">Have leadership skills?</div>
                 <div class="card-body text-center">
@@ -21,11 +21,11 @@
             </div>
         </div>
     </div>
-    <div class="row mt-5">
+    <div class="row mt-5 ms-sm-5">
         {% if usergroups %}
         {% for group, post in group_posts %}
         <h3 class="fw-bolder">You searched for:</h3>
-        <div class="col-md-4 mt-2">
+        <div class="col-6 mt-2">
             <div class="card mb-4">
                 <div class="card-img-top">
                     {% if "placeholder" in group.group_image.url %}
@@ -38,7 +38,7 @@
                     <h5 class="card-title">{{ group.name }}</h5>
                     <p class="card-subtitle">{{ group.description }}</p>
                 </div>
-                <div class="card-footer d-flex justify-content-between">
+                <div class="card-footer d-block d-sm-flex justify-content-between">
                     {% if post %}
                     <div>
                         <h6>Latest Post</h6>
@@ -57,7 +57,7 @@
         {% endif %}
     </div>
 </div>
-<div class="container ms-3">
+<div class="container ms-sm-5">
     <h1 class="fw-bolder">Groups</h1>
     <div class="row card card3">
         {% for usergroup, post in group_posts %}

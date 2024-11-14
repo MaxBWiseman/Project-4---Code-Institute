@@ -3,6 +3,9 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
+
+<div class='row'>
+    <div class='col-12 col-sm-9 mx-auto'>
 {% if "placeholder" in post.banner_image.url %}
 <img src="{% static 'images/default.jpg' %}" class="img-fluid mt-5 rounded" alt="placeholder image">
 {% else %}
@@ -19,19 +22,21 @@
     <p class="fw-lighter">Category: {{ post.category }}{% if post.group %} | From Group: {{post.group}} {% endif %}</p>
     <p class="fw-lighter">Upvotes: {{ total_upvotes }}</p>
     <p class="fw-lighter">Downvotes: {{ total_downvotes }}</p>
-    <button class="button d-inline" onclick="votePost({{ post.id }}, true)"><i class="fa-regular fa-thumbs-up"></i></button>
-    <button class="button d-inline" onclick="votePost({{ post.id }}, false)"><i class="fa-regular fa-thumbs-down"></i></button>
+    <div class="mb-5 mt-2 button-container d-inline-block justify-content-center d-flex">
+        <button class="button" onclick="votePost({{ post.id }}, true)"><i class="fa-regular fa-thumbs-up"></i></button>
+        <button class="button" onclick="votePost({{ post.id }}, false)"><i class="fa-regular fa-thumbs-down"></i></button>
 </div>
 </header>
-<section class="mb-5 mt-2">
+<section>
     {% if request.user == post.author %}
+    <button onclick="confirmDeletePost({{ post.id }})" class="btn btn-danger mb-2 {% if request.user != post.author and not request.user.is_superuser %}d-none{% else %}d-inline{% endif %}">Delete</button>
     <a href="{% url 'edit_post' post.slug %}" class="btn btn-primary {% if request.user != post.author %}d-none{% else %}d-inline{% endif %}">Edit</a>
-    <button onclick="confirmDeletePost({{ post.id }})" class="btn btn-danger {% if request.user != post.author and not request.user.is_superuser %}d-none{% else %}d-inline{% endif %}">Delete</button>
     {% endif %}
     {% if post.content %}
     
     {% endif %}
     <p class="fs-5">{{ post.content | safe }}</p>
+    </div>
 </section>
 {% load mptt_tags %}
 <section>
@@ -153,6 +158,8 @@
     </form>
 </div>
 
+</div>
+</div>
 </div>
 </div>
 </div>

@@ -326,6 +326,10 @@ footer {
   font-weight: bolder;
 }
 
+.collapse button {
+  width: 30%!important;
+}
+
 .button {
   display: flex;
   flex-direction: row;

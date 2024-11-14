@@ -54,6 +54,11 @@
                           {% if request.path == '/categories/' %}active{%endif%}" aria-current="page"
                                 href="{% url 'category_list' %}">Categories</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link
+                          {% if request.path == '/usergroups/' %}active{%endif%}" aria-current="page"
+                                href="{% url 'group_index' %}">Groups</a>
+                        </li>
                         {% if user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link {% if request.path == logout_url %}active{% endif %}" aria-current="page"
@@ -75,7 +80,7 @@
                     </span>
                     <form class="d-flex">
                         <input class="form-control mt-2 me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="button3 me-2 ms-2 " type="submit"><i class="fa-solid fa-arrow-right fa-1x"></i></button>
+                        <button class="button3 me-2 ms-2" type="submit"><i class="fa-solid fa-arrow-right fa-1x"></i></button>
                     </form>
                 </div>
             </div>
