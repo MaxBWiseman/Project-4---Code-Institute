@@ -14,6 +14,7 @@ body {
   font-weight: bolder;
 }
 
+
 /* End body*/
 /* Cards */
 .post-card {
@@ -116,6 +117,7 @@ a {
 
 .navbar-toggler {
   background-image: linear-gradient(rgb(214, 202, 254), rgb(158, 129, 254));
+  width: 35%;
 }
 
 .page-link {
@@ -298,6 +300,7 @@ footer {
   width: 100%;
   margin-bottom: -20px;
   padding: 7px;
+  white-space: nowrap;
 }
 /* End Footer */
 /* Comments */
@@ -340,10 +343,11 @@ footer {
   transform: skewX(-15deg);
   margin-right: 5px;
   color: #23322d;
+  text-decoration: none;
 }
 
 .button2 {
-  display: flex;
+  display: inline-block;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -360,6 +364,7 @@ footer {
   width: 50%;
   margin: 0 auto;
   color: #23322d;
+  text-decoration: none;
 }
 
 .button3 {
@@ -379,6 +384,7 @@ footer {
   transform: skewX(-15deg);
   margin-top: 10px;
   margin-bottom: 10px;
+  text-decoration: none;
 }
 
 .button:hover {
@@ -423,18 +429,18 @@ footer {
 }
 
 /* Media queries */
-@media screen and (max-width: 650px) {
+@media screen and (max-width: 575px) {
   .sidebar {
     display: none;
   }
 
-  .ms-sm-5 {
-    margin-left: calc(var(--bs-gutter-x) / -2) !important;
-    }
+  .ms-3 {
+    margin-left: 0 !important;
+  }
   
 }
 
-@media screen and (min-width: 750px) {
+@media screen and (max-width: 750px) {
 
   .button-container {
     display: flex;

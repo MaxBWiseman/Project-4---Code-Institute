@@ -36,8 +36,8 @@
                 <a class="navbar-brand" href="{% url 'home' %}"><b>Tooter</b></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation"><span
-                        class="navbar-toggler-icon"></span></button>
+                    aria-expanded="false" aria-label="Toggle navigation"><i class="fa-solid fa-arrow-down-wide-short"></i>
+                </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-md-0">
                         <li class="nav-item">
@@ -74,7 +74,7 @@
                         <input type="checkbox" id="day-night" />
                     </span>
                     <form class="d-flex">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <input class="form-control mt-2 me-2" type="search" placeholder="Search" aria-label="Search">
                         <button class="button3 me-2 ms-2 " type="submit"><i class="fa-solid fa-arrow-right fa-1x"></i></button>
                     </form>
                 </div>
@@ -93,7 +93,7 @@
                      Using request.resolver_match.url_name is a more reliable way to compare the current URL name with the expected URL names.-->
                 </div>
             </div>
-            <div class="col-md-9 content-padding">
+            <div class="col-md-10 ms-sm-5 content-padding">
                 <!--Everything above is copied for every page-->
                 {% block content %}
                 <!-- the blank space where the other pages will fill there own content-->
@@ -179,7 +179,7 @@
                                 </div>
                             </div>
                         </div>
-                        <p class="mt-1">Copyright &copy; Max Bland Wiseman <span id="copyright"></span></p>
+                        <p class="mt-1">Copyright &copy; Max Wiseman <span id="copyright"></span></p>
                     </div>
                 </footer>
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"

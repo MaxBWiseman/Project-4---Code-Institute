@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 
-<div class="container mt-4">
+<div class="container mt-4 ms-3">
     <div class="row mb-4">
         <div class="col-md-8">
             <h1 class="text-center">Search Groups</h1>
@@ -57,9 +57,9 @@
         {% endif %}
     </div>
 </div>
-<div class="container">
+<div class="container ms-3">
     <h1 class="fw-bolder">Groups</h1>
-    <div class="row card card3 my-4 py-4 px-3">
+    <div class="row card card3">
         {% for usergroup, post in group_posts %}
         <div class="col-md-6 mt-2">
             <div class="card mb-4">
