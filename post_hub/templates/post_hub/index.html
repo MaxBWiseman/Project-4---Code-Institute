@@ -75,7 +75,7 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <ul class="list-unstyled">
-                                    {% for category in categories %}
+                                    {% for category in top_categories %}
                                     <li><a
                                             href="{% url 'category_detail' category.slug %}">{{ category.category_name }}</a>
                                     </li>
@@ -103,6 +103,7 @@
                     </div>
                     <!-- I learned to use these cards at - https://www.sitepoint.com/bootstrap-card-component-introduction/ -->
                 </div>
+                {% include 'post_hub/suggested_categories.html' %}
                 <div class="card mb-4 shadow advert w-100">
                     <div class="card-header">Advertisement space</div>
                     <div class="card-body">

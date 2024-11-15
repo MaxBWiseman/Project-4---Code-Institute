@@ -1,0 +1,12 @@
+<div class="card mb-4 shadow card3 w-100">
+    <div class="card-header">You might be interested in...</div>
+    <ul class="card-body list-unstyled text-center">
+        {% if suggested_categories %}
+            {% for category in suggested_categories %}
+            <li class='pt-2'><a class='button2' href='{% url 'category_detail' category.slug %}'>{{ category.category_name }}</a></li>
+            {% endfor %}
+        {% else %}
+            <li>No suggested categories available.</li>
+        {% endif %}
+    </ul>
+</div>

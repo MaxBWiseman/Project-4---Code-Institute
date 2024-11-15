@@ -29,14 +29,12 @@ class PostList(generic.ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-# The get_context_data method is overridden to add the categories to the context.
-        context['categories'] = Category.objects.all()
-# The categories are retrieved and added to the context.
+        context['top_categories'] = Category.objects.annotate(post_count=Count('category_name')).order_by('post_count')
         context['top_groups'] = UserGroup.objects.annotate(num_members=Count('members')).order_by('num_members')[:8]
 # The top 8 groups are retrieved and added to the context. The annotate method is used to add a num_members field to each UserGroup object
 # which contains the count of members inside the group. Count is a django aggregation function often used in conjunction with annotate.
 # Learned from = https://stackoverflow.com/questions/3606416/django-most-efficient-way-to-count-same-field-values-in-a-query#:~:text=You%20can%20use%20Django%27s%20Count%20aggregation%20on%20a,in%20queryset%3A%20print%20%22%25s%3A%20%25s%22%20%25%20%28each.my_charfield%2C%20each.count%29
-        context['random_categories'] = Category.get_random_categories()
+        context['suggested_categories'] = Category.get_random_categories()
         return context
 # By overriding the get_context_data method, you can add the categories to the context in a more
 # standard and efficient way. This approach ensures that the categories are available in the template
@@ -456,4 +454,5 @@ class CategoryDetailView(DetailView):
 # The category object is retrieved from the context.
         context['posts'] = Post.objects.filter(category=category, status=1).order_by("-created_at")
 # The posts in the category are retrieved and added to the context.
+        context['suggested_categories'] = Category.get_random_categories()
         return context

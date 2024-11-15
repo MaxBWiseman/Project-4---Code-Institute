@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from django.utils.text import slugify
 from cloudinary.models import CloudinaryField
 from mptt.models import MPTTModel, TreeForeignKey
+import random
 
 
 STATUS = ((0, "Blocked"), (1, "Approved"))
