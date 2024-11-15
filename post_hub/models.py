@@ -42,6 +42,12 @@ class Category(models.Model):
 
     def __str__(self):
         return self.category_name
+    
+    @staticmethod
+    def get_random_categories(count=5):
+        categories = list(Category.objects.all())
+        random.shuffle(categories)
+        return categories[:count]
 
 @receiver(pre_save, sender=Category)
 def add_slug_to_category(sender, instance, *args, **kwargs):

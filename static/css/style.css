@@ -14,6 +14,14 @@ body {
   font-weight: bolder;
 }
 
+.small-bottom {
+  margin-bottom: -34px;
+}
+
+.margin-left-high {
+  margin-left: 50px;
+}
+
 
 /* End body*/
 /* Cards */
@@ -100,6 +108,7 @@ body {
 
 .row-style-2 {
   background-color: #a6f2d4 !important;
+  height: 70%;
 }
 /* End Row Styles */
 /* Navbar */
@@ -301,6 +310,14 @@ footer {
   margin-bottom: -20px;
   padding: 7px;
   white-space: nowrap;
+}
+
+.small-height {
+  margin-top: -19px;
+}
+
+.footer-item {
+  font-size: 11px;
 }
 /* End Footer */
 /* Comments */
