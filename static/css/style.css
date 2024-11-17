@@ -44,6 +44,7 @@ body {
 .card-header {
   background-color: #869377 !important;
   color: #23322d !important;
+  border-radius: 10px!important;
 }
 
 .card {
@@ -287,6 +288,13 @@ input#day-night:focus {
   color: white;
 }
 /* End dynamic classes */
+/* Widgets */
+@media screen and (min-width: 770px) {
+  .widget {
+    margin: 0 auto;
+  }
+}
+/* End Widgets */
 /* Adverts */
 .advert {
   background-color: #93cdb6;
@@ -341,6 +349,10 @@ footer {
   background-image: linear-gradient(rgb(214, 202, 254), rgb(158, 129, 254));
   color: #23322d;
   font-weight: bolder;
+}
+
+.btn-lg-width {
+  width: 80%!important;
 }
 
 .collapse button {
@@ -455,8 +467,8 @@ footer {
     display: none;
   }
 
-  .ms-3 {
-    margin-left: 0 !important;
+  .content-padding {
+    margin-left: 0;
   }
   
 }
