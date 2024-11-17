@@ -164,22 +164,22 @@
                                 <div class="col-2 col-sm-3 text-md-center mt-3">
                                     <a class="navbar-brand" href="{% url 'home' %}"><h6><b>Tooter</b></h6></a>
                                 </div>
-                                <div class="col-3 col-sm-3 my-sm-0 mt-2">
+                                <div class="col-3 col-sm-3 mb-3">
                                     <ul class="list-unstyled mt-sm-2">
-                                        <li class="mt-1 footer-item">Post a Toot!</li>
-                                        <li class="mt-1 footer-item">Security</li>
+                                        <li class="footer-item"><a class="nav-link {% if request.resolver_match.url_name == 'create_post' %}active{% endif %}" href="{% url 'create_post' %}">Post a Toot!</a></li>
+                                        <li class="footer-item">Security</li>
                                     </ul>
                                 </div>
-                                <div class="col-3 col-sm-3 my-sm-0 mt-2">
+                                <div class="col-3 col-sm-3 mb-3">
                                     <ul class="list-unstyled mt-sm-2">
-                                        <li class="mt-1 footer-item">Categories</li>
-                                        <li class="mt-1 footer-item">Contact</li>
+                                        <li class="footer-item"><a class="nav-link {% if request.resolver_match.url_name == 'category_list' %}active{% endif %}" href="{% url 'category_list' %}">Categories</a></li>
+                                        <li class="footer-item">Contact</li>
                                     </ul>
                                 </div>
-                                <div class="col-3 col-sm-3 my-sm-0 mt-2">
+                                <div class="col-3 col-sm-3 mb-3">
                                     <ul class="list-unstyled mt-sm-2">
-                                        <li class="mt-1 footer-item">Groups</li>
-                                        <li class="mt-1 footer-item">Terms & Conditions</li>
+                                        <li class="footer-item"><a class="nav-link {% if request.resolver_match.url_name == 'group_index' %}active{% endif %}" href="{% url 'group_index' %}">Groups</a></li>
+                                        <li class="footer-item">Terms & Conditions</li>
                                     </ul>
                                 </div>
                             </div>
