@@ -22,6 +22,10 @@ body {
   margin-left: 50px;
 }
 
+.colour-1 {
+  background-color: #93cdb6;
+}
+
 
 /* End body*/
 /* Cards */
@@ -352,7 +356,7 @@ footer {
 }
 
 .btn-lg-width {
-  width: 80%!important;
+  width: 70%!important;
 }
 
 .collapse button {
