@@ -3,6 +3,9 @@ from mptt.forms import TreeNodeChoiceField
 from ckeditor.widgets import CKEditorWidget
 from .models import Comment, Post, Category, UserGroup
 from spellchecker import SpellChecker
+import cloudinary
+from django.core.files.uploadedfile import InMemoryUploadedFile
+
 
 class CommentForm(forms.ModelForm):
     parent = TreeNodeChoiceField(queryset=Comment.objects.all(), required=False, widget=forms.HiddenInput())
@@ -10,15 +13,33 @@ class CommentForm(forms.ModelForm):
     
     class Meta:
         model = Comment
-        fields = ('parent', 'content', 'group')
-
+        fields = ('parent', 'content', 'group', 'image')
         widgets = {
             'content': forms.Textarea(attrs={'class': 'form-control'}),
+            'image': forms.FileInput(attrs={'class': 'form-control'}),
         }
 
     def save(self, *args, **kwargs):
+        author = kwargs.pop('author', None)
+        comment = super(CommentForm, self).save(commit=False)
+        if author:
+            comment.author = author
+        image = self.cleaned_data.get('image')
+
+        # Handle comment image upload to cloudinary
+        if image:
+            print(f'Image to upload: {image}')  # Debug print
+            upload_result = cloudinary.uploader.upload(
+                image,
+                resource_type='image',
+                folder='comments/',
+            )
+            comment.image = upload_result['url']
+            print(f'Uploaded image URL: {comment.image}')  # Debug print
+
+        comment.save()
         Comment.objects.rebuild()
-        return super(CommentForm, self).save(*args, **kwargs)
+        return comment
 
 
 class PostForm(forms.ModelForm):
@@ -90,7 +111,17 @@ class PostForm(forms.ModelForm):
         else:
             post.category = self.cleaned_data.get('category')
 # If new_category_name is empty, I set the category of the post to the selected category in dropdown menu.
-        
+
+        # Handle banner image upload to cloudinary
+        banner_image = self.cleaned_data.get('banner_image')
+        if banner_image and isinstance(banner_image, InMemoryUploadedFile):
+            upload_result = cloudinary.uploader.upload(
+                banner_image,
+                resource_type='image',
+                folder='banners/',
+            )
+            post.banner_image = upload_result['url']
+
         if commit:
             post.save()
 # If commit is True, I save the post object to the database.

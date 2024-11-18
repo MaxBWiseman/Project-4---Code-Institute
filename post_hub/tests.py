@@ -1,9 +1,12 @@
 from django.test import TestCase, Client
 from django.urls import reverse
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.messages import get_messages
 from django.contrib.auth.models import User
 from .forms import PostForm, CommentForm
 from .models import Comment, Post, Category, Vote, UserGroup
+from PIL import Image
+import tempfile
 import json
 
 class PostFormTest4SpellChecker(TestCase):
@@ -321,3 +324,84 @@ class CategoryDetailViewTest(TestCase):
         self.assertTemplateUsed(response, 'post_hub/category_detail.html')
         self.assertContains(response, self.category.category_name)
         self.assertContains(response, self.post.title)
+
+
+class CloudinaryImageUploadTest(TestCase):
+    def setUp(self):
+        # Create a sample user, post, category, and user group for testing
+        self.client = Client()
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.category = Category.objects.create(category_name='Test Category')
+        self.post = Post.objects.create(title='Test Post', content='Test content', author=self.user, category=self.category)
+        self.group = UserGroup.objects.create(name='Test Group', slug='test-group', admin=self.user)
+        self.client.login(username='testuser', password='12345')
+
+    def create_temp_image(self):
+        # Create a temporary image file
+        image = Image.new('RGB', (100, 100), color='red')
+        temp_file = tempfile.NamedTemporaryFile(suffix='.jpg')
+        image.save(temp_file, format='JPEG')
+        temp_file.seek(0)
+        return temp_file
+
+    def test_image_upload_on_post_comment(self):
+        # Create a sample image file
+        temp_image = self.create_temp_image()
+        image = SimpleUploadedFile(
+            name=temp_image.name,
+            content=temp_image.read(),
+            content_type='image/jpeg'
+        )
+
+        # Create a comment with the image on a post
+        form_data = {
+            'parent': '',
+            'content': 'Test comment with image on post',
+            'group': '',
+            'image': image
+        }
+        form = CommentForm(data=form_data, files={'image': image})
+        print(form.errors)  # Print form errors for debugging
+        self.assertTrue(form.is_valid())
+        if form.is_valid():
+            comment = form.save(commit=False, author=self.user)
+            comment.post = self.post  # Set the post field
+            comment.save()
+
+            # Print the image URL for debugging
+            print(f"Image URL: {comment.image}")
+
+            # Verify that the image URL is not empty
+            self.assertTrue(comment.image)
+
+    def test_image_upload_on_group_comment(self):
+        # Create a sample image file
+        temp_image = self.create_temp_image()
+        image = SimpleUploadedFile(
+            name=temp_image.name,
+            content=temp_image.read(),
+            content_type='image/jpeg'
+        )
+
+        # Create a comment with the image on a group
+        form_data = {
+            'parent': '',
+            'content': 'Test comment with image on group',
+            'group': self.group.id,
+            'image': image
+        }
+        form = CommentForm(data=form_data, files={'image': image})
+        print(form.errors)  # Print form errors for debugging
+        self.assertTrue(form.is_valid())
+        if form.is_valid():
+            comment = form.save(commit=False, author=self.user)
+            comment.post = None  # Ensure post is None for group comment
+            comment.group = self.group
+            print(f"Author: {comment.author}, Group: {comment.group}")  # Debug print
+            comment.save()
+
+            # Print the image URL for debugging
+            print(f"Image URL: {comment.image}")
+
+            # Verify that the image URL is not empty
+            self.assertTrue(comment.image)

@@ -134,20 +134,23 @@ def post_detail(request, slug):
         if not request.user.is_authenticated:
             messages.error(request, 'You must be logged in to post a comment.')
             return redirect('account_login')
-        comment_form = CommentForm(request.POST)
+        comment_form = CommentForm(request.POST, request.FILES)
 # The data from the form is retrieved and stored in the comment_form variable.
+        print(f"Form data: {request.POST}")  # Debug print
+        print(f"Form files: {request.FILES}")  # Debug print
         if comment_form.is_valid():
-            user_comment = comment_form.save(commit=False)
+            user_comment = comment_form.save(commit=False, author=request.user)
 # The comment is saved to the database but not committed.
 # so we may manipulate the comment before saving it to the database
             user_comment.post = post
 # This is to associate the comment with the post.
-            user_comment.author = request.user
-# This is to associate the comment with the user that posted it.
+            print(f"Image URL before save: {user_comment.image}")  # Debug print
             user_comment.save()
+            print(f"Image URL after save: {user_comment.image}")  # Debug print
             messages.success(request, 'Your comment has been posted successfully!')
             return HttpResponseRedirect(reverse('post_detail', args=[post.slug]))
         else:
+            print(comment_form.errors)
             messages.error(request, 'There was an error posting your comment. Please try again.')
             return HttpResponseRedirect(reverse('post_detail', args=[post.slug]))
 #We use args to pass the slug of the post to the URL pattern. To redirect to the correct post detail page.
@@ -236,7 +239,7 @@ def create_post(request):
             post = form.save(commit=False)
             post.author = request.user
             new_category_name = form.cleaned_data.get('new_category')
- # The new_category field is retrieved from the cleaned_data attribute of the form.
+# The new_category field is retrieved from the cleaned_data attribute of the form.
 # The new_category field is used to create a new category if it does not already exist.
 # cleaned_data attribute is used to retrieve the form data after it has been cleaned and validated.
 # Django forms automatically clean and validate the data when the is_valid method is called.
@@ -269,7 +272,6 @@ def category_list(request):
     return render(request, 'post_hub/category_list.html', {'categories': categories})
 
 
-@login_required
 def edit_post(request, slug):
     post = get_object_or_404(Post, slug=slug)
 # I used the get_object_or_404 function to retrieve the post object from the database or 404 if not.

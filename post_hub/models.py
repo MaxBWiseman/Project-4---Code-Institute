@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from django.utils.text import slugify
 from cloudinary.models import CloudinaryField
 from mptt.models import MPTTModel, TreeForeignKey
+from django.templatetags.static import static
 import random
 
 
@@ -60,7 +61,7 @@ class Post(models.Model):
     title = models.CharField(max_length=100)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     blurb = models.TextField(blank=True)
-    banner_image = CloudinaryField('image', default='placeholder')
+    banner_image = CloudinaryField('image', default='https://res.cloudinary.com/dbbqdfomn/image/upload/v1731956423/comments/yo9ilnizcyvrqaohm5ya.jpg')
     content = models.TextField()
     status = models.IntegerField(choices=STATUS, default=1)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_posts')
@@ -112,6 +113,7 @@ class Comment(MPTTModel):
     updated_at = models.DateTimeField(auto_now=True)
     group = models.ForeignKey(UserGroup, on_delete=models.CASCADE, related_name='group_comments', null=True, blank=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    image = CloudinaryField('image', blank=True, null=True)
 # The parent field references the comment model iteself, the related name allowes to access child comments
 # MPTTModel is used to create a tree structure for the comments. This allows for easy retrieval of the comments
 # and their children. Making easy nesting of comments. Here where i learnt it - 

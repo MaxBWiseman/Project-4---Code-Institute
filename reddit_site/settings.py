@@ -57,6 +57,8 @@ INSTALLED_APPS = [
     'crispy_bootstrap4',
     'mptt',
     'post_hub',
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 # Email settings
@@ -90,6 +92,16 @@ CKEDITOR_CONFIGS = {
         'removePlugins': 'exportpdf'
     },
 }
+
+#Cloudinary
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET')
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
 MIDDLEWARE = [

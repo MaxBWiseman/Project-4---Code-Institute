@@ -125,7 +125,7 @@
                         <div class="ms-2" id="comment-content-{{ node.id }}">{{ node.content }}</div>
                         <div id="edit-comment-{{ node.id }}" style="display: none;">
                             <form method="post" id="edit-comment-form-{{ node.id }}"
-                                onsubmit="return submitEditComment({{ node.id }})(event);">
+                                onsubmit="return submitEditComment({{ node.id }})(event);" enctype='multipart/form-data'>
                                 {% csrf_token %}
                                 <textarea name="content" id="edit-content-{{ node.id }}"
                                     class="form-control">{{ node.content }}</textarea>

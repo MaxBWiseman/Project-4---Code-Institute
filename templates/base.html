@@ -160,26 +160,26 @@
                                 {% endfor %}
                             </div>
                             {% endif %}
-                            <div class="row row-style-2">
-                                <div class="col-2 col-sm-3 text-md-center mt-3">
+                            <div class="row row-style-2 mb-3">
+                                <div class="col-2 col-sm-3 mt-3">
                                     <a class="navbar-brand" href="{% url 'home' %}"><h6><b>Tooter</b></h6></a>
                                 </div>
-                                <div class="col-3 col-sm-3 mb-3">
+                                <div class="col-3">
                                     <ul class="list-unstyled mt-sm-2">
                                         <li class="footer-item"><a class="nav-link {% if request.resolver_match.url_name == 'create_post' %}active{% endif %}" href="{% url 'create_post' %}">Post a Toot!</a></li>
-                                        <li class="footer-item">Security</li>
+                                        <li class="footer-item mb-2 mt-2">Security</li>
                                     </ul>
                                 </div>
-                                <div class="col-3 col-sm-3 mb-3">
+                                <div class="col-3">
                                     <ul class="list-unstyled mt-sm-2">
                                         <li class="footer-item"><a class="nav-link {% if request.resolver_match.url_name == 'category_list' %}active{% endif %}" href="{% url 'category_list' %}">Categories</a></li>
-                                        <li class="footer-item">Contact</li>
+                                        <li class="footer-item mb-2 mt-2">Contact</li>
                                     </ul>
                                 </div>
-                                <div class="col-3 col-sm-3 mb-3">
+                                <div class="col-3">
                                     <ul class="list-unstyled mt-sm-2">
                                         <li class="footer-item"><a class="nav-link {% if request.resolver_match.url_name == 'group_index' %}active{% endif %}" href="{% url 'group_index' %}">Groups</a></li>
-                                        <li class="footer-item">Terms & Conditions</li>
+                                        <li class="footer-item mb-2 mt-2">Terms & Conditions</li>
                                     </ul>
                                 </div>
                             </div>

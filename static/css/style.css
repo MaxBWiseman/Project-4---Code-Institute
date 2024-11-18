@@ -26,6 +26,11 @@ body {
   background-color: #93cdb6;
 }
 
+.img-small {
+  width: 70px;
+  height: 70px;
+}
+
 
 /* End body*/
 /* Cards */
@@ -114,6 +119,7 @@ body {
 .row-style-2 {
   background-color: #a6f2d4 !important;
   height: 70%;
+  padding-bottom: 8px;
 }
 /* End Row Styles */
 /* Navbar */
