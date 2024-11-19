@@ -8,11 +8,7 @@
 <div class="container">
     <div class="row align-items-center my-5 ms-sm-5">
         <div class="col-lg-7">
-            {% if "placeholder" in usergroup.group_image.url %}
-            <img class="post-picture" src="{% static 'images/default.jpg' %}" alt="placeholder image">
-            {% else %}
-            <img class="post-picture" src="{{ usergroup.group_image.url }}" alt="{{ usergroup.name }}">
-            {% endif %}
+            <img src="{{ usergroup.group_image.url }}" class="post-picture" alt="{{ post.title }}">
         </div>
         <div class="card my-3 py-3 col-lg-5 mt-4 mt-lg-0">
             <h1 class="card-title">{{ usergroup.name}} </h1>
@@ -64,11 +60,7 @@
             <a href="{% url 'post_detail' post.slug %}" class="post-link" style="text-decoration: none; color: inherit;">
                 <div class="card mb-3 shadow card-hover">
                     <div class="card-img-top">
-                        {% if "placeholder" in post.banner_image.url %}
-                        <img class="post-picture" src="{% static 'images/default.jpg' %}" alt="placeholder image">
-                        {% else %}
-                        <img class="post-picture" src="{{ post.banner_image.url }}" alt="{{ post.title }}">
-                        {% endif %}
+                        <img src="{{ post.banner_image.url }}" class="img-fluid mt-5 rounded" alt="{{ post.title }}">
                         <div class="image-flash">
                             <p class="author ms-1">Author: {{ post.author }} | Category: {{ post.category }}</p>
                         </div>

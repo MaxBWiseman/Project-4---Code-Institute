@@ -121,6 +121,8 @@ class PostForm(forms.ModelForm):
                 folder='banners/',
             )
             post.banner_image = upload_result['url']
+        elif not banner_image:
+            post.banner_image = 'https://res.cloudinary.com/dbbqdfomn/image/upload/v1732040135/default.jpg' 
 
         if commit:
             post.save()

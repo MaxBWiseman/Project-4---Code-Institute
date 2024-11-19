@@ -28,11 +28,7 @@
         <div class="col-6 mt-2">
             <div class="card mb-4">
                 <div class="card-img-top">
-                    {% if "placeholder" in group.group_image.url %}
-                    <img class="post-picture" src="{% static 'images/default.jpg' %}" alt="placeholder image">
-                    {% else %}
-                    <img class="post-picture" src="{{ group.group_image.url }}" alt="{{ group.name }}">
-                    {% endif %}
+                    <img src="{{ usergroup.group_image.url }}" class="img-fluid mt-5 rounded" alt="{{ post.title }}">
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">{{ group.name }}</h5>
@@ -64,11 +60,7 @@
         <div class="col-md-6 mt-2">
             <div class="card mb-4">
                 <div class="card-img-top">
-                    {% if "placeholder" in usergroup.group_image.url %}
-                    <img class="post-picture" src="{% static 'images/default.jpg' %}" alt="placeholder image">
-                    {% else %}
-                    <img class="post-picture" src="{{ usergroup.group_image.url }}" alt="{{ usergroup.name }}">
-                    {% endif %}
+                    <img src="{{ usergroup.group_image.url }}" class="img-fluid mt-5 rounded" alt="{{ post.title }}">
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">{{ usergroup.name }}</h5>

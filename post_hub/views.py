@@ -13,6 +13,7 @@ from django.urls import reverse, reverse_lazy
 from .models import Post, Comment, Category, Vote, UserGroup, User
 from .forms import CommentForm, PostForm, GroupForm, GroupAdminMessageForm
 import json
+import cloudinary
 
 
 class PostList(generic.ListView):
@@ -178,12 +179,27 @@ def edit_comment(request, comment_id):
         try:
             comment = Comment.objects.get(id=comment_id, author=request.user)
 # The comment the user is trying to edit is retrieved from the database.
-            data = json.loads(request.body)
-# The data from the request is loaded into a JSON object.
-            comment.content = data['content']
+            comment.content = request.POST.get('content', comment.content)
 # Comment content is updated with the new content from the request.
+
+            if 'image' in request.FILES:
+                # If an image is in the request
+                image = request.FILES['image']
+                # image is retrieved from the request and stored in a variable.
+                upload_result = cloudinary.uploader.upload(
+                    # Use cloudinary api to upload the image
+                    image,
+                    resource_type='image',
+                    folder='comments/',
+                )
+                comment.image = upload_result['url']
+                # Take the url of the upload_result and store it in the comment object.
+            elif 'remove_image' in request.POST and request.POST['remove_image'] == 'true':
+                comment.image = None
+                # If the user wants to remove the image, the image field is set to None.
+                 
             comment.save()
-            return JsonResponse({'success': True})
+            return JsonResponse({'success': True, 'image': comment.image})
 # A JSON response is returned to indicate that the comment was updated successfully.
         except Comment.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Comment not found or not authorized'})

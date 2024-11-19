@@ -99,23 +99,15 @@ function successModal() {
 function cancelEditComment(commentId) {
     const commentContent = document.getElementById('comment-content-' + commentId);
     const editForm = document.getElementById('edit-comment-' + commentId);
-
     commentContent.style.display = 'block';
     editForm.style.display = 'none';
 }
 
 function editComment(commentId) {
     const commentContent = document.getElementById('comment-content-' + commentId);
-    const editForm = document.getElementById("edit-comment-" + commentId);
-
+    const editForm = document.getElementById('edit-comment-' + commentId);
     commentContent.style.display = 'none';
     editForm.style.display = 'block';
-    // Store the commentId in the hidden input field
-    document.getElementById('comment-id').value = commentId;
-    // Change the form's submit event handler to update the comment
-    const editCommentForm = document.getElementById('edit-comment-form');
-    editCommentForm.removeEventListener('submit', defaultFormSubmission);
-    editCommentForm.addEventListener('submit', submitEditComment);
 }
 
 function submitEditComment(commentId) {
@@ -125,34 +117,57 @@ function submitEditComment(commentId) {
         const commentBox = document.getElementById('edit-content-' + commentId);
         const commentText = commentBox.value;
         const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+        // Collect edited comment data and token, associate with variables
+        const formData = new FormData();
+        //Create a new FormData object to send the data to the server
+        formData.append('content', commentText);
+        formData.append('csrfmiddlewaretoken', csrfToken);
+        // Append the comment text and token to the FormData object
+
+        const imageInput = document.querySelector(`#edit-comment-form-${commentId} input[name='image']`);
+        // Grab the image input from the form
+        if (imageInput && imageInput.files.length > 0) {
+            // Check if an image has been uploaded
+            formData.append('image', imageInput.files[0]);
+            // Append the image to the FormData object
+        } else {
+            formData.append('remove_image', true);
+            // If no image has been uploaded, append a remove_image key to the FormData object
+        }
 
         fetch(`/edit_comment/${commentId}/`, {
-// This is the URL to send the request to
+            // The destination URL for the fetch request
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
-            },
-// headers are used to send additional information to the server,
-// like the content type and the CSRF token
-            body: JSON.stringify({ content: commentText })
-// we use the body property to send the data to the server
-// we use JSON.stringify to convert the data to a JSON string
+            body: formData,
+            // POST the formData object to the server
         })
         .then(response => response.json())
-// we use the .then method to handle the response from the server
-// we use the .json method to convert the response to a JSON object
+        // First promise, turn the response into a JSON object
         .then(data => {
+            // Second promise, use the JSON object to update the page
             if (data.success) {
                 const commentNew = document.getElementById('edit-content-' + commentId);
                 const commentOld = document.getElementById('comment-content-' + commentId);
+                // Grab the new and old comment content elements
                 commentOld.innerText = commentNew.value;
-// Update the original comment box with the new content
-// Revert the form's submit event handler back to default behavior
-                const editCommentForm = document.getElementById('edit-comment-form');
-                editCommentForm.removeEventListener('submit', submitEditComment(commentId));
-                editCommentForm.addEventListener('submit', defaultFormSubmission);
+                // Update the comment content with the new content
+
+                const commentImage = document.getElementById(`comment-image-${commentId}`);
+                // Grab the comment image if exists
+                if (commentImage) {
+                    if (data.image) {
+                        commentImage.src = data.image;
+                        commentImage.style.display = 'block';
+                        // If the image exists, update the image source and display it
+                    } else {
+                        commentImage.style.display = 'none';
+                        // If the image does not exist, hide the image
+                    }
+                }
+
+                // Hide the edit form and display the updated comment content
                 cancelEditComment(commentId);
+                console.log(`Comment ${commentId} updated successfully.`);
                 successModal();
             } else {
                 alert('Error updating comment: ' + data.error);
@@ -163,6 +178,7 @@ function submitEditComment(commentId) {
         });
     };
 }
+
 function defaultFormSubmission(event) {
     // This function is empty as the form submission is handled by the server
 }
