@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<div class="container">
+<div class="container ms-sm-4">
     <!-- Group details and join form -->
     <div class="row align-items-center my-5 ms-sm-5">
         <div class="col-lg-7 left-box">
@@ -33,7 +33,7 @@
 
     <!-- Admin form -->
     {% if user.is_authenticated and user == usergroup.admin %}
-    <div class="card my-2 py-2 text-center">
+    <div class="card my-2 py-2 text-center ms-sm-5">
         <div class="card-body">
             <div class="card card3 mb-3">
                 <p class="mt-3">{{ usergroup.admin_message|safe }}</p>
@@ -107,7 +107,7 @@
     <!-- Comments section -->
 <section>
     <hr>
-    <div class="comment-container">
+    <div class="comment-container ms-sm-4">
         {% with allcomments.count as total_comments %}
         <h2>
             {{ total_comments }} comment{{ total_comments|pluralize }}
@@ -195,7 +195,7 @@
 </section>
 
     <!-- Comment form -->
-    <div id="myDIV" style="display:block;">
+    <div id="myDIV" style="display:block;" class="ms-sm-2">
         <form id="comment-form" method="post" enctype='multipart/form-data'>
             <h2>Create new comment</h2>
             {% csrf_token %}

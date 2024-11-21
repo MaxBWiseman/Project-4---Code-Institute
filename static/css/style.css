@@ -523,3 +523,9 @@ footer {
   }
 
 }
+
+@media screen and (max-width: 990px) {
+  .right-box {
+    margin-left: auto;
+  }
+}
