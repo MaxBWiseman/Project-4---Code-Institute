@@ -42,6 +42,9 @@ body {
   margin-left: -10%; /* Adjust this value to control the overlap */
 }
 
+.custom-container {
+  width: 50%;
+}
 
 /* End body*/
 /* Cards */
