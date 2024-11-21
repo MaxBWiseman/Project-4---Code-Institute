@@ -142,6 +142,10 @@ nav {
   background-color: #93cdb6;
 }
 
+.navbar-brand {
+  margin-right: 3rem!important;
+}
+
 .nav-link {
   color: #23322d;
 }
@@ -151,8 +155,16 @@ a {
 }
 
 .navbar-toggler {
+  font-size: 1rem;
+  padding: 0.3em 0.7em;
   background-image: linear-gradient(rgb(214, 202, 254), rgb(158, 129, 254));
-  width: 35%;
+  border: 3px solid #04aa6d;
+  border-radius: 1em;
+  color: #23322d;
+  font-weight: bolder;
+  transition: cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.4s;
+  box-shadow: -5px 5px 0px 0px #04aa6d;
+  width: 45%!important;
 }
 
 .page-link {
@@ -371,9 +383,16 @@ footer {
 /* End Comments */
 /* Buttons */
 .btn {
+  font-size: 1rem;
+  padding: 0.3em 0.7em;
   background-image: linear-gradient(rgb(214, 202, 254), rgb(158, 129, 254));
+  border: 3px solid #04aa6d;
+  border-radius: 1em;
   color: #23322d;
   font-weight: bolder;
+  transition: cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.4s;
+  box-shadow: -5px 5px 0px 0px #04aa6d;
+  width: 30%!important;
 }
 
 .btn-lg-width {
@@ -384,45 +403,44 @@ footer {
   width: 30%!important;
 }
 
-.button {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+button {
+  font-size: 1rem;
+  padding: 0.3em 0.7em;
   background-image: linear-gradient(rgb(214, 202, 254), rgb(158, 129, 254));
-  border: none;
-  cursor: pointer;
-  transition: 400ms;
-  outline: 2px #23322d solid;
-  outline-offset: -1px;
-  margin-bottom: 5px;
-  padding: 15px;
-  border-radius: 5px;
-  transform: skewX(-15deg);
-  margin-right: 5px;
+  border: 3px solid #04aa6d;
+  border-radius: 1em;
   color: #23322d;
-  text-decoration: none;
+  font-weight: bolder;
+  transition: cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.4s;
+  box-shadow: -5px 5px 0px 0px #04aa6d;
+  width: 10%!important;
+}
+
+button:hover {
+  transform: translate(5px, -5px);
+}
+
+.button-like:hover {
+  transform: translate(5px, -5px);
+}
+
+.button-container {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
 .button2 {
-  display: inline-block;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  background-color: #93cdb6;
-  border: none;
-  cursor: pointer;
-  transition: 400ms;
-  outline: 2px #23322d solid;
-  outline-offset: -1px;
-  margin-bottom: 5px;
-  padding: 5px;
-  border-radius: 5px;
-  transform: skewX(-15deg);
-  width: 50%;
-  margin: 0 auto;
+  font-size: 1rem;
+  padding: 0.3em 2em;
+  background-image: linear-gradient(rgb(214, 202, 254), rgb(158, 129, 254));
+  border: 3px solid #04aa6d;
+  border-radius: 1em;
   color: #23322d;
-  text-decoration: none;
+  font-weight: bolder;
+  transition: cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.4s;
+  box-shadow: -5px 5px 0px 0px #04aa6d;
+  width: 80%!important;
 }
 
 .button3 {
@@ -445,10 +463,6 @@ footer {
   text-decoration: none;
 }
 
-.button:hover {
-  background-color: #ddaf69;
-  transform: translateY(-2px);
-}
 
 .button2:hover {
   background-color: #ddaf69;
@@ -460,33 +474,55 @@ footer {
   transform: translateY(-2px);
 }
 
-.commentAction {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  background-image: linear-gradient(rgb(214, 202, 254), rgb(158, 129, 254));
-  border: none;
-  cursor: pointer;
-  transition: 400ms;
-  outline: 2px #363f44 solid;
-  outline-offset: -1px;
-  margin-bottom: 5px;
-  padding: 3px;
-  width: 95%;
-  font-weight: bolder;
-  transform: skewX(-15deg);
-}
-
 .collapse button {
   width: 100%;
 }
 
 .commentButtonCollapse {
-  width: 65%;
+  width: 50%;
+  display: flex;
+  gap: 9px!important;
+  justify-content: center;
+}
+/* End Buttons */
+/* Vote */
+
+.like {
+  border: 3px solid blue;
+  box-shadow: -5px 5px 0px 0px blue;
+  min-width: 4rem!important;
 }
 
+.dislike {
+  border: 3px solid red;
+  box-shadow: -5px 5px 0px 0px red;
+  min-width: 4rem!important;
+}
+/* End Vote */
 /* Media queries */
+@media screen and (max-width: 300px) {
+  .button {
+    padding: 0.3rem;
+  }
+
+  .btn {
+    padding: 0.3rem;
+  }
+}
+
+@media screen and (max-width: 435px) {
+  .navbar-toggler {
+    width: 100%!important;
+  }
+
+  .navbar-brand {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-right: 0!important;
+  }
+}
+
 @media screen and (max-width: 575px) {
   .sidebar {
     display: none;

@@ -265,6 +265,7 @@ def create_post(request):
                 post.category = category
                 if created:
                     messages.success(request, f"A new category '{new_category_name}' was created.")
+            post.group = form.cleaned_data.get('group')
             post.save()
             messages.success(request, 'Your post has been tooted out successfully!')
             return redirect('post_detail', slug=post.slug)

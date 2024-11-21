@@ -4,8 +4,9 @@ from ckeditor.widgets import CKEditorWidget
 from .models import Comment, Post, Category, UserGroup
 from spellchecker import SpellChecker
 import cloudinary
+from cloudinary.uploader import upload
+from cloudinary.exceptions import Error
 from django.core.files.uploadedfile import InMemoryUploadedFile
-
 
 class CommentForm(forms.ModelForm):
     parent = TreeNodeChoiceField(queryset=Comment.objects.all(), required=False, widget=forms.HiddenInput())
@@ -21,26 +22,28 @@ class CommentForm(forms.ModelForm):
 
     def save(self, *args, **kwargs):
         author = kwargs.pop('author', None)
-        comment = super(CommentForm, self).save(commit=False)
+        comment = super().save(commit=False)
         if author:
             comment.author = author
         image = self.cleaned_data.get('image')
 
         # Handle comment image upload to cloudinary
         if image:
-            print(f'Image to upload: {image}')  # Debug print
-            upload_result = cloudinary.uploader.upload(
-                image,
-                resource_type='image',
-                folder='comments/',
-            )
-            comment.image = upload_result['url']
-            print(f'Uploaded image URL: {comment.image}')  # Debug print
-
+            try:
+                upload_result = upload(
+                    image,
+                    resource_type='image',
+                    folder='groups/',
+                    allowed_formats=['jpg', 'jpeg', 'png'],
+                    transformation={'quality': 'auto:good', 'fetch_format': 'auto'},
+                    eager=[{'width': 700, 'height': 700, 'crop': 'limit'}]
+                )
+                comment.image = upload_result['url']
+            except Error as e:
+                print(f'Error uploading image: {e}')
         comment.save()
         Comment.objects.rebuild()
         return comment
-
 
 class PostForm(forms.ModelForm):
     new_category = forms.CharField(required=False, max_length=100, label='New Category')
@@ -56,7 +59,6 @@ class PostForm(forms.ModelForm):
             'blurb': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'cols': 40}),
             'banner_image': forms.FileInput(attrs={'class': 'form-control'}),
         }
-        
         labels = {
             'title': 'Post Title',
             'blurb': 'Short Description',
@@ -112,18 +114,20 @@ class PostForm(forms.ModelForm):
             post.category = self.cleaned_data.get('category')
 # If new_category_name is empty, I set the category of the post to the selected category in dropdown menu.
 
-        # Handle banner image upload to cloudinary
+        # Handle banner image upload to Cloudinary
         banner_image = self.cleaned_data.get('banner_image')
         if banner_image and isinstance(banner_image, InMemoryUploadedFile):
-            upload_result = cloudinary.uploader.upload(
-                banner_image,
-                resource_type='image',
-                folder='banners/',
-            )
-            post.banner_image = upload_result['url']
-        elif not banner_image:
-            post.banner_image = 'https://res.cloudinary.com/dbbqdfomn/image/upload/v1732040135/default.jpg' 
-
+            try:
+                upload_result = upload(
+                    banner_image,
+                    resource_type='image',
+                    folder='groups/',
+                    allowed_formats=['jpg', 'jpeg', 'png'],
+                    transformation={'quality': 'auto:good', 'fetch_format': 'auto'},
+                )
+                post.banner_image = upload_result['url']
+            except Error as e:
+                print(f'Error uploading image: {e}')
         if commit:
             post.save()
 # If commit is True, I save the post object to the database.
@@ -153,12 +157,18 @@ class GroupForm(forms.ModelForm):
         group = super().save(commit=False)
         group_image = self.cleaned_data.get('group_image')
         if group_image and isinstance(group_image, InMemoryUploadedFile):
-            upload_result = cloudinary.uploader.upload(
-                group_image,
-                resource_type='image',
-                folder='groups/',
-            )
-            group.group_image = upload_result['url']
+            try:
+                upload_result = upload(
+                    group_image,
+                    resource_type='image',
+                    folder='groups/',
+                    allowed_formats=['jpg', 'jpeg', 'png'],
+                    transformation={'quality': 'auto:good', 'fetch_format': 'auto'},
+                    eager=[{'width': 700, 'height': 700, 'crop': 'limit'}]
+                )
+                group.group_image = upload_result['url']
+            except Error as e:
+                print(f'Error uploading image: {e}')
         if commit:
             group.save()
         return group
@@ -185,12 +195,17 @@ class GroupAdminForm(forms.ModelForm):
         group = super().save(commit=False)
         group_image = self.cleaned_data.get('group_image')
         if group_image and isinstance(group_image, InMemoryUploadedFile):
-            upload_result = cloudinary.uploader.upload(
-                group_image,
-                resource_type='image',
-                folder='groups/',
-            )
-            group.group_image = upload_result['url']
+            try:
+                upload_result = upload(
+                    group_image,
+                    resource_type='image',
+                    folder='groups/',
+                    allowed_formats=['jpg', 'jpeg', 'png'],
+                    transformation={'quality': 'auto:good', 'fetch_format': 'auto'},
+                )
+                group.group_image = upload_result['url']
+            except Error as e:
+                print(f'Error uploading image: {e}')
         if commit:
             group.save()
         return group

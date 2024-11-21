@@ -14,7 +14,7 @@
             </div>
             <ul class="list-unstyled card-body">
                 {% for category in categories %}
-                <li class='pt-2'><a class='button2' href="{% url 'category_detail' category.slug %}">{{ category.category_name }}</a></li>
+                <li class='mt-4'><a class='button2' href="{% url 'category_detail' category.slug %}">{{ category.category_name }}</a></li>
                 {% endfor %}
             </ul>
             <div class="card-footer card3">
