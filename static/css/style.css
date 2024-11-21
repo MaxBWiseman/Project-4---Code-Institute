@@ -31,6 +31,17 @@ body {
   height: 70px;
 }
 
+.left-box {
+  left: 0;
+  z-index: 1; /* Ensure it overlaps the right box */
+}
+
+.right-box {
+  right: 0;
+  z-index: 2; /* Ensure it overlaps the left box */
+  margin-left: -10%; /* Adjust this value to control the overlap */
+}
+
 
 /* End body*/
 /* Cards */

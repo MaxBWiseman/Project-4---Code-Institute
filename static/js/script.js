@@ -15,27 +15,28 @@ function grabOne(id) {
     var csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 
 /* Reply form */
-    var formHtml = `
-       <form id="newForm" class="form-insert py-2" method="post" enctype='multipart/form-data'>
-            <div class="d-flex justify-content-between">
-                <h2>You are Replying to: ${author}</h2>
-                <div>
-                    <button type="button" class="btn btn-danger me-2" onclick="formExit()">Close</button>
-                </div>
-            </div>
-            <input type="hidden" name="csrfmiddlewaretoken" value="${ csrfToken }">
-            <select name="parent" class="d-none" id="id_parentt">
-                <option value="${id}" selected>${id}</option>
-            </select>
-            <label for="id_content">Content:</label>
-            <textarea name="content" cols="40" rows="5" class="form-control" required id="id_content"></textarea>
-            <input type="file" name="image" class="form-control mt-2" id="id_image">
-            <hr>
-            <div class="d-flex justify-content-center">
-            <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
-            </div>
-        </form>
-    `;
+var formHtml = `
+<form id="newForm" class="form-insert py-2" method="post" enctype='multipart/form-data'>
+     <div class="d-flex justify-content-between">
+         <h2>You are Replying to: ${author}</h2>
+         <div>
+             <button type="button" class="btn btn-danger me-2" onclick="formExit()">Close</button>
+         </div>
+     </div>
+     <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
+     <input type="hidden" name="form_type" value="comment_form">
+     <select name="parent" class="d-none" id="id_parentt">
+         <option value="${id}" selected>${id}</option>
+     </select>
+     <label for="id_content">Content:</label>
+     <textarea name="content" cols="40" rows="5" class="form-control" required id="id_content"></textarea>
+     <input type="file" name="image" class="form-control mt-2" id="id_image">
+     <hr>
+     <div class="d-flex justify-content-center">
+         <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
+     </div>
+ </form>
+`;
     /* This is the form that will be inserted after the comment that is being replied to when the reply button is clicked */
 
     $(`#comment-${id}`).after(formHtml);
@@ -72,6 +73,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     })
 });
+
+function pageRefresh() {
+    location.reload();
+}
 
 function confirmDeletePost(postId) {
     const modal = document.getElementById('deleteModal');

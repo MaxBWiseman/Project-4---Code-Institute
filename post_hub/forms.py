@@ -135,6 +135,7 @@ class PostForm(forms.ModelForm):
 
 class GroupForm(forms.ModelForm):
     description = forms.CharField(widget=CKEditorWidget())
+
     class Meta:
         model = UserGroup
         fields = ('name', 'description', 'group_image')
@@ -142,20 +143,54 @@ class GroupForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'group_image': forms.FileInput(attrs={'class': 'form-control'}),
         }
-        
         labels = {
-            'group_name': 'Group Name',
+            'name': 'Group Name',
             'description': 'Group Description',
             'group_image': 'Upload Group Image',
         }
 
-class GroupAdminMessageForm(forms.ModelForm):
-    admin_message = forms.CharField(widget=CKEditorWidget())
-    
+    def save(self, commit=True):
+        group = super().save(commit=False)
+        group_image = self.cleaned_data.get('group_image')
+        if group_image and isinstance(group_image, InMemoryUploadedFile):
+            upload_result = cloudinary.uploader.upload(
+                group_image,
+                resource_type='image',
+                folder='groups/',
+            )
+            group.group_image = upload_result['url']
+        if commit:
+            group.save()
+        return group
+
+class GroupAdminForm(forms.ModelForm):
+    admin_message = forms.CharField(
+        widget=CKEditorWidget(config_name='small_height'), required=False
+    )
+    description = forms.CharField(
+        widget=CKEditorWidget(config_name='small_height'), required=False
+    )
+    group_image = forms.FileInput()
+
     class Meta:
         model = UserGroup
-        fields = ('admin_message',)
-    
+        fields = ('admin_message', 'description', 'group_image')
         labels = {
             'admin_message': 'Admin Message',
+            'description': 'Update Group Description',
+            'group_image': 'Upload New Group Image',
         }
+
+    def save(self, commit=True):
+        group = super().save(commit=False)
+        group_image = self.cleaned_data.get('group_image')
+        if group_image and isinstance(group_image, InMemoryUploadedFile):
+            upload_result = cloudinary.uploader.upload(
+                group_image,
+                resource_type='image',
+                folder='groups/',
+            )
+            group.group_image = upload_result['url']
+        if commit:
+            group.save()
+        return group

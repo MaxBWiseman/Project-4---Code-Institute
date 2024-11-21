@@ -11,7 +11,7 @@ from django.views.generic.edit import DeleteView
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
 from .models import Post, Comment, Category, Vote, UserGroup, User
-from .forms import CommentForm, PostForm, GroupForm, GroupAdminMessageForm
+from .forms import CommentForm, PostForm, GroupForm, GroupAdminForm
 import json
 import cloudinary
 
@@ -318,7 +318,7 @@ def edit_post(request, slug):
 @login_required
 def create_group(request):
     if request.method == 'POST':
-        form = GroupForm(request.POST)
+        form = GroupForm(request.POST, request.FILES)
         if form.is_valid():
             user_group_count = UserGroup.objects.filter(admin=request.user).count()
             if user_group_count >= 2:
@@ -329,6 +329,7 @@ def create_group(request):
                 group.admin = request.user
 # Admin is set to group creator
                 group.save()
+                group.members.add(request.user)
                 messages.success(request, 'Your group has been created successfully!')
                 return redirect('group_detail', slug=group.slug)
         else:
@@ -350,40 +351,48 @@ def group_detail(request, slug):
 # In this case, it is used to filter comments that are not related to a post.
 
     paginator = Paginator(posts, 4)
-    page_numer = request.GET.get('page')
-    page_obj = paginator.get_page(page_numer)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     
     comment_form = CommentForm()
-    admin_message = GroupAdminMessageForm(instance=group)
+    admin_form = GroupAdminForm(instance=group)
     
     if request.method == 'POST':
 # if a post request is made whilst a user is using the group detail view,
         if not request.user.is_authenticated:
-            messages.error(request, 'Youmuyst be logged in to post a comment.')
+            messages.error(request, 'You must be logged in to post a comment.')
             return redirect('account_login')
-        comment_form = CommentForm(request.POST)
-# The data the user has sent through the request is stored in the comment_form variable.
-# The data from the comment is retrieved and stored in the comment_form variable.
-        if comment_form.is_valid():
-            user_comment = comment_form.save(commit=False)
-            user_comment.author = request.user
-            user_comment.group = group
-            user_comment.save()
-            messages.success(request, 'Your comment has been posted successfully!')
-            return HttpResponseRedirect(reverse('group_detail', args=[group.slug]))
-        else:
-            messages.error(request, 'There was an error posting your comment. Please try again.')
-            return HttpResponseRedirect(reverse('group_detail', args=[group.slug]))
         
+        if 'form_type' in request.POST:
+            form_type = request.POST['form_type']
+            if form_type == 'admin_form' and request.user == group.admin:
+                admin_form = GroupAdminForm(request.POST, request.FILES, instance=group)
+                if admin_form.is_valid():
+                    admin_form.save()
+                    messages.success(request, 'Group details updated successfully!')
+                    return redirect('group_detail', slug=slug)
+                else:
+                    messages.error(request, 'There was an error updating the group details. Please try again.')
+            elif form_type == 'comment_form':
+                comment_form = CommentForm(request.POST, request.FILES)
+                if comment_form.is_valid():
+                    user_comment = comment_form.save(commit=False, author=request.user)
+                    user_comment.group = group
+                    user_comment.save()
+                    messages.success(request, 'Your comment has been posted successfully!')
+                    return redirect('group_detail', slug=slug)
+                else:
+                    messages.error(request, 'There was an error posting your comment. Please try again.')
+
     context = {
-        'usergroup' : group,
+        'usergroup': group,
         'group_only_post': posts,
         'page_obj': page_obj,
         'is_paginated': page_obj.has_other_pages(),
         'comments': comments,
         'comment_form': comment_form,
-        'admin_message': admin_message,
-        'allcomments' : comments,
+        'admin_form': admin_form,
+        'allcomments': comments,
     }
 # A context dicitonary is used to pass what is needed to the template for rendering to the user.
     return render(request, 'post_hub/group_detail.html', context)
@@ -424,24 +433,6 @@ def group_index(request):
         group_posts.append((group, post))
         
     return render(request, 'post_hub/group_index.html', {'group_posts': group_posts, 'usergroups': usergroups})
-
-
-def admin_message(request, slug):
-    group = get_object_or_404(UserGroup, slug=slug)
-    if request.user != group.admin:
-        messages.error(request, 'You are not authorized to send messages to this group.')
-    
-    if request.method == 'POST':
-        form = GroupAdminMessageForm(request.POST, instance=group)
-# 
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Your message has been sent to the group.')
-            return redirect('group_detail', slug=slug)
-    else:
-        form = GroupAdminMessageForm(instance=group)
-    
-    return render(request, 'post_hub/group_detail.html', {'admin_message': form, 'group': group})
 
 
 def remove_member(request, slug, user_id):
