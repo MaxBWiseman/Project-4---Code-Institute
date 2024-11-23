@@ -211,13 +211,14 @@ class GroupAdminForm(forms.ModelForm):
         return group
     
 class ProfileForm(forms.ModelForm):
+    location = forms.CharField(required=False)
     
     class Meta:
         model = Profile
         fields = ('bio', 'user_image', 'location', 'is_private')
         widgets = {
             'bio': forms.Textarea(attrs={'class': 'form-control'}),
-            'location': forms.TextInput(attrs={'class': 'form-control'} required=False),
+            'location': forms.TextInput(attrs={'class': 'form-control'}),
             'user_image': forms.FileInput(attrs={'class': 'form-control'}),
             'is_private': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
@@ -240,7 +241,7 @@ class ProfileForm(forms.ModelForm):
                     allowed_formats=['jpg', 'jpeg', 'png'],
                     transformation={'quality': 'auto:good', 'fetch_format': 'auto'},
                 )
-                profile.profile_image = upload_result['url']
+                profile.user_image = upload_result['url']
             except Error as e:
                 print(f'Error uploading image: {e}')
         if commit:

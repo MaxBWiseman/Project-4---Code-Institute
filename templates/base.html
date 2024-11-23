@@ -94,6 +94,7 @@
                     <a class="nav-link {% if request.resolver_match.url_name == 'create_post' %}active{% endif %}" href="{% url 'create_post' %}">Post a Toot!</a>
                     <a class="nav-link {% if request.resolver_match.url_name == 'category_list' %}active{% endif %}" href="{% url 'category_list' %}">Categories</a>
                     <a class="nav-link {% if request.resolver_match.url_name == 'group_index' %}active{% endif %}" href="{% url 'group_index' %}">Groups</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'account_login' %}active{% endif %}" href="{% url 'view_profile' user.username %}">Profile</a>
                     <!-- The 'active' class is applied when the current URL name matches e.g 'home', 'create_post'.
                      Using request.resolver_match.url_name is a more reliable way to compare the current URL name with the expected URL names.-->
                 </div>

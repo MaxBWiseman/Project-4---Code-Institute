@@ -26,6 +26,10 @@ body {
   background-color: #93cdb6;
 }
 
+.colour-2 {
+  background-color: #139983!important;
+}
+
 .img-small {
   width: 70px;
   height: 70px;

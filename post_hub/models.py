@@ -155,7 +155,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_profile')
     bio = models.TextField()
     location = models.CharField(max_length=30, blank=True)
-    user_image = CloudinaryField('image', default='https://res.cloudinary.com/dbbqdfomn/image/upload/v1732040135/default_profile.jpg')
+    user_image = CloudinaryField('image', default='https://res.cloudinary.com/dbbqdfomn/image/upload/v1732040135/default_profile.png')
     is_private = models.BooleanField(default=False)
     
     def __str__(self):

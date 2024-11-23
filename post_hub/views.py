@@ -467,6 +467,8 @@ class CategoryDetailView(DetailView):
         context['suggested_categories'] = Category.get_random_categories()
         return context
 
+from django.core.paginator import Paginator
+
 @login_required
 def view_profile(request, username):
     user = get_object_or_404(User, username=username)
@@ -476,7 +478,53 @@ def view_profile(request, username):
     if profile.is_private and request.user != user:
         # If the profile is private and the current user is not the user whose profile is being viewed,
         return render(request, 'post_hub/private_profile.html')
-    return render(request, 'post_hub/profile.html', {'profile': profile})
+    
+    user_posts = profile.get_user_posts()
+    user_comments = profile.get_user_comments()
+    user_groups = profile.get_user_groups()
+    
+    # User stats
+    post_count = user_posts.count()
+    comment_count = user_comments.count()
+    
+    # A fun grade system
+    if post_count < 1:
+        post_grade = 'Newbie'
+    elif post_count < 10:
+        post_grade = 'Regular'
+    elif post_count < 20:
+        post_grade = 'Veteran'
+    else:
+        post_grade = 'Elite'
+    
+    if comment_count < 5:
+        comment_grade = 'Newbie'
+    elif comment_count < 15:
+        comment_grade = 'Regular'
+    elif comment_count < 35:
+        comment_grade = 'Veteran'
+    else:
+        comment_grade = 'Elite'
+    
+    stat_tuple = (post_count, comment_count, post_grade, comment_grade)
+        
+    # Paginate user posts
+    post_paginator = Paginator(user_posts, 3)
+    post_page_number = request.GET.get('post_page')
+    post_page_obj = post_paginator.get_page(post_page_number)
+
+    # Paginate user comments
+    comment_paginator = Paginator(user_comments, 3)
+    comment_page_number = request.GET.get('comment_page')
+    comment_page_obj = comment_paginator.get_page(comment_page_number)
+
+    return render(request, 'post_hub/profile.html', {
+        'profile': profile,
+        'post_page_obj': post_page_obj,
+        'comment_page_obj': comment_page_obj,
+        'user_groups': user_groups,
+        'stat_tuple': stat_tuple,
+    })
 
 @login_required
 def edit_profile(request):
