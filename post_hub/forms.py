@@ -1,7 +1,7 @@
 from django import forms
 from mptt.forms import TreeNodeChoiceField
 from ckeditor.widgets import CKEditorWidget
-from .models import Comment, Post, Category, UserGroup
+from .models import Comment, Post, Category, UserGroup, Profile, User
 from spellchecker import SpellChecker
 import cloudinary
 from cloudinary.uploader import upload
@@ -209,3 +209,40 @@ class GroupAdminForm(forms.ModelForm):
         if commit:
             group.save()
         return group
+    
+class ProfileForm(forms.ModelForm):
+    
+    class Meta:
+        model = Profile
+        fields = ('bio', 'user_image', 'location', 'is_private')
+        widgets = {
+            'bio': forms.Textarea(attrs={'class': 'form-control'}),
+            'location': forms.TextInput(attrs={'class': 'form-control'} required=False),
+            'user_image': forms.FileInput(attrs={'class': 'form-control'}),
+            'is_private': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+        labels = {
+            'bio': 'Bio',
+            'location': 'Location',
+            'user_image': 'Upload Profile Image',
+            'is_private': 'Private Account',
+        }
+    
+    def save(self, commit=True):
+        profile = super().save(commit=False)
+        user_image = self.cleaned_data.get('user_image')
+        if user_image and isinstance(user_image, InMemoryUploadedFile):
+            try:
+                upload_result = upload(
+                    user_image,
+                    resource_type='image',
+                    folder='profiles/',
+                    allowed_formats=['jpg', 'jpeg', 'png'],
+                    transformation={'quality': 'auto:good', 'fetch_format': 'auto'},
+                )
+                profile.profile_image = upload_result['url']
+            except Error as e:
+                print(f'Error uploading image: {e}')
+        if commit:
+            profile.save()
+        return profile

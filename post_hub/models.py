@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
 from cloudinary.models import CloudinaryField
@@ -155,10 +155,33 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_profile')
     bio = models.TextField()
     location = models.CharField(max_length=30, blank=True)
-    birthdate = models.DateField(null=True, blank=True)
-# Profile model has a one to one relationship with the User model,
-# this is to store additional information about the user.
+    user_image = CloudinaryField('image', default='https://res.cloudinary.com/dbbqdfomn/image/upload/v1732040135/default_profile.jpg')
+    is_private = models.BooleanField(default=False)
     
     def __str__(self):
         return self.user.username
-# Profile model added as I included it in my database diagram, this is a suggestion.
+    
+    def get_user_posts(self):
+        return self.user.user_posts.all()
+    
+    def get_user_comments(self):
+        return self.user.commenter.all()
+    
+    def get_user_groups(self):
+        return self.user.groups_members.all()
+
+@receiver(post_save, sender=User)
+# I learned that signals can be used to perform actions when certain events occur,
+# for this case, I used the post_save signal, this signal is sent just after the object is saved.
+def create_user_profile(sender, instance, created, **kwargs):
+    # sender is the model that sends the signal, in this case, the User model.
+    # instance is the instance of the model that is being saved.
+    # created is a boolean that is True if a new record was created.
+    # kwargs is used to get any additional arguments that may be passed.
+    if created:
+        # If a new user is created, a new profile is created for the user.
+        Profile.objects.create(user=instance)
+        
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()

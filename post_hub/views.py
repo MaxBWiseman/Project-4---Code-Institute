@@ -10,8 +10,8 @@ from django.views.generic import DetailView
 from django.views.generic.edit import DeleteView
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
-from .models import Post, Comment, Category, Vote, UserGroup, User
-from .forms import CommentForm, PostForm, GroupForm, GroupAdminForm
+from .models import Post, Comment, Category, Vote, UserGroup, User, Profile
+from .forms import CommentForm, PostForm, GroupForm, GroupAdminForm, ProfileForm
 import json
 import cloudinary
 
@@ -466,3 +466,30 @@ class CategoryDetailView(DetailView):
 # The posts in the category are retrieved and added to the context.
         context['suggested_categories'] = Category.get_random_categories()
         return context
+
+@login_required
+def view_profile(request, username):
+    user = get_object_or_404(User, username=username)
+    # The user object is retrieved from the database using the username.
+    profile = user.user_profile
+    # The profile object is retrieved from the user object.
+    if profile.is_private and request.user != user:
+        # If the profile is private and the current user is not the user whose profile is being viewed,
+        return render(request, 'post_hub/private_profile.html')
+    return render(request, 'post_hub/profile.html', {'profile': profile})
+
+@login_required
+def edit_profile(request):
+    profile = request.user.user_profile
+    # The profile object is retrieved from the current user.
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        # The data from the form is retrieved and stored in the form variable.
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your profile has been updated successfully!')
+            return redirect('view_profile', username=request.user.username)
+    else:
+        form = ProfileForm(instance=profile)
+    return render(request, 'post_hub/edit_profile.html', {'form': form})
+        
