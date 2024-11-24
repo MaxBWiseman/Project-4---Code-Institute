@@ -217,7 +217,7 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ('bio', 'user_image', 'location', 'is_private')
         widgets = {
-            'bio': forms.Textarea(attrs={'class': 'form-control'}),
+            'bio': CKEditorWidget(attrs={'class': 'form-control'}),
             'location': forms.TextInput(attrs={'class': 'form-control'}),
             'user_image': forms.FileInput(attrs={'class': 'form-control'}),
             'is_private': forms.CheckboxInput(attrs={'class': 'form-check-input'}),

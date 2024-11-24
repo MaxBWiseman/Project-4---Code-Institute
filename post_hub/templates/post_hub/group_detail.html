@@ -14,7 +14,7 @@
             <hr>
             <p class="image-flash"> Admin: {{ usergroup.admin }} | Members: {{ usergroup.members.count }}</p>
             <div class="card-body">
-                <p class="card-text">{{ usergroup.description }}</p>
+                <p class="card-text">{{ usergroup.description|safe }}</p>
             </div>
             <div class="card-footer">
                 {% if user.is_authenticated %}

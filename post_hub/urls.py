@@ -18,6 +18,6 @@ urlpatterns = [
     path('categories/', views.category_list, name='category_list'),
     path('category/<slug:slug>/', CategoryDetailView.as_view(), name='category_detail'),
     path('vote/', views.vote, name='vote'),
-    path('profile/<str:username>/', views.view_profile, name='view_profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
+    path('profile/<str:username>/', views.view_profile, name='view_profile'),
 ]

@@ -44,7 +44,7 @@ body {
 .right-box {
   right: 0;
   z-index: 2; /* Ensure it overlaps the left box */
-  margin-left: -15%; /* Adjust this value to control the overlap */
+  margin-left: -15%;
 }
 
 .custom-container {

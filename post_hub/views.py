@@ -467,7 +467,6 @@ class CategoryDetailView(DetailView):
         context['suggested_categories'] = Category.get_random_categories()
         return context
 
-from django.core.paginator import Paginator
 
 @login_required
 def view_profile(request, username):
@@ -479,9 +478,9 @@ def view_profile(request, username):
         # If the profile is private and the current user is not the user whose profile is being viewed,
         return render(request, 'post_hub/private_profile.html')
     
-    user_posts = profile.get_user_posts()
-    user_comments = profile.get_user_comments()
-    user_groups = profile.get_user_groups()
+    user_posts = profile.get_user_posts().order_by('-created_at')
+    user_comments = profile.get_user_comments().order_by('created_at')
+    user_groups = profile.get_user_groups().order_by('name')
     
     # User stats
     post_count = user_posts.count()
@@ -528,16 +527,17 @@ def view_profile(request, username):
 
 @login_required
 def edit_profile(request):
-    profile = request.user.user_profile
-    # The profile object is retrieved from the current user.
+    user = request.user
+    profile, created = Profile.objects.get_or_create(user=user)
+    
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=profile)
-        # The data from the form is retrieved and stored in the form variable.
         if form.is_valid():
             form.save()
             messages.success(request, 'Your profile has been updated successfully!')
-            return redirect('view_profile', username=request.user.username)
+            return redirect('view_profile', username=user.username)
     else:
         form = ProfileForm(instance=profile)
+    
     return render(request, 'post_hub/edit_profile.html', {'form': form})
         
