@@ -49,6 +49,7 @@ body {
 
 .custom-container {
   width: 50%;
+  margin: 0 auto;
 }
 
 /* End body*/
@@ -410,7 +411,7 @@ footer {
 
 button {
   font-size: 1rem;
-  padding: 0.3em 0.7em;
+  padding: 0.2em 0.3em;
   background-image: linear-gradient(rgb(214, 202, 254), rgb(158, 129, 254));
   border: 3px solid #04aa6d;
   border-radius: 1em;
@@ -572,4 +573,9 @@ button:hover {
   .right-box {
     margin-left: auto;
   }
+
+  .left-box {
+    margin-left: auto;
+  }
+
 }
