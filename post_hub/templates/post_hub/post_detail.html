@@ -79,7 +79,7 @@
                 </div>
                 <hr />
                 <div class="button-container gap-2 d-md-none">
-                    <button class='btn btn-primary text-nowrap' type='button' data-bs-toggle='collapse' data-bs-target='#buttonList-{{ node.id }}' aria-expanded='false' aria-controls='buttonList'>Actions</button>
+                    <button class='btn btn-primary text-nowrap' type='button' data-bs-toggle='collapse' data-bs-target='#buttonList-{{ node.id }}' aria-expanded='false' aria-controls='buttonList'><i class="fa-solid fa-arrow-down-wide-short"></i></button>
                     <div class='collapse commentButtonCollapse' id='buttonList-{{ node.id }}'>
                         <button class="button mt-1" onclick="voteComment({{ node.id }}, true)"><i class="fa-regular fa-thumbs-up fa-lg"></i></button>
                         <button class="button mt-1" onclick="voteComment({{ node.id }}, false)"><i class="fa-regular fa-thumbs-down fa-lg"></i></button>
@@ -160,7 +160,7 @@
         {{ comment_form.as_p }}
         <input type="hidden" id="comment-id" name="comment-id">
         <div class="d-flex justify-content-center">
-            <button type="submit" id="post-comment-button" class="button">Submit</button>
+            <button type="submit" id="post-comment-button" class="btn button-like">Submit</button>
         </div>
     </form>
 </div>

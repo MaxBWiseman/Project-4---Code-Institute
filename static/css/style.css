@@ -37,13 +37,14 @@ body {
 
 .left-box {
   left: 0;
+  margin-left: 4%;
   z-index: 1; /* Ensure it overlaps the right box */
 }
 
 .right-box {
   right: 0;
   z-index: 2; /* Ensure it overlaps the left box */
-  margin-left: -10%; /* Adjust this value to control the overlap */
+  margin-left: -15%; /* Adjust this value to control the overlap */
 }
 
 .custom-container {
@@ -466,7 +467,6 @@ button:hover {
   margin-bottom: 10px;
   text-decoration: none;
 }
-
 
 .button2:hover {
   background-color: #ddaf69;

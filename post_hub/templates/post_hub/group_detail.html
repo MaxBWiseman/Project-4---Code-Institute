@@ -3,9 +3,9 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<div class="container ms-sm-4">
+<div class="container ms-sm-5">
     <!-- Group details and join form -->
-    <div class="row align-items-center my-5 ms-sm-5">
+    <div class="row align-items-center my-5">
         <div class="col-lg-7 left-box">
             <img src="{{ usergroup.group_image.url }}" class="post-picture" alt="{{ post.title }}">
         </div>
@@ -31,11 +31,13 @@
         </div>
     </div>
 
+
     <!-- Admin form -->
+     <div class="container-fluid">
     {% if user.is_authenticated and user == usergroup.admin %}
     <div class="card my-2 py-2 text-center ms-sm-5">
         <div class="card-body">
-            <div class="card card3 mb-3">
+            <div class="card colour-2 mb-3">
                 <p class="mt-3">{{ usergroup.admin_message|safe }}</p>
             </div>
             <form id="admin-form" method="POST" action="{% url 'group_detail' usergroup.slug %}" enctype="multipart/form-data">
@@ -147,7 +149,7 @@
                 </div>
                 <hr />
                 <div class="button-container d-md-none">
-                    <button class='btn btn-primary commentAction text-dark' type='button' data-bs-toggle='collapse' data-bs-target='#buttonList-{{ node.id }}' aria-expanded='false' aria-controls='buttonList'>Actions</button>
+                    <button class='btn btn-primary commentAction text-dark' type='button' data-bs-toggle='collapse' data-bs-target='#buttonList-{{ node.id }}' aria-expanded='false' aria-controls='buttonList'><i class="fa-solid fa-arrow-down-wide-short"></i></button>
                     <div class='collapse commentButtonCollapse' id='buttonList-{{ node.id }}'>
                         <button class="button mt-1" onclick="voteComment({{ node.id }}, true)"><i class="fa-regular fa-thumbs-up fa-lg"></i></button>
                         <button class="button mt-1" onclick="voteComment({{ node.id }}, false)"><i class="fa-regular fa-thumbs-down fa-lg"></i></button>
@@ -202,7 +204,7 @@
             {{ comment_form.as_p }}
             <input type="hidden" name="form_type" value="comment_form">
             <div class="d-flex justify-content-center">
-                <button type="submit" id="post-comment-button" class="button">Submit</button>
+                <button type="submit" id="post-comment-button" class="btn button-like">Submit</button>
             </div>
         </form>
     </div>
@@ -218,5 +220,6 @@
             });
         });
     </script>
+</div>
 </div>
 {% endblock %}
