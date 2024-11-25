@@ -212,6 +212,9 @@ class GroupAdminForm(forms.ModelForm):
     
 class ProfileForm(forms.ModelForm):
     location = forms.CharField(required=False)
+    bio = forms.CharField(
+        widget=CKEditorWidget(config_name='small_height'), required=False
+    )
     
     class Meta:
         model = Profile
@@ -219,7 +222,7 @@ class ProfileForm(forms.ModelForm):
         widgets = {
             'bio': CKEditorWidget(attrs={'class': 'form-control'}),
             'location': forms.TextInput(attrs={'class': 'form-control'}),
-            'user_image': forms.FileInput(attrs={'class': 'form-control'}),
+            'user_image': forms.FileInput(attrs={'class': 'form-control', 'style': 'width:30%;display:inline-block;'}),
             'is_private': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
         labels = {

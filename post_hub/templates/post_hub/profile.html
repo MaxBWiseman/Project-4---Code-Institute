@@ -8,23 +8,25 @@
             <div class='card card3 w-100'>
                 <div class='card-header text-center'>Profile</div>
                 <div class='card-body'>
-                    <div class='row'>
+                    <div class='row d-flex justify-content-center'>
                         <div class='col-4'>
                             <img src="{{ profile.user_image.url }}" class='post-picture' alt='{{ profile.user }}'>
                         </div>
-                        <div class='col-8'>
+                        <div class='col-md-6 col-sm-12'>
                             <h5 class='text-center fw-bolder fs-2'>{{ user.username }}{% if user.is_superuser %} (Admin){% endif %}</h5>
                             <hr>
                             <div class='row'>
-                                <div class='col-6'>
-                                    <p class='fw-bolder'>Biography:</p>
+                                <div class='col-12 col-sm-6 mb-3 mb-sm-0'>
                                     <div class='card p-2'>
+                                    <p class='fw-bolder text-center'>Biography:</p>
+                                    <hr>
                                     <p>{{ profile.bio|safe }}</p>
                                     </div>
                                 </div>
-                                <div class='col-6'>
-                                    <p class='fw-bolder'>Stats:</p>
+                                <div class='col-12 col-sm-6 mb-3 mb-sm-0'>
                                     <div class='card p-2'>
+                                    <p class='fw-bolder text-center'>Stats:</p>
+                                    <hr>
                                     <p>Posts: {{ stat_tuple.0 }}</p>
                                     <p>Comments: {{ stat_tuple.1 }}</p>
                                     <p>Post Grade: {{ stat_tuple.2 }}</p>
@@ -32,9 +34,10 @@
                                     </div>
                                 </div>
                                 <div class='row'>
-                                    <div class='col-12'>
-                                        <p class='fw-bolder'>Location:</p>
-                                        <div class='card p-2' style='max-width:6rem!important;'>
+                                    <div class='col-12 mb-3 mb-sm-0'>
+                                        <div class='card p-2' style='max-width:8rem!important;'>
+                                        <p class='fw-bolder text-center'>Location:</p>
+                                        <hr>
                                         <p>{{ profile.location }}</p>
                                         </div>
                                     </div>
