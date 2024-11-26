@@ -7,9 +7,9 @@
 
 {% block content %}
 
-<div class="container">
+<div class="container ms-sm-5 mt-2">
   <div class="row">
-    <div class="col-md-8 mt-3 offset-md-2">
+    <div class="col-sm-6 col-md-8 mt-3 offset-sm-2">
       <h3>{% trans "Sign In" %}</h3>
 
       <p>{% blocktrans %}What's up? Ain't got an account? Grab one here and get Tooting! <a class="link"
@@ -18,17 +18,17 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-8 mt-3 offset-md-2">
+    <div class="col-sm-6 col-md-8 mt-3 offset-sm-2">
       <form class="login" method="POST" action="{% url 'account_login' %}">
         {% csrf_token %}
         {{ form.as_p }}
         {% if redirect_field_value %}
         <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
         {% endif %}
-        <button class="btn btn-success right" type="submit">{% trans "Sign In" %}</button>
+        <button class="button2 button-like text-nowrap" type="submit">{% trans "Sign In" %}</button>
       </form>
     </div>
-    <div class="col-md-8 mt-3 offset-md-2">
+    <div class="col-sm-6 col-md-8 mt-3 offset-sm-2">
     <a href="{% url 'account_reset_password' %}">
     <p>{% trans "Forgot your password?" %}</P>
     </a>

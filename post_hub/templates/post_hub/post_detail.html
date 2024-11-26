@@ -53,7 +53,7 @@
             {% recursetree comments %}
             <div id="comment-{{ node.id }}" class="card my-1 px-sm-1 px-md-2 px-lg-3 fw-bolder mb-4" style="border: 5px solid grey">
                 <div class="d-flex card-body phone-column justify-content-between">
-                    <span class="comment-author">By {{ node.author }} </span>
+                    <span class="comment-author">By <a href="{% url 'view_profile' node.author.username %}">{{ node.author }}</a></span>
                     <div id="reply-count">Total Replies: {{ node.get_descendant_count }}</div>
                 </div>
                 <div class="ms-2" id="comment-content-{{ node.id }}">{{ node.content }}

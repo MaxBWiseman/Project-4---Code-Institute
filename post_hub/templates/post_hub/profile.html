@@ -94,7 +94,7 @@
                                                         <div class='d-flex justify-content-end'>
                                                             {% if comment.post and comment.post.slug %}
                                                             <button class='btn button-like'>
-                                                                <a href="{% url 'post_detail' comment.post.slug %}">View Post</a>
+                                                                <a href="{% url 'post_detail' comment.post.slug %}"><i class="fa-solid fa-arrows-to-eye"></i></a>
                                                             </button>
                                                             {% else %}
                                                             <p>No post available</p>
