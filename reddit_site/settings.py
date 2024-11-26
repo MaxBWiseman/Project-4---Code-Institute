@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'allauth',
     'allauth.account',
-    'allauth.socialaccount',
     'ckeditor',
     'ckeditor_uploader',
     'django_summernote',
@@ -74,10 +73,10 @@ DEFAULT_FROM_EMAIL = 'your-email@gmail.com'
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_USERNAME_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = None
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 #Crispy Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
