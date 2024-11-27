@@ -51,7 +51,6 @@ body {
   margin: 0 auto;
   
 }
-
 /* End body*/
 /* Cards */
 .post-card {
@@ -140,7 +139,7 @@ body {
 
 .row-style-2 {
   background-color: #a6f2d4 !important;
-  height: 70%;
+  height: 75%;
   padding-bottom: 8px;
 }
 /* End Row Styles */
@@ -372,6 +371,7 @@ footer {
   margin-bottom: -20px;
   padding: 7px;
   white-space: nowrap;
+  height: 100px!important;
 }
 
 .small-height {
@@ -399,14 +399,6 @@ footer {
 }
 /* End Comments */
 /* Buttons */
-.no-overlap-button {
-  display: inline-block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-
 .btn {
   font-size: 1rem;
   padding: 0.3em 0.7em;
@@ -443,6 +435,10 @@ button {
 
 button:hover {
   transform: translate(5px, -5px);
+}
+
+.button-like {
+  max-width: 10rem;
 }
 
 .button-like:hover {
@@ -538,6 +534,7 @@ button:hover {
 
   .navbar-toggler {
     width: 100%!important;
+    margin-left: 5px;
   }
 
   .navbar-brand {
@@ -555,6 +552,10 @@ button:hover {
 
   .content-padding {
     margin-left: 0;
+  }
+
+  footer {
+    height: 88px!important;
   }
   
 }

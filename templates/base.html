@@ -172,24 +172,23 @@
                                 <div class="col-3">
                                     <ul class="list-unstyled mt-sm-2">
                                         <li class="footer-item"><a class="nav-link {% if request.resolver_match.url_name == 'create_post' %}active{% endif %}" href="{% url 'create_post' %}">Post a Toot!</a></li>
-                                        <li class="footer-item mb-2 mt-2">Security</li>
+                                        <li class="footer-item mb-2">Security</li>
                                     </ul>
                                 </div>
                                 <div class="col-3">
                                     <ul class="list-unstyled mt-sm-2">
                                         <li class="footer-item"><a class="nav-link {% if request.resolver_match.url_name == 'category_list' %}active{% endif %}" href="{% url 'category_list' %}">Categories</a></li>
-                                        <li class="footer-item mb-2 mt-2">Contact</li>
+                                        <li class="footer-item mb-2"><a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}">Contact</a></li>
                                     </ul>
                                 </div>
                                 <div class="col-3">
                                     <ul class="list-unstyled mt-sm-2">
                                         <li class="footer-item"><a class="nav-link {% if request.resolver_match.url_name == 'group_index' %}active{% endif %}" href="{% url 'group_index' %}">Groups</a></li>
-                                        <li class="footer-item mb-2 mt-2">Terms & Conditions</li>
+                                        <li class="footer-item mb-2"><a class="nav-link {% if request.resolver_match.url_name == 'terms_conditions' %}active{% endif %}" href="{% url 'terms_conditions' %}">Terms & Conditions</a></li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
-                        <p class="footer-item small-height"><span id="copyright">Copyright &copy; Max Wiseman </span></p>
                     </div>
                 </footer>
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"

@@ -3,7 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponseRedirect
 from django.db import IntegrityError, transaction
 from django.db.models import Count
+from django.conf import settings
 from django.views import generic
+from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.views.generic import DetailView
@@ -551,4 +553,30 @@ def edit_profile(request):
         form = ProfileForm(instance=profile)
     
     return render(request, 'post_hub/edit_profile.html', {'form': form})
+
+
+def terms_conditions(request):
+    return render(request, 'post_hub/terms_conditions.html')
+
+def contact(request):
+    return render(request, 'post_hub/contact.html')
+
+def send_email(request):
+    if request.method =='POST':
+        name = request.POST('name')
+        email = request.POST('email')
+        subject = request.POST('subject')
+        message = request.POST('message')
+        
+        full_message = f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}"
+        
+        send_mail(
+            subject,
+            full_message,
+            settings.DEFAULT_FROM_EMAIL,
+            ['maxwise70@hotmail.co.uk'],
+        )
+        
+        return redirect('success')
+    return render(request, 'post_hub/contact.html')
         

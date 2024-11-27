@@ -1,12 +1,12 @@
 <!-- Categories widget-->
 <div class="card card3 mb-4 widget">
     <div class="card-header">Top Categories</div>
-    <div class="card-body text-nowrap d-flex justify-content-center">
+    <div class="card-body text-nowrap">
         <div class="row">
             <div class="col-sm-12">
                 <ul class="list-unstyled">
                     {% for category in top_categories %}
-                    <li><a href="{% url 'category_detail' category.slug %}" class="button3 no-overlap-button">{{ category.category_name }}</a></li>
+                    <li><a href="{% url 'category_detail' category.slug %}" class="button3">{{ category.category_name }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
