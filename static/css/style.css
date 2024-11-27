@@ -48,8 +48,8 @@ body {
 }
 
 .custom-container {
-  width: 50%;
   margin: 0 auto;
+  
 }
 
 /* End body*/
@@ -349,6 +349,16 @@ input#day-night:focus {
   margin-bottom: 10px;
   border-radius: 5px;
 }
+
+.advert2 {
+  background-color: #93cdb6;
+  color: #23322d;
+  text-align: center;
+  height: 200px;
+  padding: 5px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
 /* End Adverts */
 /* Footer */
 footer {
@@ -389,6 +399,14 @@ footer {
 }
 /* End Comments */
 /* Buttons */
+.no-overlap-button {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
 .btn {
   font-size: 1rem;
   padding: 0.3em 0.7em;
@@ -407,7 +425,7 @@ footer {
 }
 
 .collapse button {
-  width: 30%!important;
+  width: 25%!important;
 }
 
 button {
@@ -517,6 +535,7 @@ button:hover {
 }
 
 @media screen and (max-width: 435px) {
+
   .navbar-toggler {
     width: 100%!important;
   }

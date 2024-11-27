@@ -62,58 +62,17 @@
 
             <!-- Side Widgets Column -->
             <div class="col-12 col-sm-4 d-flex flex-column">
-                <!-- Categories widget-->
-                <div class="card card3 mb-4 shadow w-100">
-                    <div class="card-header">Top Categories</div>
-                    <div class="card-body text-nowrap">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <ul class="list-unstyled">
-                                    {% for category in top_categories %}
-                                    <li><a
-                                            href="{% url 'category_detail' category.slug %}">{{ category.category_name }}</a>
-                                    </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Side widget-->
-                <div class="card card3 mb-4 shadow w-100">
-                    <div class="card-header">Top Groups</div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12">
-                                <ul>
-                                    {% for group in top_groups %}
-                                    <li>
-                                        <a href="{% url 'group_detail' group.slug %}">{{ group.name }}</a> Tooter's - {{ group.num_members }}
-                                    </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- I learned to use these cards at - https://www.sitepoint.com/bootstrap-card-component-introduction/ -->
-                </div>
+                {% include 'post_hub/top_categories.html' %}
+                {% include 'post_hub/top_groups.html' %}
                 {% include 'post_hub/suggested_categories.html' %}
-                <div class="card mb-4 shadow advert w-100">
-                    <div class="card-header">Advertisement space</div>
-                    <div class="card-body">
-                        <p>Your advertisement here</p>
-                    </div>
-                </div>
-                <div class="card mb-4 shadow advert w-100">
-                    <div class="card-header">Advertisement space</div>
-                    <div class="card-body">
-                        <p>Your advertisement here</p>
-                    </div>
-                </div>
+                {% include 'post_hub/advert.html' %}
+                {% include 'post_hub/advert.html' %}
                 </div> 
                 </div>
                 </div>
                 </div>
+    
+                <!-- I learned to use these cards at - https://www.sitepoint.com/bootstrap-card-component-introduction/ -->
 
 
 

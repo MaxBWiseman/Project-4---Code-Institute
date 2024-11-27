@@ -1,0 +1,17 @@
+<!-- Side widget-->
+<div class="card card3 mb-4 widget">
+    <div class="card-header">Top Groups</div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <ul class="list-unstyled">
+                    {% for group in top_groups %}
+                    <li>
+                        <a href="{% url 'group_detail' group.slug %}" class="button3">{{ group.name }}</a> Tooter's - {{ group.num_members }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

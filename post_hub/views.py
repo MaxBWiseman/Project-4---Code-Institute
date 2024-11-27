@@ -286,7 +286,18 @@ def category_list(request):
         categories = Category.objects.filter(category_name__icontains=query)
     else:
         categories = Category.objects.all()
-    return render(request, 'post_hub/category_list.html', {'categories': categories})
+        
+    top_categories = Category.objects.annotate(post_count=Count('category_name')).order_by('post_count')
+    top_groups = UserGroup.objects.annotate(num_members=Count('members')).order_by('num_members')[:8]
+    suggested_categories = Category.get_random_categories()
+    
+    context = {
+        'categories': categories,
+        'top_categories': top_categories,
+        'top_groups': top_groups,
+        'suggested_categories': suggested_categories,
+    }
+    return render(request, 'post_hub/category_list.html', context)
 
 
 def edit_post(request, slug):
