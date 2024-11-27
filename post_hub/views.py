@@ -576,7 +576,6 @@ def send_email(request):
             settings.DEFAULT_FROM_EMAIL,
             ['maxwise70@hotmail.co.uk'],
         )
-        
-        return redirect('success')
+        messages.success(request, 'Your email has been sent successfully!')
     return render(request, 'post_hub/contact.html')
         

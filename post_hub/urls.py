@@ -22,4 +22,5 @@ urlpatterns = [
     path('profile/<str:username>/', views.view_profile, name='view_profile'),
     path('terms-conditions/', views.terms_conditions, name='terms_conditions'),
     path('contact/', views.contact, name='contact'),
+    path('send_email/', views.send_email, name='send_email'),
 ]
