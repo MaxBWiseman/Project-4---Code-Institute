@@ -21,7 +21,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 
-# the code above imports the env.py file if it exists. due to not pushing the env.py file to github.
+# the code above imports the env.py file if it exists. due to not pushing
+# the env.py file to github.
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
 # Quick-start development settings - unsuitable for production
@@ -34,7 +35,8 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True
 # Site only runs local server if debug mode True? maybe a issue
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.herokuapp.com', '.codeinstitute-ide.net']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.herokuapp.com',
+                 '.codeinstitute-ide.net']
 
 
 # Application definition
@@ -69,7 +71,7 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
 
-#AllAuth
+# AllAuth
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
@@ -78,10 +80,10 @@ ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
-#Crispy Forms
+# Crispy Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-#CKEditor
+# CKEditor
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_CONFIGS = {
     'default': {
@@ -92,7 +94,7 @@ CKEDITOR_CONFIGS = {
     },
 }
 
-#Cloudinary
+# Cloudinary
 
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
@@ -163,8 +165,10 @@ if 'test' in sys.argv:
         }
     }
 
-# This code checks if the test command is in the sys.argv list. If it is, the database engine is set to sqlite3.
-# This is because Django uses an in-memory database when running tests, which is faster than using a real database.
+# This code checks if the test command is in the sys.argv list. If it is,
+# the database engine is set to sqlite3. This is because Django uses
+# an in-memory database when running tests, which is faster
+# than using a real database.
 
 
 # Password validation
@@ -172,16 +176,28 @@ if 'test' in sys.argv:
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': (
+            'django.contrib.auth.password_validation.'
+            'UserAttributeSimilarityValidator'
+        ),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': (
+            'django.contrib.auth.password_validation.'
+            'MinimumLengthValidator'
+        ),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': (
+            'django.contrib.auth.password_validation.'
+            'CommonPasswordValidator'
+        ),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': (
+            'django.contrib.auth.password_validation.'
+            'NumericPasswordValidator'
+        ),
     },
 ]
 

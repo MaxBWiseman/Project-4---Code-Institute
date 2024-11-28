@@ -1,34 +1,41 @@
+import random
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
+
 from cloudinary.models import CloudinaryField
 from mptt.models import MPTTModel, TreeForeignKey
-from django.templatetags.static import static
-import random
 
 
 STATUS = ((0, "Blocked"), (1, "Approved"))
 # Create your models here.
 
+
 class UserGroup(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
-    group_image = CloudinaryField('image', default='https://res.cloudinary.com/dbbqdfomn/image/upload/v1732040135/default.jpg')
+    group_image = CloudinaryField(
+        'image', default='https://res.cloudinary.com/dbbqdfomn/image/upload/v1732040135/default.jpg')
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    admin = models.ForeignKey(User, on_delete=models.CASCADE, related_name='admin_groups')
-    members = models.ManyToManyField(User, related_name='groups_members', blank=True)
+    admin = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='admin_groups')
+    members = models.ManyToManyField(
+        User, related_name='groups_members', blank=True)
     admin_message = models.TextField(blank=True)
 # Group model has a many to many relationship with the User model, this is so groups can have multiple members,
 # and users can be in multiple groups.
 # The admin field is a foreign key to the User model, this is so the group has an admin. this relationship is one to many.
 # post
+
     def __str__(self):
         return self.name
-    
+
+
 @receiver(pre_save, sender=UserGroup)
 def add_slug_to_group(sender, instance, *args, **kwargs):
     if not instance.slug:
@@ -44,12 +51,13 @@ class Category(models.Model):
 
     def __str__(self):
         return self.category_name
-    
+
     @staticmethod
     def get_random_categories(count=5):
         categories = list(Category.objects.all())
         random.shuffle(categories)
         return categories[:count]
+
 
 @receiver(pre_save, sender=Category)
 def add_slug_to_category(sender, instance, *args, **kwargs):
@@ -61,12 +69,16 @@ class Post(models.Model):
     title = models.CharField(max_length=100)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     blurb = models.TextField(blank=True)
-    banner_image = CloudinaryField('image', default='https://res.cloudinary.com/dbbqdfomn/image/upload/v1732040135/default.jpg')
+    banner_image = CloudinaryField(
+        'image', default='https://res.cloudinary.com/dbbqdfomn/image/upload/v1732040135/default.jpg')
     content = models.TextField()
     status = models.IntegerField(choices=STATUS, default=1)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_posts')
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category')
-    group = models.ForeignKey(UserGroup, on_delete=models.CASCADE, related_name='group_posts', null=True, blank=True)
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='user_posts')
+    category = models.ForeignKey(
+        Category, on_delete=models.CASCADE, related_name='category')
+    group = models.ForeignKey(UserGroup, on_delete=models.CASCADE,
+                              related_name='group_posts', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 # Post model has a many to one relationship with the User and Category models,
@@ -74,7 +86,7 @@ class Post(models.Model):
 # Each Post belongs to a single User and Category.
 # The group field is a foreign key to the UserGroup model, this is so the post can belong to a group.
 # This relationship is many to one.
-    
+
     def __str__(self):
         return f"{self.title} by {self.author.username}"
 
@@ -83,11 +95,12 @@ class Post(models.Model):
 # I learned that count() is a method that returns the number of items in a queryset from
 # https://docs.djangoproject.com/en/5.1/ref/models/querysets/#count
 # "votes" is the related name of the ForeignKey in the Vote model.
-    
+
     def total_downvotes(self):
         return self.votes.filter(is_upvote=False).count()
 # I dont include a is_downvote field in the Vote model as I can determine if a vote is a downvote
 # by checking if is_upvote is False.
+
 
 @receiver(pre_save, sender=Post)
 def add_slug_to_post(sender, instance, *args, **kwargs):
@@ -105,70 +118,80 @@ def add_slug_to_post(sender, instance, *args, **kwargs):
 
 
 class Comment(MPTTModel):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments', null=True, blank=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='commenter')
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name='comments', null=True, blank=True)
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='commenter')
     content = models.TextField()
     status = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    group = models.ForeignKey(UserGroup, on_delete=models.CASCADE, related_name='group_comments', null=True, blank=True)
-    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    group = models.ForeignKey(UserGroup, on_delete=models.CASCADE,
+                              related_name='group_comments', null=True, blank=True)
+    parent = TreeForeignKey('self', on_delete=models.CASCADE,
+                            null=True, blank=True, related_name='children')
     image = CloudinaryField('image', blank=True, null=True)
 # The parent field references the comment model iteself, the related name allowes to access child comments
 # MPTTModel is used to create a tree structure for the comments. This allows for easy retrieval of the comments
-# and their children. Making easy nesting of comments. Here where i learnt it - 
+# and their children. Making easy nesting of comments. Here where i learnt it -
 # https://blog.martinfitzpatrick.com/django-threaded-comments/
 # Comment model has a many to one relationship with the Post and User models,
 # this is to store the comments of the users on the posts.
-    
+
     class MPTTMeta:
         order_insertion_by = ['created_at']
-        
+
     def total_upvotes(self):
         return self.votes.filter(is_upvote=True).count()
-    
+
     def total_downvotes(self):
         return self.votes.filter(is_upvote=False).count()
-    
+
     def __str__(self):
         return f'Comment by {self.author} on {self.post}'
-    
-    
+
+
 class Vote(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='votes', null=True, blank=True)
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='votes', null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='voter')
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name='votes', null=True, blank=True)
+    comment = models.ForeignKey(
+        Comment, on_delete=models.CASCADE, related_name='votes', null=True, blank=True)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='voter')
     is_upvote = models.BooleanField()
 # Vote model has a many to one relationship with the Post and User models,
 # this is to store the votes of the users on the posts.
-    
+
     class Meta:
         unique_together = (('user', 'post'), ('user', 'comment'))
 # I learned that unique_together is a class Meta option, this is used to ensure that the combination of the user and post
 # or the user and comment is unique. This is to help prevent a user from voting on a post or comment more than once.
-    
+
     def __str__(self):
         return f"Vote by {self.user} on {self.post or self.comment}"
-    
-    
+
+
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_profile')
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name='user_profile')
     bio = models.TextField()
     location = models.CharField(max_length=30, blank=True)
-    user_image = CloudinaryField('image', default='https://res.cloudinary.com/dbbqdfomn/image/upload/v1732040135/default_profile.png')
+    user_image = CloudinaryField(
+        'image', default='https://res.cloudinary.com/dbbqdfomn/image/upload/v1732040135/default_profile.png')
     is_private = models.BooleanField(default=False)
-    
+
     def __str__(self):
         return self.user.username
-    
+
     def get_user_posts(self):
         return self.user.user_posts.all()
-    
+
     def get_user_comments(self):
         return self.user.commenter.all()
-    
+
     def get_user_groups(self):
         return self.user.groups_members.all()
+
 
 @receiver(post_save, sender=User)
 # I learned that signals can be used to perform actions when certain events occur,
@@ -181,7 +204,8 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         # If a new user is created, a new profile is created for the user.
         Profile.objects.create(user=instance)
-        
+
+
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.user_profile.save()

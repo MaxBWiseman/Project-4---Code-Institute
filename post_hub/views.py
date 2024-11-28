@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponseRedirect
@@ -6,16 +8,16 @@ from django.db.models import Count
 from django.conf import settings
 from django.views import generic
 from django.core.mail import send_mail
-from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.views.generic import DetailView
 from django.views.generic.edit import DeleteView
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
+
+import cloudinary
+
 from .models import Post, Comment, Category, Vote, UserGroup, User, Profile
 from .forms import CommentForm, PostForm, GroupForm, GroupAdminForm, ProfileForm
-import json
-import cloudinary
 
 
 class PostList(generic.ListView):
@@ -24,16 +26,17 @@ class PostList(generic.ListView):
     # by the created_on field in descending order.
     template_name = "post_hub/index.html"
     paginate_by = 8
-    
+
  # django automatically sets the context_object_name attribute to object_list.
     # e.g "post_list" is the context_object_name, this becomes our iterator
     # in the templates to show all published posts in order of date posted.
 
-    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['top_categories'] = Category.objects.annotate(post_count=Count('category_name')).order_by('post_count')
-        context['top_groups'] = UserGroup.objects.annotate(num_members=Count('members')).order_by('num_members')[:8]
+        context['top_categories'] = Category.objects.annotate(
+            post_count=Count('category_name')).order_by('post_count')
+        context['top_groups'] = UserGroup.objects.annotate(
+            num_members=Count('members')).order_by('num_members')[:8]
 # The top 8 groups are retrieved and added to the context. The annotate method is used to add a num_members field to each UserGroup object
 # which contains the count of members inside the group. Count is a django aggregation function often used in conjunction with annotate.
 # Learned from = https://stackoverflow.com/questions/3606416/django-most-efficient-way-to-count-same-field-values-in-a-query#:~:text=You%20can%20use%20Django%27s%20Count%20aggregation%20on%20a,in%20queryset%3A%20print%20%22%25s%3A%20%25s%22%20%25%20%28each.my_charfield%2C%20each.count%29
@@ -42,6 +45,7 @@ class PostList(generic.ListView):
 # By overriding the get_context_data method, you can add the categories to the context in a more
 # standard and efficient way. This approach ensures that the categories are available in the template
 # without creating a separate method for retrieving category data.
+
 
 @login_required
 def vote(request):
@@ -66,28 +70,30 @@ def vote(request):
 # If is_upvote is not provided, a JSON response is returned to indicate that the request has failed.
         try:
             with transaction.atomic():
-# The transaction.atomic() method is used to ensure that either all of the code in this view succeeds or none of it does.
-# This ensures that all operations are either committed or rolled back together. If an error occurs during the view function,
-# the transaction is rolled back and the database is restored to its previous state. This ensures data integrity.
+                # The transaction.atomic() method is used to ensure that either all of the code in this view succeeds or none of it does.
+                # This ensures that all operations are either committed or rolled back together. If an error occurs during the view function,
+                # the transaction is rolled back and the database is restored to its previous state. This ensures data integrity.
                 if post_id:
-# If post_id exists, the vote is for a post.
+                    # If post_id exists, the vote is for a post.
                     post = get_object_or_404(Post, id=post_id)
 # The post object to associate with is retrieved from the database using the post_id.
-                    vote, created = Vote.objects.get_or_create(user=user, post=post, defaults={'is_upvote': is_upvote})
+                    vote, created = Vote.objects.get_or_create(
+                        user=user, post=post, defaults={'is_upvote': is_upvote})
 # The vote object is retrieved from the database using the post_id.
 # The get_or_create method is used to retrieve the vote object for the user
 # because there should only be one vote per user.
                 elif comment_id:
-# If comment_id exists, the vote is for a comment.
+                    # If comment_id exists, the vote is for a comment.
                     comment = get_object_or_404(Comment, id=comment_id)
-                    vote, created = Vote.objects.get_or_create(user=user, comment=comment, defaults={'is_upvote': is_upvote})
+                    vote, created = Vote.objects.get_or_create(
+                        user=user, comment=comment, defaults={'is_upvote': is_upvote})
 # The vote object is retrieved from the database using the comment_id.
                 else:
                     return JsonResponse({'success': False, 'error': 'Invalid request'})
 # If neither post_id nor comment_id exists, a JSON response is returned to indicate that the request has failed.
 
                 if not created:
-# The vote we grabbed above
+                    # The vote we grabbed above
                     if vote.is_upvote == is_upvote:
                         vote.delete()
 # If the vote exists and the is_upvote field is the same as the request, the vote is deleted.
@@ -109,7 +115,6 @@ def vote(request):
     # If the request method is not POST, a JSON response is returned to indicate that the request is invalid.
 
 
-
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug, status=True)
 # Grab all comments related to the post with status approved
@@ -124,7 +129,7 @@ def post_detail(request, slug):
 # The comments are paginated with 10 comments per page. Using the Paginator class from Django.
     try:
         comments = paginator.page(page)
-# The page method is called on the paginator object to retrieve the comments for the requested page. 
+# The page method is called on the paginator object to retrieve the comments for the requested page.
     except PageNotAnInteger:
         comments = paginator.page(1)
     except EmptyPage:
@@ -147,35 +152,40 @@ def post_detail(request, slug):
 # so we may manipulate the comment before saving it to the database
             user_comment.post = post
 # This is to associate the comment with the post.
-            print(f"Image URL before save: {user_comment.image}")  # Debug print
+            print(f"Image URL before save: {
+                  user_comment.image}")  # Debug print
             user_comment.save()
             print(f"Image URL after save: {user_comment.image}")  # Debug print
-            messages.success(request, 'Your comment has been posted successfully!')
+            messages.success(
+                request, 'Your comment has been posted successfully!')
             return HttpResponseRedirect(reverse('post_detail', args=[post.slug]))
         else:
             print(comment_form.errors)
-            messages.error(request, 'There was an error posting your comment. Please try again.')
+            messages.error(
+                request, 'There was an error posting your comment. Please try again.')
             return HttpResponseRedirect(reverse('post_detail', args=[post.slug]))
-#We use args to pass the slug of the post to the URL pattern. To redirect to the correct post detail page.
+# We use args to pass the slug of the post to the URL pattern. To redirect to the correct post detail page.
     else:
         comment_form = CommentForm()
 # If there is no POST request, an empty comment form is created.
     context = {
-    'post': post,
-    'comments': comments,
-    'comment_form': comment_form,
-    'allcomments': allcomments,
-    'total_upvotes': post.total_upvotes(),
-    'total_downvotes': post.total_downvotes(),
-    'comment_votes': {comment.id: {'upvotes': comment.total_upvotes(),
-                                   'downvotes': comment.total_downvotes()}
-                      for comment in allcomments}
-}
+        'post': post,
+        'comments': comments,
+        'comment_form': comment_form,
+        'allcomments': allcomments,
+        'total_upvotes': post.total_upvotes(),
+        'total_downvotes': post.total_downvotes(),
+        'comment_votes': {comment.id: {'upvotes': comment.total_upvotes(),
+                                       'downvotes': comment.total_downvotes()}
+                          for comment in allcomments}
+    }
     return render(request, 'post_hub/post_detail.html', context)
 # total_upvotes and total_downvotes are added to the context to display the total number of upvotes and downvotes for the post.
 # comment_votes is added to the context to display the total number of upvotes and downvotes for each comment using a dictionary comprehension.
 
 # Exempt view from cross sit request forgery protection
+
+
 def edit_comment(request, comment_id):
     if request.method == 'POST':
         try:
@@ -199,7 +209,7 @@ def edit_comment(request, comment_id):
             elif 'remove_image' in request.POST and request.POST['remove_image'] == 'true':
                 comment.image = None
                 # If the user wants to remove the image, the image field is set to None.
-                 
+
             comment.save()
             return JsonResponse({'success': True, 'image': comment.image})
 # A JSON response is returned to indicate that the comment was updated successfully.
@@ -209,20 +219,22 @@ def edit_comment(request, comment_id):
 # If the request method is not POST, a JSON response is returned to indicate that the request is invalid.
 # I chose to use JSON responses for this view because it is an AJAX request and JSON is a common format for AJAX responses.
 
+
 class DeletePost(DeleteView):
     model = Post
     success_url = reverse_lazy('home')
-    
+
     def get_queryset(self):
         queryset = super().get_queryset()
         if self.request.user.is_superuser:
             return queryset
         return queryset.filter(auther=self.request.user)
-    
+
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.delete()
         return JsonResponse({'success': True})
+
 
 class DeleteComment(DeleteView):
     model = Comment
@@ -238,6 +250,7 @@ class DeleteComment(DeleteView):
 # The author field of the comment is compared to the current user to filter the comments.
 # The current user is retrieved from the request object and compared to the author field of the comment.
 # This ensures that only the comments by the current user can be deleted.
+
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
 # The get_object method is called to retrieve the comment to be deleted when the view is called.
@@ -252,7 +265,7 @@ def create_post(request):
         form = PostForm(request.POST, request.FILES)
         # The data from the form is retrieved and stored in the form variable.
         # The request.FILES attribute is used to handle image uploads.
-        
+
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
@@ -262,18 +275,22 @@ def create_post(request):
 # cleaned_data attribute is used to retrieve the form data after it has been cleaned and validated.
 # Django forms automatically clean and validate the data when the is_valid method is called.
             if new_category_name:
-                category, created = Category.objects.get_or_create(category_name=new_category_name)
+                category, created = Category.objects.get_or_create(
+                    category_name=new_category_name)
 # This line of code retrieves the category object from the database or creates a new category if it does not already exist.
                 post.category = category
                 if created:
-                    messages.success(request, f"A new category '{new_category_name}' was created.")
+                    messages.success(request, f"A new category '{
+                                     new_category_name}' was created.")
             post.group = form.cleaned_data.get('group')
             post.save()
-            messages.success(request, 'Your post has been tooted out successfully!')
+            messages.success(
+                request, 'Your post has been tooted out successfully!')
             return redirect('post_detail', slug=post.slug)
             # The user is redirected to the post detail page for the newly created post.
         else:
-            messages.error(request, 'There was an error creating your post. Please try again.')
+            messages.error(
+                request, 'There was an error creating your post. Please try again.')
             # If the form is not valid, an error message is displayed to the user.
             return redirect('create_post')
     else:
@@ -281,18 +298,20 @@ def create_post(request):
         # If there is no POST request, an empty form is created.
     return render(request, 'post_hub/create_post.html', {'form': form})
 
-    
+
 def category_list(request):
     query = request.GET.get('q')
     if query:
         categories = Category.objects.filter(category_name__icontains=query)
     else:
         categories = Category.objects.all()
-        
-    top_categories = Category.objects.annotate(post_count=Count('category_name')).order_by('post_count')
-    top_groups = UserGroup.objects.annotate(num_members=Count('members')).order_by('num_members')[:8]
+
+    top_categories = Category.objects.annotate(
+        post_count=Count('category_name')).order_by('post_count')
+    top_groups = UserGroup.objects.annotate(
+        num_members=Count('members')).order_by('num_members')[:8]
     suggested_categories = Category.get_random_categories()
-    
+
     context = {
         'categories': categories,
         'top_categories': top_categories,
@@ -317,10 +336,12 @@ def edit_post(request, slug):
         if form.is_valid():
             form.save()
 # The form is saved to update the post object in the database.
-            messages.success(request, 'Your post has been updated successfully!')
+            messages.success(
+                request, 'Your post has been updated successfully!')
             return redirect('post_detail', slug=slug)
         else:
-            messages.error(request, 'There was an error updating your post. Please try again.')
+            messages.error(
+                request, 'There was an error updating your post. Please try again.')
     else:
         form = PostForm(instance=post)
 # If no POST request is made, the form is created with the existing post object.
@@ -334,7 +355,8 @@ def create_group(request):
     if request.method == 'POST':
         form = GroupForm(request.POST, request.FILES)
         if form.is_valid():
-            user_group_count = UserGroup.objects.filter(admin=request.user).count()
+            user_group_count = UserGroup.objects.filter(
+                admin=request.user).count()
             if user_group_count >= 2:
                 messages.error(request, 'You can only create up to 2 groups.')
 # Limit users to 2 groups each
@@ -344,15 +366,17 @@ def create_group(request):
 # Admin is set to group creator
                 group.save()
                 group.members.add(request.user)
-                messages.success(request, 'Your group has been created successfully!')
+                messages.success(
+                    request, 'Your group has been created successfully!')
                 return redirect('group_detail', slug=group.slug)
         else:
-            messages.error(request, 'There was an error creating your group. Please try again.')
+            messages.error(
+                request, 'There was an error creating your group. Please try again.')
     else:
         form = GroupForm()
     return render(request, 'post_hub/create_group.html', {'form': form})
-    
-    
+
+
 def group_detail(request, slug):
     group = get_object_or_404(UserGroup, slug=slug)
     posts = group.group_posts.filter(status=1).order_by("-created_at")
@@ -367,36 +391,42 @@ def group_detail(request, slug):
     paginator = Paginator(posts, 4)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    
+
     comment_form = CommentForm()
     admin_form = GroupAdminForm(instance=group)
-    
+
     if request.method == 'POST':
-# if a post request is made whilst a user is using the group detail view,
+        # if a post request is made whilst a user is using the group detail view,
         if not request.user.is_authenticated:
             messages.error(request, 'You must be logged in to post a comment.')
             return redirect('account_login')
-        
+
         if 'form_type' in request.POST:
             form_type = request.POST['form_type']
             if form_type == 'admin_form' and request.user == group.admin:
-                admin_form = GroupAdminForm(request.POST, request.FILES, instance=group)
+                admin_form = GroupAdminForm(
+                    request.POST, request.FILES, instance=group)
                 if admin_form.is_valid():
                     admin_form.save()
-                    messages.success(request, 'Group details updated successfully!')
+                    messages.success(
+                        request, 'Group details updated successfully!')
                     return redirect('group_detail', slug=slug)
                 else:
-                    messages.error(request, 'There was an error updating the group details. Please try again.')
+                    messages.error(
+                        request, 'There was an error updating the group details. Please try again.')
             elif form_type == 'comment_form':
                 comment_form = CommentForm(request.POST, request.FILES)
                 if comment_form.is_valid():
-                    user_comment = comment_form.save(commit=False, author=request.user)
+                    user_comment = comment_form.save(
+                        commit=False, author=request.user)
                     user_comment.group = group
                     user_comment.save()
-                    messages.success(request, 'Your comment has been posted successfully!')
+                    messages.success(
+                        request, 'Your comment has been posted successfully!')
                     return redirect('group_detail', slug=slug)
                 else:
-                    messages.error(request, 'There was an error posting your comment. Please try again.')
+                    messages.error(
+                        request, 'There was an error posting your comment. Please try again.')
 
     context = {
         'usergroup': group,
@@ -416,11 +446,12 @@ def group_detail(request, slug):
 def join_group(request, slug):
     group = get_object_or_404(UserGroup, slug=slug)
     if request.user not in group.members.all():
-# The user is added to the group if they are not already a member if a join request is made.
+        # The user is added to the group if they are not already a member if a join request is made.
         group.members.add(request.user)
         messages.success(request, f'You have joined the group {group.name}!')
     else:
-        messages.info(request, f'You are already a member of the group {group.name}.')
+        messages.info(
+            request, f'You are already a member of the group {group.name}.')
     return redirect('group_detail', slug=slug)
 
 
@@ -432,7 +463,7 @@ def group_index(request):
 # Example : http://example.com/search?q=search_term
 # The query string is retrieved from the URL using GET, this is a dictionary that containes the paramters from the URL.
 # Then the value assocciated with the key 'q' is stored in the request.GET dictionary.
-    
+
     if query:
         usergroups = UserGroup.objects.filter(name__icontains=query)
 # *my_field*__icontains is a field lookup that is used to perform case-insensitive containment test.
@@ -440,24 +471,26 @@ def group_index(request):
 # learned from = https://docs.djangoproject.com/en/3.2/ref/models/querysets/#icontains
     else:
         usergroups = UserGroup.objects.none()
-    
-        
+
     for group in groups:
-        post = group.group_posts.filter(status=1).order_by('-created_at').first()
+        post = group.group_posts.filter(
+            status=1).order_by('-created_at').first()
         group_posts.append((group, post))
-        
+
     return render(request, 'post_hub/group_index.html', {'group_posts': group_posts, 'usergroups': usergroups})
 
 
 def remove_member(request, slug, user_id):
     group = get_object_or_404(UserGroup, slug=slug)
     if request.user != group.admin:
-        messages.error(request, 'You are not authorized to remove members from this group.')
+        messages.error(
+            request, 'You are not authorized to remove members from this group.')
         return redirect('group_detail', slug=slug)
-    
+
     user_remove = get_object_or_404(User, id=user_id)
     group.members.remove(user_remove)
-    messages.success(request, f'{user_remove.username} has been removed from the group.')
+    messages.success(
+        request, f'{user_remove.username} has been removed from the group.')
     return redirect('group_detail', slug=slug)
 
 
@@ -469,13 +502,14 @@ class CategoryDetailView(DetailView):
     def get_object(self):
         slug = self.kwargs.get("slug")
         return get_object_or_404(Category, slug=slug)
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 # The get_context_data method is overridden to add the posts in the category to the context.
         category = self.get_object()
 # The category object is retrieved from the context.
-        context['posts'] = Post.objects.filter(category=category, status=1).order_by("-created_at")
+        context['posts'] = Post.objects.filter(
+            category=category, status=1).order_by("-created_at")
 # The posts in the category are retrieved and added to the context.
         context['suggested_categories'] = Category.get_random_categories()
         return context
@@ -490,15 +524,15 @@ def view_profile(request, username):
     if profile.is_private and request.user != user:
         # If the profile is private and the current user is not the user whose profile is being viewed,
         return render(request, 'post_hub/private_profile.html')
-    
+
     user_posts = profile.get_user_posts().order_by('-created_at')
     user_comments = profile.get_user_comments().order_by('created_at')
     user_groups = profile.get_user_groups().order_by('name')
-    
+
     # User stats
     post_count = user_posts.count()
     comment_count = user_comments.count()
-    
+
     # A fun grade system
     if post_count < 1:
         post_grade = 'Newbie'
@@ -508,7 +542,7 @@ def view_profile(request, username):
         post_grade = 'Veteran'
     else:
         post_grade = 'Elite'
-    
+
     if comment_count < 5:
         comment_grade = 'Newbie'
     elif comment_count < 15:
@@ -517,9 +551,9 @@ def view_profile(request, username):
         comment_grade = 'Veteran'
     else:
         comment_grade = 'Elite'
-    
+
     stat_tuple = (post_count, comment_count, post_grade, comment_grade)
-        
+
     # Paginate user posts
     post_paginator = Paginator(user_posts, 3)
     post_page_number = request.GET.get('post_page')
@@ -538,38 +572,42 @@ def view_profile(request, username):
         'stat_tuple': stat_tuple,
     })
 
+
 @login_required
 def edit_profile(request):
     user = request.user
     profile, created = Profile.objects.get_or_create(user=user)
-    
+
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Your profile has been updated successfully!')
+            messages.success(
+                request, 'Your profile has been updated successfully!')
             return redirect('view_profile', username=user.username)
     else:
         form = ProfileForm(instance=profile)
-    
+
     return render(request, 'post_hub/edit_profile.html', {'form': form})
 
 
 def terms_conditions(request):
     return render(request, 'post_hub/terms_conditions.html')
 
+
 def contact(request):
     return render(request, 'post_hub/contact.html')
 
+
 def send_email(request):
-    if request.method =='POST':
+    if request.method == 'POST':
         name = request.POST('name')
         email = request.POST('email')
         subject = request.POST('subject')
         message = request.POST('message')
-        
+
         full_message = f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}"
-        
+
         send_mail(
             subject,
             full_message,
@@ -578,4 +616,3 @@ def send_email(request):
         )
         messages.success(request, 'Your email has been sent successfully!')
     return render(request, 'post_hub/contact.html')
-        
