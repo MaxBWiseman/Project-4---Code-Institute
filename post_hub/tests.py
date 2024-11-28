@@ -24,7 +24,8 @@ class PostFormTest4SpellChecker(TestCase):
         self.assertFalse(form.is_valid())
         self.assertIn('new_category', form.errors)
         self.assertTrue(any(
-            "Did you mean 'technology'?" in error for error in form.errors['new_category']))
+            "Did you mean 'technology'?" in error for error in form.errors[
+                'new_category']))
 
         # Test with a correctly spelled category name "technology"
         form_data['new_category'] = 'technology'
@@ -37,7 +38,8 @@ class PostFormTest4SpellChecker(TestCase):
         self.assertFalse(form.is_valid())
         self.assertIn('new_category', form.errors)
         self.assertTrue(any(
-            "Did you mean 'development'?" in error for error in form.errors['new_category']))
+            "Did you mean 'development'?" in error for error in form.errors[
+                'new_category']))
 
         # Test with a correctly spelled category name "development"
         form_data['new_category'] = 'development'
@@ -55,8 +57,9 @@ class CommentFormTest(TestCase):
         self.category = Category.objects.create(category_name='Test Category')
 
         # Create a post for the comment
-        self.post = Post.objects.create(title='Test Post', blurb='Test Blurb',
-                                        content='Test Content', category=self.category, author=self.user)
+        self.post = Post.objects.create(
+            title='Test Post', blurb='Test Blurb',
+            content='Test Content', category=self.category, author=self.user)
 
         # Create a parent comment for testing
         self.parent_comment = Comment.objects.create(
@@ -360,15 +363,17 @@ class CategoryDetailViewTest(TestCase):
         self.assertContains(response, self.post.title)
 
 
-"""
 class CloudinaryImageUploadTest(TestCase):
     def setUp(self):
         # Create a sample user, post, category, and user group for testing
         self.client = Client()
-        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.user = User.objects.create_user(
+            username='testuser', password='12345')
         self.category = Category.objects.create(category_name='Test Category')
-        self.post = Post.objects.create(title='Test Post', content='Test content', author=self.user, category=self.category)
-        self.group = UserGroup.objects.create(name='Test Group', slug='test-group', admin=self.user)
+        self.post = Post.objects.create(
+            title='Test Post', content='Test content', author=self.user, category=self.category)
+        self.group = UserGroup.objects.create(
+            name='Test Group', slug='test-group', admin=self.user)
         self.client.login(username='testuser', password='12345')
 
     def create_temp_image(self):
@@ -409,7 +414,6 @@ class CloudinaryImageUploadTest(TestCase):
             # Verify that the image URL is not empty
             self.assertTrue(comment.image)
 
-
     def test_image_upload_on_group_comment(self):
         # Create a sample image file
         temp_image = self.create_temp_image()
@@ -433,7 +437,8 @@ class CloudinaryImageUploadTest(TestCase):
             comment = form.save(commit=False, author=self.user)
             comment.post = None  # Ensure post is None for group comment
             comment.group = self.group
-            print(f"Author: {comment.author}, Group: {comment.group}")  # Debug print
+            print(f"Author: {comment.author}, Group: {
+                  comment.group}")  # Debug print
             comment.save()
 
             # Print the image URL for debugging
@@ -441,8 +446,8 @@ class CloudinaryImageUploadTest(TestCase):
 
             # Verify that the image URL is not empty
             self.assertTrue(comment.image)
-    """
-# This test is commented out as to not send too many images to cloudinary
+
+# This test is sometimes commented out as to not send too many images to cloudinary
 
 
 class ProfileModelTest(TestCase):

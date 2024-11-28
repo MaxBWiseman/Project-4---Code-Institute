@@ -27,6 +27,7 @@ class UserGroup(models.Model):
     members = models.ManyToManyField(
         User, related_name='groups_members', blank=True)
     admin_message = models.TextField(blank=True)
+    objects = models.Manager()
 # Group model has a many to many relationship with the User model, this is so groups can have multiple members,
 # and users can be in multiple groups.
 # The admin field is a foreign key to the User model, this is so the group has an admin. this relationship is one to many.
@@ -45,6 +46,7 @@ def add_slug_to_group(sender, instance, *args, **kwargs):
 class Category(models.Model):
     category_name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
+    objects = models.Manager()
 # Category model is used to store the categories of the posts.
 # Each Category has a unique name.
 # This has a many to one relationship with the Post model.
@@ -81,6 +83,7 @@ class Post(models.Model):
                               related_name='group_posts', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    objects = models.Manager()
 # Post model has a many to one relationship with the User and Category models,
 # this is to store the posts of the users in the categories.
 # Each Post belongs to a single User and Category.
@@ -159,6 +162,7 @@ class Vote(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='voter')
     is_upvote = models.BooleanField()
+    objects = models.Manager()
 # Vote model has a many to one relationship with the Post and User models,
 # this is to store the votes of the users on the posts.
 
@@ -179,6 +183,7 @@ class Profile(models.Model):
     user_image = CloudinaryField(
         'image', default='https://res.cloudinary.com/dbbqdfomn/image/upload/v1732040135/default_profile.png')
     is_private = models.BooleanField(default=False)
+    objects = models.Manager()
 
     def __str__(self):
         return self.user.username
