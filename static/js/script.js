@@ -20,7 +20,7 @@ var formHtml = `
      <div class="d-flex justify-content-between">
          <h2>You are Replying to: ${author}</h2>
          <div>
-             <button type="button" class="btn btn-danger me-2" onclick="formExit()">Close</button>
+             <button type="button" class="me-2" style="width:fit-content!important;" onclick="formExit()">Close</button>
          </div>
      </div>
      <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">

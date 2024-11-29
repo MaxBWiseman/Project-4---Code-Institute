@@ -5,8 +5,10 @@
 <!-- index.html content starts here -->
 <div class="container ms-sm-4 mt-2 ms-1">
 <div class="row">
-    <h1 class="text-center mt-3">Welcome to Tooter!</h1>
-    <p class="text-center">This is a place where you can find all the latest Toots from our community.</p>
+    <div class="card-header mb-3 text-center d-flex flex-column mx-auto" style="width: fit-content;">
+        <h1 class="card-title">Welcome to Tooter!</h1>
+        <p class="card-text">This is a place where you can find all the latest Toots from our community.</p>
+    </div>
         <div class="row ms-sm-4 ms-2">
             <!-- Main Content Column -->
             <div class="col-11 col-sm-8">
@@ -61,7 +63,7 @@
             </div>
 
             <!-- Side Widgets Column -->
-            <div class="col-12 col-sm-4 d-flex flex-column">
+            <div class="col-11 col-sm-4 d-flex flex-column">
                 {% include 'post_hub/top_categories.html' %}
                 {% include 'post_hub/top_groups.html' %}
                 {% include 'post_hub/suggested_categories.html' %}

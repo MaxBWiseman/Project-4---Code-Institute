@@ -6,8 +6,10 @@
     <div class="row mt-5 ms-sm-2">
         <div class="col-12 col-sm-8">
         <div class="card card3 text-center">
-            <h1 class="text-center card-title mt-5">Categories</h1>
-            <hr>
+            <div class="card-header">
+            <h1 class="text-center card-title">Categories</h1>
+            </div>
+            <br>
             <div class='category-search'>
                 <form method='GET' action='{% url 'category_list' %}'>
                     <input type='text' name='q' class='form-control' placeholder='Search for categories...'>

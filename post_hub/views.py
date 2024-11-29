@@ -398,7 +398,6 @@ class DeletePost(DeleteView):
         Initializes the DeletePost view.
         """
         super().__init__(*args, **kwargs)
-        self.object = None
 
     def delete(self, request, *args, **kwargs):
         """
@@ -1079,6 +1078,20 @@ def contact(request):
         HttpResponse: The rendered template for the contact page.
     """
     return render(request, 'post_hub/contact.html')
+
+def security(request):
+    """
+    Display the security page.
+
+    This view function renders the security page.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered template for the security page.
+    """
+    return render(request, 'post_hub/security.html')
 
 
 def send_email(request):

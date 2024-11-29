@@ -80,7 +80,7 @@
                     </span>
                     <form class="d-flex">
                         <input class="form-control mt-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="button ms-3" type="submit"><i class="fa-solid fa-arrow-right fa-1x"></i></button>
+                        <button class="ms-3" type="submit"><i class="fa-solid fa-arrow-right"></i></button>
                     </form>
                 </div>
             </div>
@@ -173,7 +173,7 @@
                                 <div class="col-3">
                                     <ul class="list-unstyled mt-sm-2">
                                         <li class="footer-item"><a class="nav-link {% if request.resolver_match.url_name == 'create_post' %}active{% endif %}" href="{% url 'create_post' %}">Post a Toot!</a></li>
-                                        <li class="footer-item mb-2">Security</li>
+                                        <li class="footer-item mb-2"><a class="nav-link {% if request.resolver_match.url_name == 'security' %}active{% endif %}" href="{% url 'security' %}">Security</a></li>
                                     </ul>
                                 </div>
                                 <div class="col-3">
@@ -185,7 +185,7 @@
                                 <div class="col-3">
                                     <ul class="list-unstyled mt-sm-2">
                                         <li class="footer-item"><a class="nav-link {% if request.resolver_match.url_name == 'group_index' %}active{% endif %}" href="{% url 'group_index' %}">Groups</a></li>
-                                        <li class="footer-item mb-2"><a class="nav-link {% if request.resolver_match.url_name == 'terms_conditions' %}active{% endif %}" href="{% url 'terms_conditions' %}">Terms & Conditions</a></li>
+                                        <li class="footer-item mb-2"><a class="nav-link {% if request.resolver_match.url_name == 'terms_conditions' %}active{% endif %}" href="{% url 'terms_conditions' %}">Terms of Use</a></li>
                                     </ul>
                                 </div>
                             </div>
