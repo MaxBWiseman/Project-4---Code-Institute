@@ -8,6 +8,7 @@ dj-database-url==0.5.0
 Django==4.2.16
 django-allauth==0.57.2
 django-ckeditor==6.7.1
+django-cloudinary-storage==0.3.0
 django-crispy-forms==2.3
 django-heroku==0.3.1
 django-js-asset==2.2.0
