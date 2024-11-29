@@ -331,6 +331,10 @@ body.night-mode .sidebar a.active {
   color: #ecf0f1 !important;
 }
 
+body.night-mode .colour-1 {
+  background-color: #34495e;
+}
+
 /*These two below are for keyboard users so its clear whats being selected */
 input#day-night:focus-visible {
   outline: 2px solid dodgerblue;

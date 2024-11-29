@@ -74,7 +74,7 @@ class PostList(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context['top_categories'] = Category.objects.annotate(
-            post_count=Count('category_name')).order_by('post_count')
+            post_count=Count('category')).order_by('-post_count')[:8]
         context['top_groups'] = UserGroup.objects.annotate(
             num_members=Count('members')).order_by('num_members')[:8]
 # The top 8 groups are retrieved and added to the context. The annotate method
