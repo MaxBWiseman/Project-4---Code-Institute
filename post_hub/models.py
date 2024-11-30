@@ -202,7 +202,8 @@ class Profile(models.Model):
     bio = models.TextField()
     location = models.CharField(max_length=30, blank=True)
     user_image = CloudinaryField(
-        'image', default='https://res.cloudinary.com/dbbqdfomn/image/upload/v1732040135/default_profile.png')
+        'image', default='https://res.cloudinary.com/dbbqdfomn/image/'
+        'upload/v1732040135/default_profile.png')
     is_private = models.BooleanField(default=False)
     objects = models.Manager()
 
@@ -217,11 +218,14 @@ class Profile(models.Model):
 
     def get_user_groups(self):
         return self.user.groups_members.all()
+    
+    ## All these methods are pylint false positives, they work as intended.
 
 
 @receiver(post_save, sender=User)
-# I learned that signals can be used to perform actions when certain events occur,
-# for this case, I used the post_save signal, this signal is sent just after the object is saved.
+# I learned that signals can be used to perform actions when
+# certain events occur, for this case, I used the post_save signal,
+# this signal is sent just after the object is saved.
 def create_user_profile(sender, instance, created, **kwargs):
     # sender is the model that sends the signal, in this case, the User model.
     # instance is the instance of the model that is being saved.

@@ -393,12 +393,6 @@ class DeletePost(DeleteView):
             return queryset
         return queryset.filter(auther=self.request.user)
 
-    def __init__(self, *args, **kwargs):
-        """
-        Initializes the DeletePost view.
-        """
-        super().__init__(*args, **kwargs)
-
     def delete(self, request, *args, **kwargs):
         """
         Deletes the specified post and returns a JSON response
@@ -414,6 +408,7 @@ class DeletePost(DeleteView):
             of the deletion.
         """
         self.object = self.get_object()
+        # False postive pylint error, django has its own initialization
         self.object.delete()
         return JsonResponse({'success': True})
 
@@ -1078,6 +1073,7 @@ def contact(request):
         HttpResponse: The rendered template for the contact page.
     """
     return render(request, 'post_hub/contact.html')
+
 
 def security(request):
     """

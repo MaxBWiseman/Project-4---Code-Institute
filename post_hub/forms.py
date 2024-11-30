@@ -194,21 +194,24 @@ class GroupForm(forms.ModelForm):
 
 class GroupAdminForm(forms.ModelForm):
     admin_message = forms.CharField(
-        widget=CKEditorWidget(config_name='small_height'), required=False
+        label='A message to your group members',
+        widget=CKEditorWidget(config_name='small_height', attrs={'class': 'my-5'}),
+        required=False
     )
     description = forms.CharField(
-        widget=CKEditorWidget(config_name='small_height'), required=False
+        label='Update group description',
+        widget=CKEditorWidget(config_name='small_height', attrs={'class': 'my-5'}),
+        required=False
     )
-    group_image = forms.FileInput()
+    group_image = forms.FileField(
+        label='Upload new group image',
+        widget=forms.FileInput(attrs={'class': 'my-5'}),
+        required=False
+    )
 
     class Meta:
         model = UserGroup
         fields = ('admin_message', 'description', 'group_image')
-        labels = {
-            'admin_message': 'Admin Message',
-            'description': 'Update Group Description',
-            'group_image': 'Upload New Group Image',
-        }
 
     def save(self, commit=True):
         group = super().save(commit=False)

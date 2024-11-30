@@ -335,6 +335,15 @@ body.night-mode .colour-1 {
   background-color: #34495e;
 }
 
+body.night-mode .colour-2 {
+  background-color: #34495e!important;
+}
+
+body.night-mode .nested-comment { 
+  background-color: #2c3e50!important;
+  border-left: 3px solid #0074e7!important;
+}
+
 /*These two below are for keyboard users so its clear whats being selected */
 input#day-night:focus-visible {
   outline: 2px solid dodgerblue;
@@ -473,8 +482,8 @@ footer {
 
 .nested-comment {
   margin-left: 20px;
-  background-color: #f9f9f9;
-  border-left: 3px solid #ccc;
+  background-color: #ecf6e6;
+  border-left: 3px solid #04aa6d;
   padding-left: 10px;
 }
 /* End Comments */
