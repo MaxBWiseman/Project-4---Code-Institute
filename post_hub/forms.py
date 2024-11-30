@@ -13,9 +13,11 @@ from .models import Comment, Post, Category, UserGroup, Profile
 
 class CommentForm(forms.ModelForm):
     parent = TreeNodeChoiceField(
-        queryset=Comment.objects.all(), required=False, widget=forms.HiddenInput())
+        queryset=Comment.objects.all(),
+        required=False, widget=forms.HiddenInput())
     group = forms.ModelChoiceField(
-        queryset=UserGroup.objects.all(), required=False, widget=forms.HiddenInput())
+        queryset=UserGroup.objects.all(),
+        required=False, widget=forms.HiddenInput())
 
     class Meta:
         model = Comment
@@ -67,7 +69,8 @@ class PostForm(forms.ModelForm):
                   'category', 'new_category', 'group')
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'blurb': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'cols': 40}),
+            'blurb': forms.Textarea(
+                attrs={'class': 'form-control', 'rows': 3, 'cols': 40}),
             'banner_image': forms.FileInput(attrs={'class': 'form-control'}),
         }
         labels = {
@@ -82,30 +85,39 @@ class PostForm(forms.ModelForm):
 # super is used to call the parent class (forms.ModelForm) and use its data.
 # clean is used to validate the form data and return the cleaned data
         new_category_name = cleaned_data.get('new_category')
-# I used the get method to get the value of the new_category field from the cleaned_data dictionary.
+# I used the get method to get the value of the new_category field
+# from the cleaned_data dictionary.
         category = cleaned_data.get('category')
-# I used the get method to get the value of the category field from the cleaned_data dictionary.
+# I used the get method to get the value of the category field from
+# the cleaned_data dictionary.
         if not new_category_name and not category:
             raise forms.ValidationError(
-                'You must provide either a new category or select an existing category.')
-# I raised a ValidationError with a message if both new_category_name and category are empty.
+                'You must provide either a new category or'
+                ' select an existing category.')
+# I raised a ValidationError with a message if both
+# new_category_name and category are empty.
         if new_category_name:
             existing_categories = Category.objects.filter(
                 category_name=new_category_name)
-# I used the filter method to get all the categories with the same name as new_category_name.
+# I used the filter method to get all the categories with
+# the same name as new_category_name.
             if existing_categories.count() >= 2:
                 self.add_error(
-                    'new_category', 'There cannot be more than 2 categories with the same name.')
-# I raised a ValidationError with a message if there are more than two categories with the same name.
+                    'new_category', 'There cannot be more than 2'
+                    ' categories with the same name.')
+# I raised a ValidationError with a message if there are
+# more than two categories with the same name.
             spell = SpellChecker()
-# I reasearched a way to spell check my categories and came across the spellchecker library.
-# First, I imported the SpellChecker class from the spellchecker module.
+# I reasearched a way to spell check my categories and came
+# across the spellchecker library. First, I imported the
+# SpellChecker class from the spellchecker module.
 # Then, I created a SpellChecker object called spell.
             misspelled = spell.unknown([new_category_name])
 # I used the unknown method to check if the category name is misspelled.
             if misspelled:
                 corrected = spell.correction(new_category_name)
-# If the category name is misspelled, I used the correction method to get the correct spelling.
+# If the category name is misspelled, I used the correction
+# method to get the correct spelling.
                 self.add_error('new_category', f"Did you mean '{corrected}'?")
 # I raised a ValidationError with a message that suggests the correct spelling.
 
@@ -114,20 +126,24 @@ class PostForm(forms.ModelForm):
     def save(self, commit=True):
         # I overrode the save method to handle the new_category field.
         post = super().save(commit=False)
-# This line calls the save method of the parent class with super (forms.ModelForm) and use its data.
-# and sets commit to False.
+# This line calls the save method of the parent class with
+# super (forms.ModelForm) and use its data. and sets commit to False.
         new_category_name = self.cleaned_data.get('new_category')
-# I used the get method to get the value of the new_category field from the cleaned_data dictionary.
+# I used the get method to get the value of the new_category
+# field from the cleaned_data dictionary.
         if new_category_name:
             category, created = Category.objects.get_or_create(
                 category_name=new_category_name)
-# get_or_create is a method that tries to get a Category object with the specified category_name.
-# If the Category object does not exist, it creates a new one, if it does, it returns the existing one.
+# get_or_create is a method that tries to get a Category
+# object with the specified category_name.
+# If the Category object does not exist, it creates a new one,
+# if it does, it returns the existing one.
             post.category = category
 # I set the category of the post to the newly created category.
         else:
             post.category = self.cleaned_data.get('category')
-# If new_category_name is empty, I set the category of the post to the selected category in dropdown menu.
+# If new_category_name is empty, I set the category of the post
+# to the selected category in dropdown menu.
 
         # Handle banner image upload to Cloudinary
         banner_image = self.cleaned_data.get('banner_image')
@@ -149,9 +165,11 @@ class PostForm(forms.ModelForm):
 # If commit is True, I save the post object to the database.
 
         return post
-# The code above checks if a new category name was provided. If so, it either gets the existing
-# category or creates a new one and assigns it to the post.category field. If no new category
-# name is provided, it assigns the selected category from the dropdown menu to the post.category field.
+# The code above checks if a new category name was provided.
+# If so, it either gets the existing category or creates a
+# new one and assigns it to the post.category field. If no new category
+# name is provided, it assigns the selected category from
+# the dropdown menu to the post.category field.
 
 
 class GroupForm(forms.ModelForm):
@@ -195,12 +213,14 @@ class GroupForm(forms.ModelForm):
 class GroupAdminForm(forms.ModelForm):
     admin_message = forms.CharField(
         label='A message to your group members',
-        widget=CKEditorWidget(config_name='small_height', attrs={'class': 'my-5'}),
+        widget=CKEditorWidget(
+            config_name='small_height', attrs={'class': 'my-5'}),
         required=False
     )
     description = forms.CharField(
         label='Update group description',
-        widget=CKEditorWidget(config_name='small_height', attrs={'class': 'my-5'}),
+        widget=CKEditorWidget(
+            config_name='small_height', attrs={'class': 'my-5'}),
         required=False
     )
     group_image = forms.FileField(
@@ -246,8 +266,11 @@ class ProfileForm(forms.ModelForm):
         widgets = {
             'bio': CKEditorWidget(attrs={'class': 'form-control'}),
             'location': forms.TextInput(attrs={'class': 'form-control'}),
-            'user_image': forms.FileInput(attrs={'class': 'form-control', 'style': 'width:30%;display:inline-block;'}),
-            'is_private': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'user_image': forms.FileInput(
+                attrs={'class': 'form-control', 'style': 'width:30%;'
+                       'display:inline-block;'}),
+            'is_private': forms.CheckboxInput(
+                attrs={'class': 'form-check-input'}),
         }
         labels = {
             'bio': 'Bio',

@@ -407,6 +407,7 @@ class DeletePost(DeleteView):
             JsonResponse: A JSON response indicating the success
             of the deletion.
         """
+        # pylint: disable=attribute-defined-outside-init
         self.object = self.get_object()
         # False postive pylint error, django has its own initialization
         self.object.delete()

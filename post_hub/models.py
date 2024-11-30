@@ -42,7 +42,7 @@ class UserGroup(models.Model):
 
 
 @receiver(pre_save, sender=UserGroup)
-def add_slug_to_group(sender, instance, *args, **kwargs):
+def add_slug_to_group(_sender, instance, *_args, **_kwargs):
     if not instance.slug:
         instance.slug = slugify(instance.name)
 
@@ -66,7 +66,7 @@ class Category(models.Model):
 
 
 @receiver(pre_save, sender=Category)
-def add_slug_to_category(sender, instance, *args, **kwargs):
+def add_slug_to_category(_sender, instance, *_args, **_kwargs):
     if not instance.slug:
         instance.slug = slugify(instance.category_name)
 
@@ -100,11 +100,12 @@ class Post(models.Model):
     def __str__(self):
         return f"{self.title} by {self.author}"
 
+    # pylint: disable=no-member
     def total_upvotes(self):
         return self.votes.filter(is_upvote=True).count()
     # Pylint false positive with 'self.votes',
     # this works as its a related model.
-    
+
 # I learned that count() is a method that returns
 # the number of items in a queryset from
 # https://docs.djangoproject.com/en/5.1/ref/models/querysets/#count
@@ -112,12 +113,13 @@ class Post(models.Model):
 
     def total_downvotes(self):
         return self.votes.filter(is_upvote=False).count()
+    # pylint: disable=no-member
 # I dont include a is_downvote field in the Vote model as I can
 # determine if a vote is a downvote by checking if is_upvote is False.
 
 
 @receiver(pre_save, sender=Post)
-def add_slug_to_post(sender, instance, *args, **kwargs):
+def add_slug_to_post(_sender, instance, *_args, **_kwargs):
     if not instance.slug:
         instance.slug = slugify(instance.title)
 # This automatically generates a slug for the post when it is created.
@@ -218,15 +220,15 @@ class Profile(models.Model):
 
     def get_user_groups(self):
         return self.user.groups_members.all()
-    
-    ## All these methods are pylint false positives, they work as intended.
+
+    # All these methods are pylint false positives, they work as intended.
 
 
 @receiver(post_save, sender=User)
 # I learned that signals can be used to perform actions when
 # certain events occur, for this case, I used the post_save signal,
 # this signal is sent just after the object is saved.
-def create_user_profile(sender, instance, created, **kwargs):
+def create_user_profile(_sender, instance, created, **_kwargs):
     # sender is the model that sends the signal, in this case, the User model.
     # instance is the instance of the model that is being saved.
     # created is a boolean that is True if a new record was created.
@@ -237,5 +239,5 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 
 @receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
+def save_user_profile(_sender, instance, **_kwargs):
     instance.user_profile.save()
