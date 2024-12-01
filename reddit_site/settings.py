@@ -32,7 +32,7 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 # Site only runs local server if debug mode True? maybe a issue
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.herokuapp.com',
