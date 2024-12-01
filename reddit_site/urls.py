@@ -23,5 +23,3 @@ urlpatterns = [
     path('summernote/', include('django_summernote.urls')),
     path('', include('post_hub.urls'), name='post_hub'),
 ]
-
-

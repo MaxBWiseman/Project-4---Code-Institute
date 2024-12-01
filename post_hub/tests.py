@@ -27,7 +27,28 @@ from .models import Category, Comment, Post, Profile, UserGroup, Vote
 
 
 class PostFormTest4SpellChecker(TestCase):
+    """
+    Tests the spell checker functionality in the PostForm.
+
+    Methods:
+        test_spell_checker(): Tests the spell checker with
+                        various category names.
+    """
     def test_spell_checker(self):
+        """
+        Tests the spell checker with various category names.
+
+        This method tests the PostForm with both correctly spelled and
+        intentionally misspelled category names to ensure that
+        the spell checker suggests the correct spelling for misspelled
+        names and validates correctly spelled names.
+
+        The test cases include:
+            - A misspelled category name "technology".
+            - A correctly spelled category name "technology".
+            - A misspelled category name "development".
+            - A correctly spelled category name "development".
+        """
         # Test with a misspelled category name "technology"
         form_data = {
             'title': 'Test Post',
@@ -63,7 +84,23 @@ class PostFormTest4SpellChecker(TestCase):
 
 
 class CommentFormTest(TestCase):
+    """
+    Tests the CommentForm functionality.
+
+    Methods:
+        setUp(): Sets up the test environment by creating necessary objects.
+        test_comment_form_valid(): Tests the form with valid data.
+        test_comment_form_no_parent(): Tests the form with valid
+                                    data but no parent.
+        test_comment_form_empty_content(): Tests the form with empty content.
+    """
     def setUp(self):
+        """
+        Sets up the test environment by creating necessary objects.
+
+        This method creates a user, a category, a post, and a parent comment
+        to be used in the tests.
+        """
         # Create a user for the author
         self.user = User.objects.create_user(
             username='testuser', password='12345')
@@ -81,6 +118,12 @@ class CommentFormTest(TestCase):
             content="Parent comment", author=self.user, post=self.post)
 
     def test_comment_form_valid(self):
+        """
+        Tests the form with valid data.
+
+        This method tests the CommentForm with valid data to ensure that
+        the form is valid.
+        """
         # Test with valid data
         form_data = {
             'content': 'This is a test comment.',
@@ -92,6 +135,12 @@ class CommentFormTest(TestCase):
         self.assertTrue(form.is_valid())
 
     def test_comment_form_no_parent(self):
+        """
+        Tests the form with valid data but no parent.
+
+        This method tests the CommentForm with valid data but without a parent
+        comment to ensure that the form is still valid.
+        """
         # Test with valid data but no parent
         form_data = {
             'content': 'This is a test comment without parent.',
@@ -102,6 +151,12 @@ class CommentFormTest(TestCase):
         self.assertTrue(form.is_valid())
 
     def test_comment_form_empty_content(self):
+        """
+        Tests the form with empty content.
+
+        This method tests the CommentForm with empty content to ensure that
+        the form is invalid and raises the appropriate validation error.
+        """
         # Test with empty content
         form_data = {
             'content': '',
@@ -115,8 +170,23 @@ class CommentFormTest(TestCase):
 
 
 class PostFormTest(TestCase):
-    def setUp(self):
+    """
+    Tests the PostForm functionality.
 
+    Methods:
+        setUp(): Sets up the test environment by creating necessary objects.
+        test_post_form_get(): Tests the GET request for the post form.
+        test_post_form_valid(): Tests the form with valid data.
+        test_post_form_no_category(): Tests the form with valid data
+                                    but no category.
+    """
+    def setUp(self):
+        """
+        Sets up the test environment by creating necessary objects.
+
+        This method creates a client, a user,
+        and a category to be used in the tests.
+        """
         self.client = Client()
 # I created a Client object called self.client to simulate a user
 # interacting with the application. The Client object allows me to
@@ -130,6 +200,12 @@ class PostFormTest(TestCase):
         self.category = Category.objects.create(category_name='Test Category')
 
     def test_post_form_get(self):
+        """
+        Tests the GET request for the post form.
+
+        This method tests the GET request for the create_post view to ensure
+        that the response status code is 200 and the correct template is used.
+        """
         self.client.login(username='testuser', password='12345')
         response = self.client.get(reverse('create_post'))
 # response is the response from the view function when
@@ -140,6 +216,12 @@ class PostFormTest(TestCase):
 # assertTemplateUsed checks if the response uses the specified template.
 
     def test_post_form_valid(self):
+        """
+        Tests the form with valid data.
+
+        This method tests the PostForm with valid data to ensure that
+        the form submission is successful and the response status code is 302.
+        """
         self.client.login(username='testuser', password='12345')
         # Test with valid data
         form_data = {
@@ -155,6 +237,13 @@ class PostFormTest(TestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_post_form_no_category(self):
+        """
+        Tests the form with valid data but no category.
+
+        This method tests the PostForm with valid data but without a category
+        to ensure that the form is invalid and raises the
+        appropriate validation error.
+        """
         self.client.login(username='testuser', password='12345')
         # Test with valid data but no category
         form_data = {
@@ -178,7 +267,20 @@ class PostFormTest(TestCase):
 
 
 class PostDetailViewTest(TestCase):
+    """
+    Tests the PostDetailView functionality.
+
+    Methods:
+        setUp(): Sets up the test environment by creating necessary objects.
+        test_post_detail_page(): Tests the post detail page.
+    """
     def setUp(self):
+        """
+        Sets up the test environment by creating necessary objects.
+
+        This method creates a client, a user, a category,
+        and a post to be used in the tests.
+        """
         self.client = Client()
         self.user = User.objects.create_user(
             username='testuser', password='12345')
@@ -189,6 +291,13 @@ class PostDetailViewTest(TestCase):
                                         author=self.user)
 
     def test_post_detail_page(self):
+        """
+        Tests the post detail page.
+
+        This method tests the post detail page to ensure that
+        the response status code is 200, the correct template is used,
+        and the response contains the post title and content.
+        """
         url = reverse('post_detail', args=[self.post.slug])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
@@ -198,8 +307,19 @@ class PostDetailViewTest(TestCase):
 
 
 class CommentModelTest(TestCase):
+    """
+    Tests the Comment model functionality.
 
+    Methods:
+        setUp(): Sets up the test environment by creating necessary objects.
+    """
     def setUp(self):
+        """
+        Sets up the test environment by creating necessary objects.
+
+        This method creates a user, a category, a post,
+        and a comment to be used in the tests.
+        """
         # Create a user
         self.user = User.objects.create_user(
             username='testuser', password='testpassword')
@@ -225,6 +345,12 @@ class CommentModelTest(TestCase):
         )
 
     def test_comment_creation(self):
+        """
+        Tests that the comment was created successfully.
+
+        This method checks that the comment's content, author, post, and status
+        are correctly set.
+        """
         # Test that the comment was created successfully
         self.assertEqual(self.comment.content, 'This is a test comment.')
         self.assertEqual(self.comment.author.username, 'testuser')
@@ -232,6 +358,12 @@ class CommentModelTest(TestCase):
         self.assertTrue(self.comment.status)
 
     def test_comment_str_method(self):
+        """
+        Tests the __str__ method of the Comment model.
+
+        This method checks that the __str__ method of the Comment model
+        returns the expected string representation.
+        """
         # Test the __str__ method of the Comment model
         self.assertEqual(str(self.comment), f'Comment by {
                          self.user} on {self.post}')
@@ -249,7 +381,21 @@ class CommentModelTest(TestCase):
 # Got an error creating the test database: permission denied to create database
 
 class VoteFunctionalityTest(TestCase):
+    """
+    Tests the voting functionality for posts and comments.
+
+    Methods:
+        setUp(): Sets up the test environment by creating necessary objects.
+        test_vote_post(): Tests the voting functionality for a post.
+        test_vote_comment(): Tests the voting functionality for a comment.
+    """
     def setUp(self):
+        """
+        Sets up the test environment by creating necessary objects.
+
+        This method creates a client, a user, a category, a post,
+        and a comment to be used in the tests.
+        """
         self.client = Client()
         self.user = User.objects.create_user(
             username='testuser', password='12345')
@@ -265,6 +411,14 @@ class VoteFunctionalityTest(TestCase):
         self.client.login(username='testuser', password='12345')
 
     def test_vote_post(self):
+        """
+        Tests the voting functionality for a post.
+
+        This method tests the voting functionality for a post
+        by sending a POST request to the vote view with the post ID
+        and upvote status. It checks if the vote is created
+        and then deleted successfully.
+        """
         url = reverse('vote')
         data = {
             'post_id': self.post.id,
@@ -291,6 +445,14 @@ class VoteFunctionalityTest(TestCase):
         # the vote if it already exists in the same vote category
 
     def test_vote_comment(self):
+        """
+        Tests the voting functionality for a comment.
+
+        This method tests the voting functionality for a comment
+        by sending a POST request to the vote view with the comment ID
+        and upvote status. It checks if the vote is created and
+        then deleted successfully.
+        """
         url = reverse('vote')
         data = {
             'comment_id': self.comment.id,
@@ -313,7 +475,20 @@ class VoteFunctionalityTest(TestCase):
 
 
 class EditPostTest(TestCase):
+    """
+    Tests the functionality of editing a post.
+
+    Methods:
+        setUp(): Sets up the test environment by creating necessary objects.
+        test_edit_post(): Tests the editing functionality for a post.
+    """
     def setUp(self):
+        """
+        Sets up the test environment by creating necessary objects.
+
+        This method creates a client, a user, a category,
+        and a post to be used in the tests.
+        """
         self.client = Client()
         self.user = User.objects.create_user(
             username='testuser', password='12345')
@@ -328,6 +503,14 @@ class EditPostTest(TestCase):
         self.client.login(username='testuser', password='12345')
 
     def test_edit_post(self):
+        """
+        Tests the editing functionality for a post.
+
+        This method tests the editing functionality for
+        a post by sending a POST request to the edit_post
+        view with the post data. It checks if the post is updated
+        successfully and the response status code is 302.
+        """
         url = reverse('edit_post', args=[self.post.slug])
         data = {
             'title': 'Edited Post',
@@ -346,7 +529,20 @@ class EditPostTest(TestCase):
 
 
 class UserGroupTest(TestCase):
+    """
+    Tests the functionality of user groups.
+
+    Methods:
+        setUp(): Sets up the test environment by creating necessary objects.
+        test_join_group(): Tests the functionality of joining a group.
+    """
     def setUp(self):
+        """
+        Sets up the test environment by creating necessary objects.
+
+        This method creates a client, a user,
+        and a user group to be used in the tests.
+        """
         self.client = Client()
         self.user = User.objects.create_user(
             username='testuser', password='12345')
@@ -355,6 +551,14 @@ class UserGroupTest(TestCase):
         self.client.login(username='testuser', password='12345')
 
     def test_join_group(self):
+        """
+        Tests the functionality of joining a group.
+
+        This method tests the functionality of joining a group
+        by sending a POST request to the join_group view with the group slug.
+        It checks if the user is added to the group's members and if the
+        appropriate success message is displayed.
+        """
         url = reverse('join_group', args=[self.group.slug])
         response = self.client.post(url)
         self.assertEqual(response.status_code, 302)
@@ -365,7 +569,20 @@ class UserGroupTest(TestCase):
 
 
 class CategoryDetailViewTest(TestCase):
+    """
+    Tests the CategoryDetailView functionality.
+
+    Methods:
+        setUp(): Sets up the test environment by creating necessary objects.
+        test_category_detail_view(): Tests the category detail view.
+    """
     def setUp(self):
+        """
+        Sets up the test environment by creating necessary objects.
+
+        This method creates a client, a user, a category,
+        and a post to be used in the tests.
+        """
         self.client = Client()
         self.user = User.objects.create_user(
             username='testuser', password='12345')
@@ -380,6 +597,13 @@ class CategoryDetailViewTest(TestCase):
         )
 
     def test_category_detail_view(self):
+        """
+        Tests the category detail view.
+
+        This method tests the category detail view to ensure that
+        the response status code is 200, the correct template is used,
+        and the response contains the category name and post title.
+        """
         url = reverse('category_detail', args=[self.category.slug])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
@@ -389,7 +613,24 @@ class CategoryDetailViewTest(TestCase):
 
 
 class CloudinaryImageUploadTest(TestCase):
+    """
+    Tests the functionality of image uploads to Cloudinary for comments.
+
+    Methods:
+        setUp(): Sets up the test environment by creating necessary objects.
+        create_temp_image(): Creates a temporary image file for testing.
+        test_image_upload_on_post_comment(): Tests image upload on
+                                        a post comment.
+        test_image_upload_on_group_comment(): Tests image upload on a
+                                        group comment.
+    """
     def setUp(self):
+        """
+        Sets up the test environment by creating necessary objects.
+
+        This method creates a client, a user, a category, a post,
+        and a user group to be used in the tests.
+        """
         # Create a sample user, post, category, and user group for testing
         self.client = Client()
         self.user = User.objects.create_user(
@@ -403,6 +644,15 @@ class CloudinaryImageUploadTest(TestCase):
         self.client.login(username='testuser', password='12345')
 
     def create_temp_image(self):
+        """
+        Creates a temporary image file for testing.
+
+        This method creates a temporary image file with a
+        red background and returns it.
+
+        Returns:
+            NamedTemporaryFile: A temporary image file.
+        """
         # Create a temporary image file
         image = Image.new('RGB', (100, 100), color='red')
         temp_file = tempfile.NamedTemporaryFile(suffix='.jpg')
@@ -411,6 +661,13 @@ class CloudinaryImageUploadTest(TestCase):
         return temp_file
 
     def test_image_upload_on_post_comment(self):
+        """
+        Tests image upload on a post comment.
+
+        This method tests the image upload functionality for a comment
+        on a post by creating a temporary image file, submitting the comment
+        form with the image, and verifying that the image URL is not empty.
+        """
         # Create a sample image file
         temp_image = self.create_temp_image()
         image = SimpleUploadedFile(
@@ -441,6 +698,14 @@ class CloudinaryImageUploadTest(TestCase):
             self.assertTrue(comment.image)
 
     def test_image_upload_on_group_comment(self):
+        """
+        Tests image upload on a group comment.
+
+        This method tests the image upload functionality for a comment
+        on a group by creating a temporary image file, submitting the
+        comment form with the image, and verifying that the
+        image URL is not empty.
+        """
         # Create a sample image file
         temp_image = self.create_temp_image()
         image = SimpleUploadedFile(
@@ -478,21 +743,56 @@ class CloudinaryImageUploadTest(TestCase):
 
 
 class ProfileModelTest(TestCase):
+    """
+    Tests the Profile model functionality.
+
+    Methods:
+        setUp(): Sets up the test environment by creating necessary objects.
+        test_profile_creation(): Tests the creation of a profile.
+        test_profile_str_method(): Tests the __str__ method of Profile model.
+        test_get_user_posts(): Tests the retrieval of user posts.
+        test_get_user_comments(): Tests the retrieval of user comments.
+        test_get_user_groups(): Tests the retrieval of user groups.
+    """
     def setUp(self):
+        """
+        Sets up the test environment by creating necessary objects.
+
+        This method creates a user and retrieves the associated
+        profile to be used in the tests.
+        """
         self.user = User.objects.create_user(
             username='testuser', password='12345')
         self.profile = Profile.objects.get(user=self.user)
 
     def test_profile_creation(self):
+        """
+        Tests the creation of a profile.
+
+        This method checks that the profile's user, bio, location,
+        and privacy status are correctly set upon creation.
+        """
         self.assertEqual(self.profile.user.username, 'testuser')
         self.assertEqual(self.profile.bio, '')
         self.assertEqual(self.profile.location, '')
         self.assertFalse(self.profile.is_private)
 
     def test_profile_str_method(self):
+        """
+        Tests the __str__ method of the Profile model.
+
+        This method checks that the __str__ method of the Profile model
+        returns the expected string representation.
+        """
         self.assertEqual(str(self.profile), 'testuser')
 
     def test_get_user_posts(self):
+        """
+        Tests the retrieval of user posts.
+
+        This method checks that the get_user_posts method returns the posts
+        created by the user.
+        """
         post = Post.objects.create(title='Test Post', content='Test Content',
                                    author=self.user,
                                    category=Category.objects.create(
@@ -500,6 +800,12 @@ class ProfileModelTest(TestCase):
         self.assertIn(post, self.profile.get_user_posts())
 
     def test_get_user_comments(self):
+        """
+        Tests the retrieval of user comments.
+
+        This method checks that the get_user_comments method
+        returns the comments made by the user.
+        """
         post = Post.objects.create(title='Test Post', content='Test Content',
                                    author=self.user,
                                    category=Category.objects.create(
@@ -509,13 +815,33 @@ class ProfileModelTest(TestCase):
         self.assertIn(comment, self.profile.get_user_comments())
 
     def test_get_user_groups(self):
+        """
+        Tests the retrieval of user groups.
+
+        This method checks that the get_user_groups method returns the groups
+        the user is a member of.
+        """
         group = UserGroup.objects.create(name='Test Group', admin=self.user)
         group.members.add(self.user)
         self.assertIn(group, self.profile.get_user_groups())
 
 
 class ViewProfileTest(TestCase):
+    """
+    Tests the functionality of viewing user profiles.
+
+    Methods:
+        setUp(): Sets up the test environment by creating necessary objects.
+        test_view_profile(): Tests viewing a public profile.
+        test_view_private_profile(): Tests viewing a private profile.
+    """
     def setUp(self):
+        """
+        Sets up the test environment by creating necessary objects.
+
+        This method creates a client, a user, and retrieves the
+        associated profile to be used in the tests.
+        """
         self.client = Client()
         self.user = User.objects.create_user(
             username='testuser', password='12345')
@@ -523,6 +849,15 @@ class ViewProfileTest(TestCase):
         self.client.login(username='testuser', password='12345')
 
     def test_view_profile(self):
+        """
+        Tests viewing a public profile.
+
+        This method tests viewing a public profile by sending a GET request
+        to the view_profile view with the user's username.
+        It checks if the response status code is 200, the correct template
+        is used, and the response contains the user's username,
+        bio, and location.
+        """
         url = reverse('view_profile', args=[self.user.username])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
@@ -532,6 +867,15 @@ class ViewProfileTest(TestCase):
         self.assertContains(response, self.profile.location)
 
     def test_view_private_profile(self):
+        """
+        Tests viewing a private profile.
+
+        This method tests viewing a private profile by setting
+        the profile to private, logging out the current user, creating and
+        logging in with a different test account, and sending a GET request
+        to the view_profile view with the original user's username. It checks
+        if the response status code is 200 and the correct template is used.
+        """
         self.profile.is_private = True
         self.profile.save()
         self.client.logout()
@@ -547,7 +891,21 @@ class ViewProfileTest(TestCase):
 
 
 class EditProfileTest(TestCase):
+    """
+    Tests the functionality of editing a user profile.
+
+    Methods:
+        setUp(): Sets up the test environment by creating necessary objects.
+        create_temp_image(): Creates a temporary image file for testing.
+        test_edit_profile(): Tests the editing functionality for user profiles.
+    """
     def setUp(self):
+        """
+        Sets up the test environment by creating necessary objects.
+
+        This method creates a client, a user, and retrieves the
+        associated profile to be used in the tests.
+        """
         self.client = Client()
         self.user = User.objects.create_user(
             username='testuser', password='12345')
@@ -555,6 +913,15 @@ class EditProfileTest(TestCase):
         self.client.login(username='testuser', password='12345')
 
     def create_temp_image(self):
+        """
+        Creates a temporary image file for testing.
+
+        This method creates a temporary image file with a red background and
+        returns it.
+
+        Returns:
+            NamedTemporaryFile: A temporary image file.
+        """
         # Create a temporary image file
         image = Image.new('RGB', (100, 100), color='red')
         temp_file = tempfile.NamedTemporaryFile(suffix='.jpg')
@@ -563,6 +930,14 @@ class EditProfileTest(TestCase):
         return temp_file
 
     def test_edit_profile(self):
+        """
+        Tests the editing functionality for a user profile.
+
+        This method tests the editing functionality for a user profile by
+        sending a POST request to the edit_profile view with the profile data,
+        including a temporary image file. It checks if the profile is updated
+        successfully and the response status code is 302.
+        """
         url = reverse('edit_profile')
         temp_image = self.create_temp_image()
         image = SimpleUploadedFile(
