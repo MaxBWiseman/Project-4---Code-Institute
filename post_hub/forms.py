@@ -1,3 +1,15 @@
+"""
+This module defines the forms used in the application.
+
+Forms:
+    CommentForm: A form for creating and updating comments.
+    PostForm: A form for creating and updating posts.
+    GroupAdminForm: A form for managing user groups.
+    ProfileForm: A form for updating user profiles.
+
+Utilities:
+    Handles image uploads to Cloudinary and integrates CKEditor for rich text editing.
+"""
 from cloudinary.uploader import upload
 from cloudinary.exceptions import Error
 from spellchecker import SpellChecker
@@ -12,6 +24,25 @@ from .models import Comment, Post, Category, UserGroup, Profile
 
 
 class CommentForm(forms.ModelForm):
+    """
+    A form for creating and updating comments.
+
+    Fields:
+        parent (TreeNodeChoiceField): The parent comment,
+                                allowing for nested comments (MPTT).
+        group (ModelChoiceField): The group to which the comment belongs.
+        content (Textarea): The main content of the comment.
+        image (FileInput): The image associated with the comment.
+
+    Meta:
+        model (Comment): The model that this form is associated with.
+        fields (tuple): The fields to include in the form.
+        widgets (dict): Custom widgets for the form fields.
+
+    Methods:
+        save(*_args, **kwargs): Saves the comment instance,
+                            handling image upload to Cloudinary.
+    """
     parent = TreeNodeChoiceField(
         queryset=Comment.objects.all(),
         required=False, widget=forms.HiddenInput())
@@ -27,7 +58,7 @@ class CommentForm(forms.ModelForm):
             'image': forms.FileInput(attrs={'class': 'form-control'}),
         }
 
-    def save(self, *args, **kwargs):
+    def save(self, *_args, **kwargs):
         author = kwargs.pop('author', None)
         comment = super().save(commit=False)
         if author:
@@ -132,7 +163,7 @@ class PostForm(forms.ModelForm):
 # I used the get method to get the value of the new_category
 # field from the cleaned_data dictionary.
         if new_category_name:
-            category, created = Category.objects.get_or_create(
+            category, _created = Category.objects.get_or_create(
                 category_name=new_category_name)
 # get_or_create is a method that tries to get a Category
 # object with the specified category_name.

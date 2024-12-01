@@ -1,3 +1,16 @@
+"""
+This module configures the Django admin interface for the application's models.
+
+Admin Classes:
+    PostAdmin: Custom admin class for the Post model,
+    using Summernote for rich text editing.
+
+Registered Models:
+    Comment: Registered with MPTTModelAdmin to support tree
+            structure for nested comments.
+    Category: Registered with the default admin interface.
+    UserGroup: Registered with the default admin interface.
+"""
 from django.contrib import admin
 
 from django_summernote.admin import SummernoteModelAdmin

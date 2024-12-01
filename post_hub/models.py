@@ -1,3 +1,31 @@
+"""
+This module defines the database models for the application.
+
+Models:
+    UserGroup: Represents a user group with a name, slug, image, description,
+               creation and update timestamps, admin, members, admin message.
+    Category: Represents a category for posts with a unique name and slug.
+    Post: Represents a post with a title, slug, blurb, banner image, content,
+          status, author, category, group, and timestamps.
+    Comment: Represents a comment on a post with a parent comment, image, and
+             a tree structure for nested comments.
+    Vote: Represents a vote on a post or comment with a user, upvote status,
+          and relationships to posts and comments.
+    Profile: Represents a user profile with a one-to-one relationship
+            to the User model, including bio, location, image, privacy.
+
+Signals:
+    add_slug_to_group: Automatically generates a slug for a UserGroup
+                    instance before saving.
+    add_slug_to_category: Automatically generates a slug for a Category
+                    instance before saving.
+    add_slug_to_post: Automatically generates a slug for a Post
+                    instance before saving.
+    create_user_profile: Creates a Profile instance when a new User
+                    instance is created.
+    save_user_profile: Saves the Profile instance when a User
+                    instance is saved.
+"""
 import random
 
 from django.db import models
@@ -11,10 +39,25 @@ from mptt.models import MPTTModel, TreeForeignKey
 
 
 STATUS = ((0, "Blocked"), (1, "Approved"))
-# Create your models here.
 
 
 class UserGroup(models.Model):
+    """
+    Represents a user group with a name, slug, image, description,
+    creation and update timestamps, admin, members, and an admin message.
+
+    Attributes:
+        name (CharField): The name of the group.
+        slug (SlugField): The slug for the group, generated from the name.
+        group_image (CloudinaryField): The image associated with the group.
+        description (TextField): A description of the group.
+        created_at (DateTimeField): Timestamp when the group was created.
+        updated_at (DateTimeField): Timestamp when the group was last updated.
+        admin (ForeignKey): The admin of the group, linked to the User model.
+        members (ManyToManyField): Members of the group, linked to User model.
+        admin_message (TextField): Message from admin to the group members.
+        objects (Manager): The default manager for the model.
+    """
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     group_image = CloudinaryField(
@@ -43,11 +86,28 @@ class UserGroup(models.Model):
 
 @receiver(pre_save, sender=UserGroup)
 def add_slug_to_group(_sender, instance, *_args, **_kwargs):
+    """
+    Automatically generates a slug for a UserGroup instance before saving.
+
+    Args:
+        _sender (Model): The model class that sent the signal.
+        instance (UserGroup): The actual instance being saved.
+        *_args: Additional positional arguments.
+        **_kwargs: Additional keyword arguments.
+    """
     if not instance.slug:
         instance.slug = slugify(instance.name)
 
 
 class Category(models.Model):
+    """
+    Represents a category for posts with a unique name and slug.
+
+    Attributes:
+        category_name (CharField): The name of the category.
+        slug (SlugField): The slug for the category, generated from the name.
+        objects (Manager): The default manager for the model.
+    """
     category_name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     objects = models.Manager()
@@ -60,6 +120,15 @@ class Category(models.Model):
 
     @staticmethod
     def get_random_categories(count=5):
+        """
+        Returns a list of random categories.
+
+        Args:
+            count (int): The number of random categories to return.
+
+        Returns:
+            list: A list of random categories.
+        """
         categories = list(Category.objects.all())
         random.shuffle(categories)
         return categories[:count]
@@ -67,11 +136,39 @@ class Category(models.Model):
 
 @receiver(pre_save, sender=Category)
 def add_slug_to_category(_sender, instance, *_args, **_kwargs):
+    """
+    Automatically generates a slug for a Category instance before saving.
+
+    Args:
+        _sender (Model): The model class that sent the signal.
+        instance (Category): The actual instance being saved.
+        *_args: Additional positional arguments.
+        **_kwargs: Additional keyword arguments.
+    """
     if not instance.slug:
         instance.slug = slugify(instance.category_name)
 
 
 class Post(models.Model):
+    """
+    Represents a post with a title, slug, blurb, banner image, content,
+    status, author, category, group, and timestamps.
+
+    Attributes:
+        title (CharField): The title of the post.
+        slug (SlugField): The slug for the post, generated from the title.
+        blurb (TextField): A short description or blurb for the post.
+        banner_image (CloudinaryField): The banner image associated with post.
+        content (TextField): The main content of the post.
+        status (IntegerField): The status of the post (blocked or approved).
+        author (ForeignKey): The author of the post, linked to the User model.
+        category (ForeignKey): Category of post, linked to the Category model.
+        group (ForeignKey): The group to which the post belongs,
+                        linked to the UserGroup model.
+        created_at (DateTimeField): Timestamp when the post was created.
+        updated_at (DateTimeField): Timestamp when the post was last updated.
+        objects (Manager): The default manager for the model.
+    """
     title = models.CharField(max_length=100)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     blurb = models.TextField(blank=True)
@@ -102,6 +199,12 @@ class Post(models.Model):
 
     # pylint: disable=no-member
     def total_upvotes(self):
+        """
+        Returns the total number of upvotes for the post.
+
+        Returns:
+            Integer: The total number of upvotes for the post.
+        """
         return self.votes.filter(is_upvote=True).count()
     # Pylint false positive with 'self.votes',
     # this works as its a related model.
@@ -112,6 +215,12 @@ class Post(models.Model):
 # "votes" is the related name of the ForeignKey in the Vote model.
 
     def total_downvotes(self):
+        """
+        Returns the total number of downvotes for the post.
+
+        Returns:
+            Integer: The total number of downvotes for the post.
+        """
         return self.votes.filter(is_upvote=False).count()
     # pylint: disable=no-member
 # I dont include a is_downvote field in the Vote model as I can
@@ -120,6 +229,15 @@ class Post(models.Model):
 
 @receiver(pre_save, sender=Post)
 def add_slug_to_post(_sender, instance, *_args, **_kwargs):
+    """
+    Automatically generates a slug for a Post instance before saving.
+
+    Args:
+        _sender (Model): The model class that sent the signal.
+        instance (Post): The actual instance being saved.
+        *_args: Additional positional arguments.
+        **_kwargs: Additional keyword arguments.
+    """
     if not instance.slug:
         instance.slug = slugify(instance.title)
 # This automatically generates a slug for the post when it is created.
@@ -135,6 +253,24 @@ def add_slug_to_post(_sender, instance, *_args, **_kwargs):
 
 
 class Comment(MPTTModel):
+    """
+    Represents a comment on a post with a parent comment, image, and
+    a tree structure for nested comments.
+
+    Attributes:
+        post (ForeignKey): The post to which the comment belongs,
+                        linked to the Post model.
+        author (ForeignKey): The author of the comment, linked to User model.
+        content (TextField): The main content of the comment.
+        status (BooleanField): The status of the comment (active or inactive).
+        created_at (DateTimeField): Timestamp when comment was created.
+        updated_at (DateTimeField): Timestamp when comment was last updated.
+        group (ForeignKey): The group to which the comment belongs,
+                        linked to the UserGroup model.
+        parent (TreeForeignKey): Parent comment, allowing for nested comments.
+        image (CloudinaryField): The image associated with the comment.
+        objects (Manager): The default manager for the model.
+    """
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, related_name='comments',
         null=True, blank=True)
@@ -159,14 +295,33 @@ class Comment(MPTTModel):
 # this is to store the comments of the users on the posts.
 
     class MPTTMeta:
+        """
+        Meta options for the MPTTModel.
+
+        Attributes:
+            order_insertion_by (list): Specifies the field(s) by which nodes
+                                    are ordered when they are inserted.
+        """
         order_insertion_by = ['created_at']
 
     def total_upvotes(self):
+        """
+        Returns the total number of upvotes for the post.
+
+        Returns:
+            Integer: The total number of upvotes for the post.
+        """
         return self.votes.filter(is_upvote=True).count()
     # Pylint false positive with 'self.votes',
     # this works as its a related model.
 
     def total_downvotes(self):
+        """
+        Returns the total number of downvotes for the post.
+
+        Returns:
+            Integer: The total number of downvotes for the post.
+        """
         return self.votes.filter(is_upvote=False).count()
 
     def __str__(self):
@@ -174,6 +329,19 @@ class Comment(MPTTModel):
 
 
 class Vote(models.Model):
+    """
+    Represents a vote on a post or comment with a user and upvote status.
+
+    Attributes:
+        post (ForeignKey): The post to which the vote belongs,
+                        linked to the Post model.
+        comment (ForeignKey): The comment to which the vote belongs,
+                        linked to the Comment model.
+        user (ForeignKey): The user who cast the vote, linked to User model.
+        is_upvote (BooleanField): Indicates whether the vote is an upvote
+                        (True) or downvote (False).
+        objects (Manager): The default manager for the model.
+    """
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, related_name='votes',
         null=True, blank=True)
@@ -188,6 +356,14 @@ class Vote(models.Model):
 # this is to store the votes of the users on the posts.
 
     class Meta:
+        """
+        Meta options for the Vote model.
+
+        Attributes:
+            unique_together (tuple): Ensures that the combination of user and
+            post, or user and comment, is unique. This prevents a user from
+            voting on the same post or comment more than once.
+        """
         unique_together = (('user', 'post'), ('user', 'comment'))
 # I learned that unique_together is a class Meta option, this is used to
 # ensure that the combination of the user and post or the user and
@@ -199,6 +375,19 @@ class Vote(models.Model):
 
 
 class Profile(models.Model):
+    """
+    Represents a user profile with a one-to-one relationship to the User model,
+    including bio, location, image, and privacy settings.
+
+    Attributes:
+        user (OneToOneField): The user associated with the profile,
+                        linked to the User model.
+        bio (TextField): A short biography of the user.
+        location (CharField): The location of the user.
+        user_image (CloudinaryField): The profile image of the user.
+        is_private (BooleanField): Indicates whether the profile is private.
+        objects (Manager): The default manager for the model.
+    """
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name='user_profile')
     bio = models.TextField()
@@ -213,12 +402,30 @@ class Profile(models.Model):
         return self.user.username
 
     def get_user_posts(self):
+        """
+        Retrieves all posts created by the user.
+
+        Returns:
+            QuerySet: A queryset containing all posts created by the user.
+        """
         return self.user.user_posts.all()
 
     def get_user_comments(self):
+        """
+        Retrieves all comments made by the user.
+
+        Returns:
+            QuerySet: A queryset containing all comments made by the user.
+        """
         return self.user.commenter.all()
 
     def get_user_groups(self):
+        """
+        Retrieves all groups the user is a member of.
+
+        Returns:
+            QuerySet: A queryset containing all groups the user is a member of.
+        """
         return self.user.groups_members.all()
 
     # All these methods are pylint false positives, they work as intended.
@@ -229,10 +436,19 @@ class Profile(models.Model):
 # certain events occur, for this case, I used the post_save signal,
 # this signal is sent just after the object is saved.
 def create_user_profile(_sender, instance, created, **_kwargs):
-    # sender is the model that sends the signal, in this case, the User model.
-    # instance is the instance of the model that is being saved.
-    # created is a boolean that is True if a new record was created.
-    # kwargs is used to get any additional arguments that may be passed.
+    """
+    Creates a Profile instance when a new User instance is created.
+
+    This signal handler is triggered by the post_save signal, which is sent
+    just after a User instance is saved. If a new User instance is created,
+    this function creates a corresponding Profile instance for the user.
+
+    Args:
+        _sender (Model): The model class that sent the signal (User model).
+        instance (User): The instance of the User model that is being saved.
+        created (bool): A boolean indicating whether a new record was created.
+        **_kwargs: Additional keyword arguments.
+    """
     if created:
         # If a new user is created, a new profile is created for the user.
         Profile.objects.create(user=instance)
@@ -240,4 +456,16 @@ def create_user_profile(_sender, instance, created, **_kwargs):
 
 @receiver(post_save, sender=User)
 def save_user_profile(_sender, instance, **_kwargs):
+    """
+    Saves the Profile instance when a User instance is saved.
+
+    This signal handler is triggered by the post_save signal, which is sent
+    just after a User instance is saved. This function ensures that the
+    corresponding Profile instance is also saved.
+
+    Args:
+        _sender (Model): The model class that sent the signal (User model).
+        instance (User): The instance of the User model that is being saved.
+        **_kwargs: Additional keyword arguments.
+    """
     instance.user_profile.save()
