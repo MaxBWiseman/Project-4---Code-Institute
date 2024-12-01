@@ -8,7 +8,8 @@ Forms:
     ProfileForm: A form for updating user profiles.
 
 Utilities:
-    Handles image uploads to Cloudinary and integrates CKEditor for rich text editing.
+    Handles image uploads to Cloudinary and integrates
+    CKEditor for rich text editing.
 """
 from cloudinary.uploader import upload
 from cloudinary.exceptions import Error
@@ -51,6 +52,14 @@ class CommentForm(forms.ModelForm):
         required=False, widget=forms.HiddenInput())
 
     class Meta:
+        """
+        Meta options for the CommentForm.
+
+        Attributes:
+            model (Comment): The model that this form is associated with.
+            fields (tuple): The fields to include in the form.
+            widgets (dict): Custom widgets for the form fields.
+        """
         model = Comment
         fields = ('parent', 'content', 'group', 'image')
         widgets = {
@@ -59,6 +68,16 @@ class CommentForm(forms.ModelForm):
         }
 
     def save(self, *_args, **kwargs):
+        """
+        Saves the comment instance, handling image upload to Cloudinary.
+
+        Args:
+            *_args: Additional positional arguments.
+            **kwargs: Additional keyword arguments.
+
+        Returns:
+            Comment: The saved comment instance.
+        """
         author = kwargs.pop('author', None)
         comment = super().save(commit=False)
         if author:
@@ -86,6 +105,27 @@ class CommentForm(forms.ModelForm):
 
 
 class PostForm(forms.ModelForm):
+    """
+    A form for creating and updating posts.
+
+    Fields:
+        new_category (CharField): A field for entering a new category name.
+        category (ModelChoiceField): A dropdown field for selecting
+                                an existing category.
+        group (ModelChoiceField): A dropdown field for selecting a user group.
+        content (CharField): A field for entering the main content of the post.
+
+    Meta:
+        model (Post): The model that this form is associated with.
+        fields (tuple): The fields to include in the form.
+        widgets (dict): Custom widgets for the form fields.
+        labels (dict): Custom labels for the form fields.
+
+    Methods:
+        clean(): Validates the form data and returns the cleaned data.
+        save(commit=True): Saves the post instance, handling the new_category
+                        field and image upload to Cloudinary.
+    """
     new_category = forms.CharField(
         required=False, max_length=100, label='New Category')
     category = forms.ModelChoiceField(queryset=Category.objects.all(
@@ -95,6 +135,15 @@ class PostForm(forms.ModelForm):
     content = forms.CharField(widget=CKEditorWidget())
 
     class Meta:
+        """
+        Meta options for the PostForm.
+
+        Attributes:
+            model (Post): The model that this form is associated with.
+            fields (tuple): The fields to include in the form.
+            widgets (dict): Custom widgets for the form fields.
+            labels (dict): Custom labels for the form fields.
+        """
         model = Post
         fields = ('title', 'blurb', 'banner_image', 'content',
                   'category', 'new_category', 'group')
@@ -112,6 +161,16 @@ class PostForm(forms.ModelForm):
         }
 
     def clean(self):
+        """
+        Validates the form data and returns the cleaned data.
+
+        This method checks if either a new category name or existing category
+        is provided. It also checks for duplicate category names and performs
+        spell checking on the new category name.
+
+        Returns:
+            dict: The cleaned data.
+        """
         cleaned_data = super().clean()
 # super is used to call the parent class (forms.ModelForm) and use its data.
 # clean is used to validate the form data and return the cleaned data
@@ -155,6 +214,16 @@ class PostForm(forms.ModelForm):
         return cleaned_data
 
     def save(self, commit=True):
+        """
+        Saves the post instance, handling the new_category field and
+        image upload to Cloudinary.
+
+        Args:
+            commit (bool): Whether to save the instance to the database.
+
+        Returns:
+            Post: The saved post instance.
+        """
         # I overrode the save method to handle the new_category field.
         post = super().save(commit=False)
 # This line calls the save method of the parent class with
@@ -204,9 +273,34 @@ class PostForm(forms.ModelForm):
 
 
 class GroupForm(forms.ModelForm):
+    """
+    A form for creating and updating user groups.
+
+    Fields:
+        description (CharField): A field for entering the group description.
+
+    Meta:
+        model (UserGroup): The model that this form is associated with.
+        fields (tuple): The fields to include in the form.
+        widgets (dict): Custom widgets for the form fields.
+        labels (dict): Custom labels for the form fields.
+
+    Methods:
+        save(commit=True): Saves the group instance,
+                        handling image upload to Cloudinary.
+    """
     description = forms.CharField(widget=CKEditorWidget())
 
     class Meta:
+        """
+        Meta options for the GroupForm.
+
+        Attributes:
+            model (UserGroup): The model that this form is associated with.
+            fields (tuple): The fields to include in the form.
+            widgets (dict): Custom widgets for the form fields.
+            labels (dict): Custom labels for the form fields.
+        """
         model = UserGroup
         fields = ('name', 'description', 'group_image')
         widgets = {
@@ -220,6 +314,15 @@ class GroupForm(forms.ModelForm):
         }
 
     def save(self, commit=True):
+        """
+        Saves the group instance, handling image upload to Cloudinary.
+
+        Args:
+            commit (bool): Whether to save the instance to the database.
+
+        Returns:
+            UserGroup: The saved group instance.
+        """
         group = super().save(commit=False)
         group_image = self.cleaned_data.get('group_image')
         if group_image and isinstance(group_image, InMemoryUploadedFile):
@@ -242,6 +345,23 @@ class GroupForm(forms.ModelForm):
 
 
 class GroupAdminForm(forms.ModelForm):
+    """
+    A form for managing user groups by the admin.
+
+    Fields:
+        admin_message (CharField): A field for entering a message
+                                to the group members.
+        description (CharField): A field for updating the group description.
+        group_image (FileField): A field for uploading a new group image.
+
+    Meta:
+        model (UserGroup): The model that this form is associated with.
+        fields (tuple): The fields to include in the form.
+
+    Methods:
+        save(commit=True): Saves the group instance,
+                        handling image upload to Cloudinary.
+    """
     admin_message = forms.CharField(
         label='A message to your group members',
         widget=CKEditorWidget(
@@ -261,10 +381,26 @@ class GroupAdminForm(forms.ModelForm):
     )
 
     class Meta:
+        """
+        Meta options for the GroupAdminForm.
+
+        Attributes:
+            model (UserGroup): The model that this form is associated with.
+            fields (tuple): The fields to include in the form.
+        """
         model = UserGroup
         fields = ('admin_message', 'description', 'group_image')
 
     def save(self, commit=True):
+        """
+        Saves the group instance, handling image upload to Cloudinary.
+
+        Args:
+            commit (bool): Whether to save the instance to the database.
+
+        Returns:
+            UserGroup: The saved group instance.
+        """
         group = super().save(commit=False)
         group_image = self.cleaned_data.get('group_image')
         if group_image and isinstance(group_image, InMemoryUploadedFile):
@@ -286,12 +422,38 @@ class GroupAdminForm(forms.ModelForm):
 
 
 class ProfileForm(forms.ModelForm):
+    """
+    A form for updating user profiles.
+
+    Fields:
+        location (CharField): A field for entering the user's location.
+        bio (CharField): A field for entering the user's biography.
+
+    Meta:
+        model (Profile): The model that this form is associated with.
+        fields (tuple): The fields to include in the form.
+        widgets (dict): Custom widgets for the form fields.
+        labels (dict): Custom labels for the form fields.
+
+    Methods:
+        save(commit=True): Saves the profile instance,
+                        handling image upload to Cloudinary.
+    """
     location = forms.CharField(required=False)
     bio = forms.CharField(
         widget=CKEditorWidget(config_name='small_height'), required=False
     )
 
     class Meta:
+        """
+        Meta options for the ProfileForm.
+
+        Attributes:
+            model (Profile): The model that this form is associated with.
+            fields (tuple): The fields to include in the form.
+            widgets (dict): Custom widgets for the form fields.
+            labels (dict): Custom labels for the form fields.
+        """
         model = Profile
         fields = ('bio', 'user_image', 'location', 'is_private')
         widgets = {
@@ -311,6 +473,15 @@ class ProfileForm(forms.ModelForm):
         }
 
     def save(self, commit=True):
+        """
+        Saves the profile instance, handling image upload to Cloudinary.
+
+        Args:
+            commit (bool): Whether to save the instance to the database.
+
+        Returns:
+            Profile: The saved profile instance.
+        """
         profile = super().save(commit=False)
         user_image = self.cleaned_data.get('user_image')
         if user_image and isinstance(user_image, InMemoryUploadedFile):

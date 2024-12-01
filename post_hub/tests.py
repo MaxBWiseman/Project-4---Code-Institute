@@ -1,14 +1,29 @@
-from django.test import TestCase, Client
-from django.urls import reverse
-from django.core.files.uploadedfile import SimpleUploadedFile
-from django.contrib.messages import get_messages
-from django.contrib.auth.models import User
-from PIL import Image
-import tempfile
-import json
+"""
+This module contains the unit tests for the application.
 
-from .forms import PostForm, CommentForm
-from .models import Comment, Post, Category, Vote, UserGroup, Profile
+Tests:
+    PostFormTest4SpellChecker: Tests the spell checker functionality
+                            in the PostForm.
+
+Utilities:
+    Uses Django's TestCase for setting up and tearing down tests.
+    Utilizes Django's Client for simulating HTTP requests.
+    Employs SimpleUploadedFile for testing file uploads.
+    Leverages PIL for image creation in tests.
+"""
+import json
+import tempfile
+
+from PIL import Image
+
+from django.contrib.auth.models import User
+from django.contrib.messages import get_messages
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import Client, TestCase
+from django.urls import reverse
+
+from .forms import CommentForm, PostForm
+from .models import Category, Comment, Post, Profile, UserGroup, Vote
 
 
 class PostFormTest4SpellChecker(TestCase):
@@ -103,8 +118,9 @@ class PostFormTest(TestCase):
     def setUp(self):
 
         self.client = Client()
-# I created a Client object called self.client to simulate a user interacting with the application.
-# The Client object allows me to make requests to the views and test the responses.
+# I created a Client object called self.client to simulate a user
+# interacting with the application. The Client object allows me to
+# make requests to the views and test the responses.
 
         # Create a user for the author
         self.user = User.objects.create_user(
@@ -116,8 +132,9 @@ class PostFormTest(TestCase):
     def test_post_form_get(self):
         self.client.login(username='testuser', password='12345')
         response = self.client.get(reverse('create_post'))
-# response is the response from the view function when it is called with a GET request.
-# we use the reverse function to get the URL of the create_post view.
+# response is the response from the view function when
+# it is called with a GET request. We use the reverse function
+# to get the URL of the create_post view.
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'post_hub/create_post.html')
 # assertTemplateUsed checks if the response uses the specified template.
@@ -133,7 +150,8 @@ class PostFormTest(TestCase):
             'author': self.user.id
         }
         response = self.client.post(reverse('create_post'), data=form_data)
-# This is a better way to test the form submission because it simulates a real user interaction with the application.
+# This is a better way to test the form submission because it simulates
+# a real user interaction with the application.
         self.assertEqual(response.status_code, 302)
 
     def test_post_form_no_category(self):
@@ -152,9 +170,11 @@ class PostFormTest(TestCase):
         # Check that the error is in the __all__ key
         self.assertIn('__all__', form.errors)
         self.assertIn(
-            'You must provide either a new category or select an existing category.', form.errors['__all__'])
-# I used the assertIn method to check if the error message is in the __all__ key of the errors dictionary.
-# I learned that errors are stored in __all__ key when they are not associated with a specific field.
+            'You must provide either a new category'
+            ' or select an existing category.', form.errors['__all__'])
+# I used the assertIn method to check if the error message is in the __all__
+# key of the errors dictionary. I learned that errors are stored in __all__
+# key when they are not associated with a specific field.
 
 
 class PostDetailViewTest(TestCase):
@@ -164,7 +184,9 @@ class PostDetailViewTest(TestCase):
             username='testuser', password='12345')
         self.category = Category.objects.create(category_name='Test Category')
         self.post = Post.objects.create(title='Test Post', blurb='Test Blurb',
-                                        content='Test Content', category=self.category, author=self.user)
+                                        content='Test Content',
+                                        category=self.category,
+                                        author=self.user)
 
     def test_post_detail_page(self):
         url = reverse('post_detail', args=[self.post.slug])
@@ -235,7 +257,9 @@ class VoteFunctionalityTest(TestCase):
         self.author = User.objects.create_user(
             username='author', password='12345')
         self.post = Post.objects.create(title='Test Post', blurb='Test Blurb',
-                                        content='Test Content', category=self.category, author=self.author)
+                                        content='Test Content',
+                                        category=self.category,
+                                        author=self.author)
         self.comment = Comment.objects.create(
             post=self.post, author=self.user, content='Test Comment')
         self.client.login(username='testuser', password='12345')
@@ -262,8 +286,9 @@ class VoteFunctionalityTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFalse(Vote.objects.filter(
             post=self.post, user=self.user).exists())
-        # Check if the vote was deleted successfully, this works as the view functionality
-        # is set to delete the vote if it already exists in the same vote category
+        # Check if the vote was deleted successfully,
+        # this works as the view functionality is set to delete
+        # the vote if it already exists in the same vote category
 
     def test_vote_comment(self):
         url = reverse('vote')
@@ -371,7 +396,8 @@ class CloudinaryImageUploadTest(TestCase):
             username='testuser', password='12345')
         self.category = Category.objects.create(category_name='Test Category')
         self.post = Post.objects.create(
-            title='Test Post', content='Test content', author=self.user, category=self.category)
+            title='Test Post', content='Test content',
+            author=self.user, category=self.category)
         self.group = UserGroup.objects.create(
             name='Test Group', slug='test-group', admin=self.user)
         self.client.login(username='testuser', password='12345')
@@ -447,7 +473,8 @@ class CloudinaryImageUploadTest(TestCase):
             # Verify that the image URL is not empty
             self.assertTrue(comment.image)
 
-# This test is sometimes commented out as to not send too many images to cloudinary
+# This test is sometimes commented out as to not
+# send too many images to cloudinary
 
 
 class ProfileModelTest(TestCase):
@@ -465,17 +492,18 @@ class ProfileModelTest(TestCase):
     def test_profile_str_method(self):
         self.assertEqual(str(self.profile), 'testuser')
 
-    def test_profile_str_method(self):
-        self.assertEqual(str(self.profile), 'testuser')
-
     def test_get_user_posts(self):
-        post = Post.objects.create(title='Test Post', content='Test Content', author=self.user,
-                                   category=Category.objects.create(category_name='Test Category'))
+        post = Post.objects.create(title='Test Post', content='Test Content',
+                                   author=self.user,
+                                   category=Category.objects.create(
+                                       category_name='Test Category'))
         self.assertIn(post, self.profile.get_user_posts())
 
     def test_get_user_comments(self):
-        post = Post.objects.create(title='Test Post', content='Test Content', author=self.user,
-                                   category=Category.objects.create(category_name='Test Category'))
+        post = Post.objects.create(title='Test Post', content='Test Content',
+                                   author=self.user,
+                                   category=Category.objects.create(
+                                       category_name='Test Category'))
         comment = Comment.objects.create(
             post=post, author=self.user, content='Test Comment')
         self.assertIn(comment, self.profile.get_user_comments())
@@ -509,8 +537,7 @@ class ViewProfileTest(TestCase):
         self.client.logout()
 
         # Create and log in with a different test account
-        other_user = User.objects.create_user(
-            username='otheruser', password='12345')
+        User.objects.create_user(username='otheruser', password='12345')
         self.client.login(username='otheruser', password='12345')
 
         url = reverse('view_profile', args=[self.user.username])
