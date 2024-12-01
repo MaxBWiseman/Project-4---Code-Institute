@@ -9,7 +9,7 @@ Forms:
 
 Utilities:
     Handles image uploads to Cloudinary and integrates
-    CKEditor for rich text editing.
+    Summernote for rich text editing.
 """
 from cloudinary.uploader import upload
 from cloudinary.exceptions import Error
@@ -17,8 +17,8 @@ from spellchecker import SpellChecker
 
 from django import forms
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from django_summernote.widgets import SummernoteWidget
 
-from ckeditor.widgets import CKEditorWidget
 from mptt.forms import TreeNodeChoiceField
 
 from .models import Comment, Post, Category, UserGroup, Profile
@@ -132,7 +132,7 @@ class PostForm(forms.ModelForm):
     ), required=False, widget=forms.Select(attrs={'class': 'form-control'}))
     group = forms.ModelChoiceField(queryset=UserGroup.objects.all(
     ), required=False, widget=forms.Select(attrs={'class': 'form-control'}))
-    content = forms.CharField(widget=CKEditorWidget())
+    content = forms.CharField(widget=SummernoteWidget())
 
     class Meta:
         """
@@ -289,7 +289,7 @@ class GroupForm(forms.ModelForm):
         save(commit=True): Saves the group instance,
                         handling image upload to Cloudinary.
     """
-    description = forms.CharField(widget=CKEditorWidget())
+    description = forms.CharField(widget=SummernoteWidget())
 
     class Meta:
         """
@@ -364,14 +364,12 @@ class GroupAdminForm(forms.ModelForm):
     """
     admin_message = forms.CharField(
         label='A message to your group members',
-        widget=CKEditorWidget(
-            config_name='small_height', attrs={'class': 'my-5'}),
+        widget=SummernoteWidget(attrs={'class': 'my-5'}),
         required=False
     )
     description = forms.CharField(
         label='Update group description',
-        widget=CKEditorWidget(
-            config_name='small_height', attrs={'class': 'my-5'}),
+        widget=SummernoteWidget(attrs={'class': 'my-5'}),
         required=False
     )
     group_image = forms.FileField(
@@ -441,7 +439,7 @@ class ProfileForm(forms.ModelForm):
     """
     location = forms.CharField(required=False)
     bio = forms.CharField(
-        widget=CKEditorWidget(config_name='small_height'), required=False
+        widget=SummernoteWidget, required=False
     )
 
     class Meta:
@@ -457,7 +455,7 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ('bio', 'user_image', 'location', 'is_private')
         widgets = {
-            'bio': CKEditorWidget(attrs={'class': 'form-control'}),
+            'bio': SummernoteWidget(attrs={'class': 'form-control'}),
             'location': forms.TextInput(attrs={'class': 'form-control'}),
             'user_image': forms.FileInput(
                 attrs={'class': 'form-control', 'style': 'width:30%;'

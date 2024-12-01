@@ -85,12 +85,12 @@ class UserGroup(models.Model):
 
 
 @receiver(pre_save, sender=UserGroup)
-def add_slug_to_group(_sender, instance, *_args, **_kwargs):
+def add_slug_to_group(sender, instance, *_args, **_kwargs):
     """
     Automatically generates a slug for a UserGroup instance before saving.
 
     Args:
-        _sender (Model): The model class that sent the signal.
+        sender (Model): The model class that sent the signal.
         instance (UserGroup): The actual instance being saved.
         *_args: Additional positional arguments.
         **_kwargs: Additional keyword arguments.
@@ -135,12 +135,12 @@ class Category(models.Model):
 
 
 @receiver(pre_save, sender=Category)
-def add_slug_to_category(_sender, instance, *_args, **_kwargs):
+def add_slug_to_category(sender, instance, *_args, **_kwargs):
     """
     Automatically generates a slug for a Category instance before saving.
 
     Args:
-        _sender (Model): The model class that sent the signal.
+        sender (Model): The model class that sent the signal.
         instance (Category): The actual instance being saved.
         *_args: Additional positional arguments.
         **_kwargs: Additional keyword arguments.
@@ -228,12 +228,12 @@ class Post(models.Model):
 
 
 @receiver(pre_save, sender=Post)
-def add_slug_to_post(_sender, instance, *_args, **_kwargs):
+def add_slug_to_post(sender, instance, *_args, **_kwargs):
     """
     Automatically generates a slug for a Post instance before saving.
 
     Args:
-        _sender (Model): The model class that sent the signal.
+        sender (Model): The model class that sent the signal.
         instance (Post): The actual instance being saved.
         *_args: Additional positional arguments.
         **_kwargs: Additional keyword arguments.
@@ -435,7 +435,7 @@ class Profile(models.Model):
 # I learned that signals can be used to perform actions when
 # certain events occur, for this case, I used the post_save signal,
 # this signal is sent just after the object is saved.
-def create_user_profile(_sender, instance, created, **_kwargs):
+def create_user_profile(sender, instance, created, **_kwargs):
     """
     Creates a Profile instance when a new User instance is created.
 
@@ -444,7 +444,7 @@ def create_user_profile(_sender, instance, created, **_kwargs):
     this function creates a corresponding Profile instance for the user.
 
     Args:
-        _sender (Model): The model class that sent the signal (User model).
+        sender (Model): The model class that sent the signal (User model).
         instance (User): The instance of the User model that is being saved.
         created (bool): A boolean indicating whether a new record was created.
         **_kwargs: Additional keyword arguments.
@@ -455,7 +455,7 @@ def create_user_profile(_sender, instance, created, **_kwargs):
 
 
 @receiver(post_save, sender=User)
-def save_user_profile(_sender, instance, **_kwargs):
+def save_user_profile(sender, instance, **_kwargs):
     """
     Saves the Profile instance when a User instance is saved.
 
@@ -464,7 +464,7 @@ def save_user_profile(_sender, instance, **_kwargs):
     corresponding Profile instance is also saved.
 
     Args:
-        _sender (Model): The model class that sent the signal (User model).
+        sender (Model): The model class that sent the signal (User model).
         instance (User): The instance of the User model that is being saved.
         **_kwargs: Additional keyword arguments.
     """
