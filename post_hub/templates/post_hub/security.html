@@ -1,20 +1,23 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-
-<div class="container mt-5 ms-sm-5">
-    <h2>Security</h2>
-    <p>At Tooter, we take security very seriously. We have implemented the following security measures to protect your data:</p>
-    <ul>
-        <li>Trusted AllAuth for authentication, a trusted and widely used authentication system.</li>
-        <li>Several password validators to enforce strong passwords</li>
-        <li>Cross-site request forgery (CSRF) protection</li>
-        <li>Cross-site scripting (XSS) protection</li>
-        <li>Encrypted passwords</li>
-        <li>Cloudinary secure image storage</li>
-    </ul>
-    <p>If you have any security concerns or would like to report a security issue, please contact us at <a href="{% url 'contact' %}">Contact Us</a>.</p>
-</div>
-
-
+    <div class="container mt-5 ms-sm-5">
+        <h2>Security</h2>
+        <p>
+            At Tooter, we take security very seriously. We have implemented the following
+             security measures to protect your data:
+        </p>
+        <ul>
+            <li>Trusted AllAuth for authentication, a trusted and widely used authentication system.</li>
+            <li>Several password validators to enforce strong passwords</li>
+            <li>Cross-site request forgery (CSRF) protection</li>
+            <li>Cross-site scripting (XSS) protection</li>
+            <li>Encrypted passwords</li>
+            <li>Cloudinary secure image storage</li>
+        </ul>
+        <p>
+            If you have any security concerns or would like to report a security issue,
+             please contact us at <a href="{% url 'contact' %}">Contact Us</a>.
+        </p>
+    </div>
 {% endblock %}

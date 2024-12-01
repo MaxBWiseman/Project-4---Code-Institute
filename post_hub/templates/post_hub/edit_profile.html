@@ -1,20 +1,20 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-<div class='container mt-4 ms-sm-5'>
-    <div class='row'>
-        <div class='col-12 text-center'>
-            <div class='card card3 w-100'>
-                <div class='card-header text-center'>Edit Profile</div>
-                <div class='card-body'>
-                    <form method='POST' enctype='multipart/form-data'>
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <button type='submit' class='btn btn-primary'>Save changes</button>
-                    </form>
+    <div class="container mt-4 ms-sm-5">
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="card card3 w-100">
+                    <div class="card-header text-center">Edit Profile</div>
+                    <div class="card-body">
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}

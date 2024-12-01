@@ -1,92 +1,108 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-
-<div class="container mt-4 ms-sm-5">
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <h1 class="text-center">Search Groups</h1>
-            <form method="GET" action="{% url 'group_index' %}">
-                <input type="text" name="q" class="form-control" placeholder="Search for groups...">
-            </form>
-        </div>
-        <div class="col-md-4 mt-4 d-flex justify-content-center">
-            <div class="card card3 shadow w-100">
-                <div class="card-header text-center">Have leadership skills?</div>
-                <div class="card-body text-center">
-                    <ul class="list-unstyled">
-                        <li><a href="{% url 'create_group' %}" class="btn button-like text-nowrap" style="width:auto!important;">Create a group</a></li>
-                    </ul>
-                </div>
+    <div class="container mt-4 ms-sm-5">
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h1 class="text-center">Search Groups</h1>
+                <form method="GET" action="{% url 'group_index' %}">
+                    <input type="text"
+                           name="q"
+                           class="form-control"
+                           placeholder="Search for groups...">
+                </form>
             </div>
-        </div>
-    </div>
-    <div class="row mt-5 ms-sm-5">
-        {% if usergroups %}
-        {% for group, post in group_posts %}
-        <h3 class="fw-bolder">You searched for:</h3>
-        <div class="col-6 mt-2">
-            <div class="card mb-4">
-                <div class="card-img-top">
-                    <img src="{{ usergroup.group_image.url }}" class="post-picture" alt="{{ post.title }}">
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">{{ group.name }}</h5>
-                    <p class="card-subtitle">{{ group.description }}</p>
-                </div>
-                <div class="card-footer d-block d-sm-flex justify-content-between">
-                    {% if post %}
-                    <div>
-                        <h6>Latest Post</h6>
-                        <p><a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a> by
-                            {{ post.author.username }}</p>
-                        {% else %}
-                        <p>No posts yet.</p>
-                        {% endif %}
+            <div class="col-md-4 mt-4 d-flex justify-content-center">
+                <div class="card card3 shadow w-100">
+                    <div class="card-header text-center">Have leadership skills?</div>
+                    <div class="card-body text-center">
+                        <ul class="list-unstyled">
+                            <li>
+                                <a href="{% url 'create_group' %}"
+                                   class="btn button-like text-nowrap"
+                                   style="width:auto!important">Create a group</a>
+                            </li>
+                        </ul>
                     </div>
-                    <p>Members: {{ group.members.count }}</p>
                 </div>
-                <a href="{% url 'group_detail' group.slug %}" class="btn btn-primary">View Group</a>
             </div>
         </div>
-        {% endfor %}
-        {% endif %}
+        <div class="row mt-5 ms-sm-5">
+            {% if usergroups %}
+                {% for group, post in group_posts %}
+                    <h3 class="fw-bolder">You searched for:</h3>
+                    <div class="col-6 mt-2">
+                        <div class="card mb-4">
+                            <div class="card-img-top">
+                                <img src="{{ usergroup.group_image.url }}"
+                                     class="post-picture"
+                                     alt="{{ post.title }}">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ group.name }}</h5>
+                                <p class="card-subtitle">{{ group.description }}</p>
+                            </div>
+                            <div class="card-footer d-block d-sm-flex justify-content-between">
+                                {% if post %}
+                                    <div>
+                                        <h6>Latest Post</h6>
+                                        <p>
+                                            <a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a> by
+                                            {{ post.author.username }}
+                                        </p>
+                                    {% else %}
+                                        <p>No posts yet.</p>
+                                    {% endif %}
+                                </div>
+                                <p>Members: {{ group.members.count }}</p>
+                            </div>
+                            <a href="{% url 'group_detail' group.slug %}" class="btn btn-primary">View Group</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
     </div>
-</div>
-<div class="container mr-1 ms-sm-5">
-    <div class="card-header" style="width:fit-content;">
-    <h1 class="fw-bolder">Groups</h1>
-    </div>
-    <div class="row">
-        {% for usergroup, post in group_posts %}
-        <div class="col-md-6 mt-2">
-            <div class="card mb-4">
-                <div class="card-img-top">
-                    <img src="{{ usergroup.group_image.url }}" class="post-picture" alt="{{ post.title }}">
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">{{ usergroup.name }}</h5>
-                    <hr>
-                    <p class="card-subtitle">{{ usergroup.description|safe }}</p>
-                    <div class="ms-1 mt-2 d-block d-sm-flex justify-content-between">
-                        <div>
-                            {% if post %}
-                            <h6>Latest Post</h6>
-                            <p><a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a> by {{ post.author.username }}</p>
-                            {% else %}
-                            <p>No posts yet.</p>
-                            {% endif %}
-                            <p>Members: {{ usergroup.members.count }}</p>
+    <div class="container mr-1 ms-sm-5">
+        <div class="card-header mb-2" style="width:fit-content;">
+            <h1 class="fw-bolder">Groups</h1>
+        </div>
+        <div class="row">
+            {% for usergroup, post in group_posts %}
+                <div class="col-md-6 mt-2">
+                    <div class="card mb-4">
+                        <div class="card-img-top">
+                            <img src="{{ usergroup.group_image.url }}"
+                                 class="post-picture"
+                                 alt="{{ post.title }}">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ usergroup.name }}</h5>
+                            <hr>
+                            <p class="card-subtitle">{{ usergroup.description|safe }}</p>
+                            <div class="ms-1 mt-2 d-block d-sm-flex justify-content-between">
+                                <div>
+                                    {% if post %}
+                                        <h6>Latest Post</h6>
+                                        <p>
+                                            <a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a>
+                                             by {{ post.author.username }}
+                                        </p>
+                                    {% else %}
+                                        <p>No posts yet.</p>
+                                    {% endif %}
+                                    <p>Members: {{ usergroup.members.count }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex justify-content-center">
+                            <a href="{% url 'group_detail' usergroup.slug %}"
+                               class="btn button-like text-nowrap"
+                               style="width:auto!important">View Group</a>
                         </div>
                     </div>
                 </div>
-                <div class="card-footer d-flex justify-content-center">
-                    <a href="{% url 'group_detail' usergroup.slug %}" class="btn button-like text-nowrap" style="width:auto!important;">View Group</a>
-                </div>
-            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
-</div>
-
 {% endblock %}

@@ -3,7 +3,11 @@
     <ul class="card-body list-unstyled">
         {% if suggested_categories %}
             {% for category in suggested_categories %}
-            <li class='mb-3 mt-2'><a href='{% url 'category_detail' category.slug %}' class='button3'>{{ category.category_name }}</a></li>
+                <li class='mb-3 mt-2'>
+                    <a href='{% url 'category_detail' category.slug %}' class='button3'>
+                        {{ category.category_name }}
+                    </a>
+                </li>
             {% endfor %}
         {% else %}
             <li>No suggested categories available.</li>

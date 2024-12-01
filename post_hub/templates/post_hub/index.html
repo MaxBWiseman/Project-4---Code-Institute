@@ -1,85 +1,89 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-
-<!-- index.html content starts here -->
-<div class="container ms-sm-4 mt-2 ms-1">
-<div class="row">
-    <div class="card-header mb-3 text-center d-flex flex-column mx-auto" style="width: fit-content;">
-        <h1 class="card-title">Welcome to Tooter!</h1>
-        <p class="card-text">This is a place where you can find all the latest Toots from our community.</p>
-    </div>
-        <div class="row ms-sm-4 ms-2">
-            <!-- Main Content Column -->
-            <div class="col-11 col-sm-8">
-                {% for post in post_list %}
-                {% if not forloop.first %}
-                <hr>
-                {% endif %}
-                <a href="{% url 'post_detail' post.slug %}" class="post-link"
-                    style="text-decoration: none; color: inherit;">
-                    <div class="card mb-3 card-hover">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-img-top">
-                                    <img src="{{ post.banner_image.url }}" class="post-picture" alt="{{ post.title }}">
-                                    <div class="image-flash">
-                                        <p class="author ms-1">Author: {{ post.author }} | Category:
-                                            {{ post.category }}</p>
+    <!-- index.html content starts here -->
+    <div class="container ms-sm-4 mt-2 ms-1">
+        <div class="row">
+            <div class="card-header mb-3 text-center d-flex flex-column mx-auto"
+                 style="width: fit-content">
+                <h1 class="card-title">Welcome to Tooter!</h1>
+                <p class="card-text">
+                    This is a place where you can find all the latest Toots from our community.</p>
+            </div>
+            <div class="row ms-sm-4 ms-2">
+                <!-- Main Content Column -->
+                <div class="col-11 col-sm-8">
+                    {% for post in post_list %}
+                        {% if not forloop.first %}<hr>{% endif %}
+                        <a href="{% url 'post_detail' post.slug %}"
+                           class="post-link"
+                           style="text-decoration: none;
+                                  color: inherit">
+                            <div class="card mb-3 card-hover">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-img-top">
+                                            <img src="{{ post.banner_image.url }}"
+                                                 class="post-picture"
+                                                 alt="{{ post.title }}">
+                                            <div class="image-flash">
+                                                <p class="author ms-1">
+                                                    Author: {{ post.author }} | Category:
+                                                    {{ post.category }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="card-title">
+                                            <h2 class="card-title ms-1 title-link">{{ post.title }}</h2>
+                                            <p class="card-subtitle ms-1">
+                                                {% if post.group %}From Group: {{ post.group }}{% endif %}
+                                            </p>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="card-subtitle ms-1">{{ post.blurb|truncatewords:30 }}</p>
+                                        </div>
+                                        <div class="card-footer">
+                                            <p class="text-muted h6 custom-center align-center">
+                                                {{ post.created_at|date:"F d, Y" }} | Upvotes: {{ post.total_upvotes }} |
+                                                Downvotes:
+                                                {{ post.total_downvotes }}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="card-title">
-                                    <h2 class="card-title ms-1 title-link">{{ post.title }}</h2>
-                                    <p class="card-subtitle ms-1">{% if post.group %}From Group: {{post.group}}
-                                        {% endif %} </p>
-                                </div>
-                                <div class="card-body">
-                                    <p class="card-subtitle ms-1">{{ post.blurb|truncatewords:30 }}</p>
-                                </div>
-                                <div class="card-footer">
-                                    <p class="text-muted h6 custom-center align-center">
-                                        {{ post.created_at|date:"F d, Y" }} | Upvotes: {{ post.total_upvotes }} |
-                                        Downvotes:
-                                        {{ post.total_downvotes }}</p>
-                                </div>
                             </div>
-                        </div>
-                    </div>
-                </a>
-                {% endfor %}
-
-                {% if is_paginated %}
-                <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center">
-                        {% if page_obj.has_previous %}
-                        <li><a href="?page={{ page_obj.previous_page_number }}" class="page-link">&laquo; PREV</a></li>
-                        {% endif %}
-                        {% if page_obj.has_next %}
-                        <li><a href="?page={{ page_obj.next_page_number }}" class="page-link"> NEXT &raquo;</a></li>
-                        {% endif %}
-                    </ul>
-                </nav>
-                {% endif %}
+                        </a>
+                    {% endfor %}
+                    {% if is_paginated %}
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                {% if page_obj.has_previous %}
+                                    <li>
+                                        <a href="?page={{ page_obj.previous_page_number }}" class="page-link">&laquo; PREV</a>
+                                    </li>
+                                {% endif %}
+                                {% if page_obj.has_next %}
+                                    <li>
+                                        <a href="?page={{ page_obj.next_page_number }}" class="page-link">NEXT &raquo;</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    {% endif %}
+                </div>
+                <!-- Side Widgets Column -->
+                <div class="col-11 col-sm-4 d-flex flex-column">
+                    {% include 'post_hub/top_categories.html' %}
+                    {% include 'post_hub/top_groups.html' %}
+                    {% include 'post_hub/suggested_categories.html' %}
+                    {% include 'post_hub/advert.html' %}
+                    {% include 'post_hub/advert.html' %}
+                </div>
             </div>
-
-            <!-- Side Widgets Column -->
-            <div class="col-11 col-sm-4 d-flex flex-column">
-                {% include 'post_hub/top_categories.html' %}
-                {% include 'post_hub/top_groups.html' %}
-                {% include 'post_hub/suggested_categories.html' %}
-                {% include 'post_hub/advert.html' %}
-                {% include 'post_hub/advert.html' %}
-                </div> 
-                </div>
-                </div>
-                </div>
-    
-                <!-- I learned to use these cards at - https://www.sitepoint.com/bootstrap-card-component-introduction/ -->
-
-
-
-    {% endblock %}
-
-    {% block copyright %}
-    Copyright 2023 Mw
-    {% endblock %}
+        </div>
+    </div>
+    <!-- I learned to use these cards at - https://www.sitepoint.com/bootstrap-card-component-introduction/ -->
+{% endblock %}
+{% block copyright %}
+Copyright 2023 Mw
+{% endblock %}

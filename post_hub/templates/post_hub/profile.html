@@ -1,145 +1,177 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-
-<div class='container mt-4 ms-sm-5'>
-    <div class='row'>
-        <div class='col-12'>
-            <div class='card card3 w-100'>
-                <div class='card-header text-center'>Profile</div>
-                <div class='card-body'>
-                    <div class='row d-flex justify-content-center'>
-                        <div class='col-4'>
-                            <img src="{{ profile.user_image.url }}" class='post-picture' alt='{{ profile.user }}'>
-                        </div>
-                        <div class='col-md-6 col-sm-12'>
-                            <h5 class='text-center fw-bolder fs-2'>{{ profile.user }}{% if profile.user.is_superuser %} (Admin){% endif %}</h5>
-                            <hr>
-                            <div class='row'>
-                                <div class='col-12 col-sm-6 mb-3 mb-sm-0'>
-                                    <div class='card p-2'>
-                                    <p class='fw-bolder text-center'>Biography:</p>
-                                    <hr>
-                                    <p>{{ profile.bio|safe }}</p>
-                                    </div>
-                                </div>
-                                <div class='col-12 col-sm-6 mb-3 mb-sm-0'>
-                                    <div class='card p-2'>
-                                    <p class='fw-bolder text-center'>Stats:</p>
-                                    <hr>
-                                    <p>Posts: {{ stat_tuple.0 }}</p>
-                                    <p>Comments: {{ stat_tuple.1 }}</p>
-                                    <p>Post Grade: {{ stat_tuple.2 }}</p>
-                                    <p>Comment Grade: {{ stat_tuple.3 }}</p>
-                                    </div>
-                                </div>
+    <div class='container mt-4 ms-sm-5'>
+        <div class='row'>
+            <div class='col-12'>
+                <div class='card card3 w-100'>
+                    <div class='card-header text-center'>Profile</div>
+                    <div class='card-body'>
+                        <div class='row d-flex justify-content-center'>
+                            <div class='col-4'>
+                                <img src="{{ profile.user_image.url }}"
+                                     class='post-picture'
+                                     alt='{{ profile.user }}'>
+                            </div>
+                            <div class='col-md-6 col-sm-12'>
+                                <h5 class='text-center fw-bolder fs-2'>
+                                    {{ profile.user }}
+                                    {% if profile.user.is_superuser %}(Admin){% endif %}
+                                </h5>
+                                <hr>
                                 <div class='row'>
-                                    <div class='col-12 mb-3 mb-sm-0'>
-                                        <div class='card p-2' style='max-width:8rem!important;'>
-                                        <p class='fw-bolder text-center'>Location:</p>
-                                        <hr>
-                                        <p>{{ profile.location }}</p>
+                                    <div class='col-12 col-sm-6 mb-3 mb-sm-0'>
+                                        <div class='card p-2'>
+                                            <p class='fw-bolder text-center'>Biography:</p>
+                                            <hr>
+                                            <p>{{ profile.bio|safe }}</p>
                                         </div>
                                     </div>
-                                    <div class='d-flex justify-content-end'>
-                                        <a href="{% url 'edit_profile' %}" class='btn button-like'><i class="fa-regular fa-pen-to-square fa-lg"></i></a>
-                                </div>
-                                <div class='row ms-2'>
-                                    <div class='col-12'>
-                                        <h3 class='text-center'>Posts:</h3>
-                                        <hr>
-                                        <div class='row'>
-                                            {% for post in post_page_obj %}
-                                            <div class='col-12 col-md-6 col-lg-4 d-flex align-items-stretch mb-3'>
-                                                <div class='card'>
-                                                    <img src="{{ post.banner_image }}" class='post-picture' alt='{{ post.title }}'>
-                                                    <div class='card-body'>
-                                                        <h5 class='card-title'>{{ post.title }}</h5>
-                                                        <p class='card-text'>{{ post.description }}</p>
-                                                    </div>
-                                                    <div class='card-footer text-center'>
-                                                        <a href="{% url 'post_detail' post.id %}" class='btn button-like' style='width:auto!important;'>View Post</a>
-                                                    </div>
-                                                </div>
+                                    <div class='col-12 col-sm-6 mb-3 mb-sm-0'>
+                                        <div class='card p-2'>
+                                            <p class='fw-bolder text-center'>Stats:</p>
+                                            <hr>
+                                            <p>Posts: {{ stat_tuple.0 }}</p>
+                                            <p>Comments: {{ stat_tuple.1 }}</p>
+                                            <p>Post Grade: {{ stat_tuple.2 }}</p>
+                                            <p>Comment Grade: {{ stat_tuple.3 }}</p>
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class='col-12 mb-3 mb-sm-0'>
+                                            <div class='card p-2' style='max-width:8rem!important;'>
+                                                <p class='fw-bolder text-center'>Location:</p>
+                                                <hr>
+                                                <p>{{ profile.location }}</p>
                                             </div>
-                                            {% endfor %}
                                         </div>
-                                        <div class="pagination colour-2 d-flex justify-content-center">
-                                            <span class="step-links">
-                                                {% if post_page_obj.has_previous %}
-                                                    <a href="?post_page=1">&laquo; first</a>
-                                                    <a href="?post_page={{ post_page_obj.previous_page_number }}">previous</a>
-                                                {% endif %}
-                                                <span class="current">
-                                                    Page {{ post_page_obj.number }} of {{ post_page_obj.paginator.num_pages }}.
-                                                </span>
-                                                {% if post_page_obj.has_next %}
-                                                    <a href="?post_page={{ post_page_obj.next_page_number }}">next</a>
-                                                    <a href="?post_page={{ post_page_obj.paginator.num_pages }}">last &raquo;</a>
-                                                {% endif %}
-                                            </span>
+                                        <div class='d-flex justify-content-end'>
+                                            <a href="{% url 'edit_profile' %}" class='btn button-like'>
+                                                <i class="fa-regular fa-pen-to-square fa-lg"></i>
+                                            </a>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class='row mt-3 ms-2'>
-                                    <div class='col-12'>
-                                        <h3 class='text-center'>Comments:</h3>
-                                        <hr>
-                                        <div class='row'>
-                                            {% for comment in comment_page_obj %}
+                                        <div class='row ms-2'>
                                             <div class='col-12'>
-                                                <div class='card mb-2 shadow'>
-                                                    <div class='card-body'>
-                                                        <p class='card-text'>{{ comment.content }}</p>
-                                                        <div class='d-flex justify-content-end'>
-                                                            {% if comment.post and comment.post.slug %}
-                                                            <button class='btn button-like'>
-                                                                <a href="{% url 'post_detail' comment.post.slug %}"><i class="fa-solid fa-arrows-to-eye fa-lg"></i></a>
-                                                            </button>
-                                                            {% else %}
-                                                            <p>No post available</p>
-                                                            {% endif %}
+                                                <h3 class='text-center'>Posts:</h3>
+                                                <hr>
+                                                <div class='row'>
+                                                    {% for post in post_page_obj %}
+                                                        <div class='col-12 col-md-6 col-lg-4 d-flex align-items-stretch mb-3'>
+                                                            <div class='card'>
+                                                                <img src="{{ post.banner_image }}"
+                                                                     class='post-picture'
+                                                                     alt='{{ post.title }}'>
+                                                                <div class='card-body'>
+                                                                    <h5 class='card-title'>{{ post.title }}</h5>
+                                                                    <p class='card-text'>{{ post.description }}</p>
+                                                                </div>
+                                                                <div class='card-footer text-center'>
+                                                                    <a href="{% url 'post_detail' post.id %}"
+                                                                       class='btn button-like'
+                                                                       style='width:auto!important'>View Post</a>
+                                                                </div>
+                                                            </div>
                                                         </div>
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="pagination colour-2 d-flex justify-content-center">
+                                                    <span class="step-links">
+                                                        {% if post_page_obj.has_previous %}
+                                                            <a href="?post_page=1">&laquo; first</a>
+                                                            <a href="?post_page={{ post_page_obj.previous_page_number }}">
+                                                                previous
+                                                            </a>
+                                                        {% endif %}
+                                                        <span class="current">
+                                                            Page {{ post_page_obj.number }} of 
+                                                            {{ post_page_obj.paginator.num_pages }}.
+                                                        </span>
+                                                        {% if post_page_obj.has_next %}
+                                                            <a href="?post_page={{ post_page_obj.next_page_number }}">
+                                                                next
+                                                            </a>
+                                                            <a href="?post_page={{ post_page_obj.paginator.num_pages }}">
+                                                                last &raquo;
+                                                            </a>
+                                                        {% endif %}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='row mt-3 ms-2'>
+                                            <div class='col-12'>
+                                                <h3 class='text-center'>Comments:</h3>
+                                                <hr>
+                                                <div class='row'>
+                                                    {% for comment in comment_page_obj %}
+                                                        <div class='col-12'>
+                                                            <div class='card mb-2 shadow'>
+                                                                <div class='card-body'>
+                                                                    <p class='card-text'>{{ comment.content }}</p>
+                                                                    <div class='d-flex justify-content-end'>
+                                                                        {% if comment.post and comment.post.slug %}
+                                                                            <button class='btn button-like'>
+                                                                                <a href="{% url 'post_detail' comment.post.slug %}">
+                                                                                    <i class="fa-solid fa-arrows-to-eye fa-lg"></i>
+                                                                                </a>
+                                                                            </button>
+                                                                        {% else %}
+                                                                            <p>No post available</p>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="pagination colour-2 d-flex justify-content-center">
+                                                    <span class="step-links">
+                                                        {% if comment_page_obj.has_previous %}
+                                                            <a href="?comment_page=1">&laquo; first</a>
+                                                            <a href="?comment_page={{ comment_page_obj.previous_page_number }}">
+                                                                previous
+                                                            </a>
+                                                        {% endif %}
+                                                        <span class="current">
+                                                            Page {{ comment_page_obj.number }} of 
+                                                            {{ comment_page_obj.paginator.num_pages }}.</span>
+                                                        {% if comment_page_obj.has_next %}
+                                                            <a href="?comment_page={{ comment_page_obj.next_page_number }}">
+                                                                next
+                                                            </a>
+                                                            <a href="?comment_page={{ comment_page_obj.paginator.num_pages }}">
+                                                                last &raquo;
+                                                            </a>
+                                                        {% endif %}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='row mt-3 ms-2'>
+                                            <div class='col-12'>
+                                                <h3 class='text-center'>Groups:</h3>
+                                                <hr>
+                                                <div class='row'>
+                                                    {% for group in user_groups %}
+                                                        <div class='col-12 col-md-6 col-lg-4 d-flex align-items-stretch mb-3'>
+                                                            <div class='card'>
+                                                                <img src="{{ group.group_image }}"
+                                                                     class='post-picture'
+                                                                     alt='{{ group.name }}'>
+                                                                <div class='card-body'>
+                                                                    <h5 class='card-title'>{{ group.name }}</h5>
+                                                                    <p class='card-text'>{{ group.description|safe }}</p>
+                                                                </div>
+                                                                <div class='card-footer text-center'>
+                                                                    <a href="{% url 'group_detail' group.slug %}"
+                                                                       class='btn button-like'
+                                                                       style='width:auto!important'>View Group</a>
+                                                                </div>
+                                                            </div>
+                                                        {% endfor %}
                                                     </div>
                                                 </div>
                                             </div>
-                                            {% endfor %}
-                                        </div>
-                                        <div class="pagination colour-2 d-flex justify-content-center">
-                                            <span class="step-links">
-                                                {% if comment_page_obj.has_previous %}
-                                                    <a href="?comment_page=1">&laquo; first</a>
-                                                    <a href="?comment_page={{ comment_page_obj.previous_page_number }}">previous</a>
-                                                {% endif %}
-                                                <span class="current">
-                                                    Page {{ comment_page_obj.number }} of {{ comment_page_obj.paginator.num_pages }}.
-                                                </span>
-                                                {% if comment_page_obj.has_next %}
-                                                    <a href="?comment_page={{ comment_page_obj.next_page_number }}">next</a>
-                                                    <a href="?comment_page={{ comment_page_obj.paginator.num_pages }}">last &raquo;</a>
-                                                {% endif %}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class='row mt-3 ms-2'>
-                                    <div class='col-12'>
-                                        <h3 class='text-center'>Groups:</h3>
-                                        <hr>
-                                        <div class='row'>
-                                            {% for group in user_groups %}
-                                            <div class='col-12 col-md-6 col-lg-4 d-flex align-items-stretch mb-3'>
-                                                <div class='card'>
-                                                    <img src="{{ group.group_image }}" class='post-picture' alt='{{ group.name }}'>
-                                                    <div class='card-body'>
-                                                        <h5 class='card-title'>{{ group.name }}</h5>
-                                                        <p class='card-text'>{{ group.description|safe }}</p>
-                                                    </div>
-                                                    <div class='card-footer text-center'>
-                                                        <a href="{% url 'group_detail' group.slug %}" class='btn button-like' style='width:auto!important;'>View Group</a>
-                                                </div>
-                                            </div>
-                                            {% endfor %}
                                         </div>
                                     </div>
                                 </div>
@@ -148,8 +180,4 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-
-{% endblock %}
+        {% endblock %}

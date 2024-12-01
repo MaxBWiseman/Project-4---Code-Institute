@@ -27,7 +27,7 @@ body {
 }
 
 .colour-2 {
-  background-color: #139983!important;
+  background-color: #139983 !important;
 }
 
 .img-small {
@@ -38,19 +38,22 @@ body {
 .left-box {
   left: 0;
   margin-left: 4%;
-  z-index: 1; /* Ensure it overlaps the right box */
+  z-index: 1;
+  /* Ensure it overlaps the right box */
 }
 
 .right-box {
   right: 0;
-  z-index: 2; /* Ensure it overlaps the left box */
+  z-index: 2;
+  /* Ensure it overlaps the left box */
   margin-left: -15%;
 }
 
 .custom-container {
   margin: 0 auto;
-  
+
 }
+
 /* End body*/
 /* Cards */
 .post-card {
@@ -66,14 +69,14 @@ body {
 }
 
 .post-picture {
-  width: 100%;
-  max-height: 400px!important;
+  width: 100%!important;
+  max-height: 280px !important;
 }
 
 .card-header {
   background-color: #04aa6d !important;
   color: #23322d !important;
-  border-radius: 10px!important;
+  border-radius: 10px !important;
   border: 4px solid #93cdb6;
 }
 
@@ -107,6 +110,7 @@ body {
   text-decoration: none;
   color: inherit;
 }
+
 /*Code learnt from - https://www.bing.com/search?pglt=43&q=how+to+make+a+card+look+like+its+been+pushed+down+when+hovered&cvid=bbf905a6f64d4cdb91dcc0e60b0833c9&gs_lcrp=EgZjaHJvbWUyBggAEEUYOdIBBzI3M2owajGoAgiwAgE&FORM=ANNTA1&PC=LCTS */
 .card-hover {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -130,6 +134,7 @@ body {
 .title-link:hover {
   color: darkblue;
 }
+
 /*End of code learnt from - https://www.bing.com/search?pglt=43&q=how+to+make+a+card+look+like+its+been+pushed+down+when+hovered&cvid=bbf905a6f64d4cdb91dcc0e60b0833c9&gs_lcrp=EgZjaHJvbWUyBggAEEUYOdIBBzI3M2owajGoAgiwAgE&FORM=ANNTA1&PC=LCTS */
 
 /* End Cards */
@@ -143,6 +148,7 @@ body {
   height: 75%;
   padding-bottom: 8px;
 }
+
 /* End Row Styles */
 /* Navbar */
 nav {
@@ -150,7 +156,7 @@ nav {
 }
 
 .navbar-brand {
-  margin-right: 3rem!important;
+  margin-right: 3rem !important;
 }
 
 .nav-link {
@@ -171,7 +177,7 @@ a {
   font-weight: bolder;
   transition: cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.4s;
   box-shadow: -5px 5px 0px 0px #04aa6d;
-  width: 45%!important;
+  width: 45% !important;
 }
 
 .page-link {
@@ -188,6 +194,7 @@ header {
   position: relative;
   z-index: 1000;
 }
+
 /* start of content from - https://www.youtube.com/watch?v=IP_rtWEMR0o&t=438s */
 /* I watched a JSconference video on youtube and learned how to create a switch with just HTML and CSS,
    I thought thise was pretty cool as you needed zero javascript to create a switch */
@@ -273,12 +280,12 @@ body.night-mode .card {
 }
 
 body.night-mode .card3 {
-  background: #34495e;
+  background: #507091;
   box-shadow: none;
 }
 
 body.night-mode .card3 .card-header {
-  background: #507091!important;
+  background: #34495e !important;
 }
 
 body.night-mode .button3 {
@@ -287,12 +294,12 @@ body.night-mode .button3 {
 }
 
 body.night-mode .card-footer {
-  background: #3d566e!important;
+  background: #3d566e !important;
   color: #ecf0f1;
 }
 
 body.night-mode .text-muted {
-  color: #ecf0f1e7!important;
+  color: #ecf0f1e7 !important;
 }
 
 body.night-mode .nested-comment {
@@ -301,11 +308,11 @@ body.night-mode .nested-comment {
 
 body.night-mode .sidebar {
   background: #43515f;
-  color: #ecf0f1!important;
+  color: #ecf0f1 !important;
 }
 
 body.night-mode .sidebar a {
-  color: #ecf0f1!important;
+  color: #ecf0f1 !important;
 }
 
 body.night-mode .btn {
@@ -336,12 +343,12 @@ body.night-mode .colour-1 {
 }
 
 body.night-mode .colour-2 {
-  background-color: #34495e!important;
+  background-color: #34495e !important;
 }
 
-body.night-mode .nested-comment { 
-  background-color: #2c3e50!important;
-  border-left: 3px solid #0074e7!important;
+body.night-mode .nested-comment {
+  background-color: #2c3e50 !important;
+  border-left: 3px solid #0074e7 !important;
 }
 
 /*These two below are for keyboard users so its clear whats being selected */
@@ -353,6 +360,7 @@ input#day-night:focus-visible {
 input#day-night:focus {
   outline-color: transparent;
 }
+
 /* input included at the start for specificity */
 /* end of content from - https://www.youtube.com/watch?v=IP_rtWEMR0o&t=438s */
 
@@ -389,6 +397,7 @@ input#day-night:focus {
 .sidebar .nav-link {
   color: #23322d;
 }
+
 /* End Navbar */
 /* Modal */
 .background-modal {
@@ -414,11 +423,13 @@ input#day-night:focus {
   width: 50%;
   margin-left: 25%;
 }
+
 /* End Modal */
 /* dynamic classes */
 .active {
   color: #ecf0f1;
 }
+
 /* End dynamic classes */
 /* Widgets */
 @media screen and (min-width: 770px) {
@@ -426,6 +437,7 @@ input#day-night:focus {
     margin: 0 auto;
   }
 }
+
 /* End Widgets */
 /* Adverts */
 .advert {
@@ -447,6 +459,7 @@ input#day-night:focus {
   margin-bottom: 10px;
   border-radius: 5px;
 }
+
 /* End Adverts */
 /* Footer */
 footer {
@@ -460,7 +473,7 @@ footer {
   margin-bottom: -20px;
   padding: 7px;
   white-space: nowrap;
-  height: 100px!important;
+  height: 100px !important;
 }
 
 .small-height {
@@ -470,6 +483,7 @@ footer {
 .footer-item {
   font-size: 11px;
 }
+
 /* End Footer */
 /* Comments */
 .comment {
@@ -486,6 +500,7 @@ footer {
   border-left: 3px solid #04aa6d;
   padding-left: 10px;
 }
+
 /* End Comments */
 /* Buttons */
 .btn {
@@ -498,15 +513,15 @@ footer {
   font-weight: bolder;
   transition: cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.4s;
   box-shadow: -5px 5px 0px 0px #04aa6d;
-  width: 30%!important;
+  width: 30% !important;
 }
 
 .btn-lg-width {
-  width: 70%!important;
+  width: 70% !important;
 }
 
 .collapse button {
-  width: 25%!important;
+  width: 25% !important;
 }
 
 button {
@@ -519,7 +534,7 @@ button {
   font-weight: bolder;
   transition: cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.4s;
   box-shadow: -5px 5px 0px 0px #04aa6d;
-  width: 10%!important;
+  width: 10% !important;
 }
 
 button:hover {
@@ -550,7 +565,7 @@ button:hover {
   font-weight: bolder;
   transition: cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.4s;
   box-shadow: -5px 5px 0px 0px #04aa6d;
-  width: 80%!important;
+  width: 80% !important;
 }
 
 .button3 {
@@ -574,12 +589,12 @@ button:hover {
 }
 
 .button2:hover {
-  background-color: #0074e7!important;
+  background-color: #0074e7 !important;
   transform: translateY(-2px);
 }
 
 .button3:hover {
-  background-color: #0074e7!important;
+  background-color: #0074e7 !important;
   transform: translateY(-2px);
 }
 
@@ -590,23 +605,25 @@ button:hover {
 .commentButtonCollapse {
   width: 50%;
   display: flex;
-  gap: 9px!important;
+  gap: 9px !important;
   justify-content: center;
 }
+
 /* End Buttons */
 /* Vote */
 
 .like {
   border: 3px solid blue;
   box-shadow: -5px 5px 0px 0px blue;
-  min-width: 4rem!important;
+  min-width: 4rem !important;
 }
 
 .dislike {
   border: 3px solid red;
   box-shadow: -5px 5px 0px 0px red;
-  min-width: 4rem!important;
+  min-width: 4rem !important;
 }
+
 /* End Vote */
 /* Media queries */
 @media screen and (max-width: 300px) {
@@ -622,7 +639,7 @@ button:hover {
 @media screen and (max-width: 435px) {
 
   .navbar-toggler {
-    width: 100%!important;
+    width: 100% !important;
     margin-left: 5px;
   }
 
@@ -630,7 +647,7 @@ button:hover {
     display: flex;
     justify-content: center;
     width: 100%;
-    margin-right: 0!important;
+    margin-right: 0 !important;
   }
 }
 
@@ -644,9 +661,9 @@ button:hover {
   }
 
   footer {
-    height: 88px!important;
+    height: 88px !important;
   }
-  
+
 }
 
 @media screen and (max-width: 750px) {

@@ -1,227 +1,273 @@
 {% extends "base.html" %}
 {% load static %}
 {% load crispy_forms_tags %}
-
 {% block content %}
-<div class="container ms-1 ms-sm-5">
-    <!-- Group details and join form -->
-    <div class="row align-items-center my-5">
-        <div class="col-lg-7 left-box">
-            <img src="{{ usergroup.group_image.url }}" class="post-picture" alt="{{ post.title }}">
-        </div>
-        <div class="card my-3 py-3 col-lg-5 mt-4 mt-lg-0 right-box">
-            <h1 class="card-title">{{ usergroup.name }} </h1>
-            <hr>
-            <p class="image-flash"> Admin: {{ usergroup.admin }} | Members: {{ usergroup.members.count }}</p>
-            <div class="card-body">
-                <p class="card-subtitle">{{ usergroup.description|safe }}</p>
+    <div class="container ms-1 ms-sm-5">
+        <!-- Group details and join form -->
+        <div class="row align-items-center my-5">
+            <div class="col-lg-7 left-box">
+                <img src="{{ usergroup.group_image.url }}"
+                     class="post-picture"
+                     alt="{{ post.title }}">
             </div>
-            <div class="card-footer">
-                {% if user.is_authenticated %}
-                {% if user in usergroup.members.all %}
-                <p>You are a member of this group.</p>
-                {% else %}
-                <form method="post" action="{% url 'join_group' usergroup.slug %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-primary">Join Group</button>
-                </form>
-                {% endif %}
-                {% endif %}
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Admin form -->
-     <div class="container-fluid">
-    {% if user.is_authenticated and user == usergroup.admin %}
-    <div class="card my-2 py-2 text-center">
-        <div class="card-body">
-            <div class="card colour-2 mb-3">
-                <p class="mt-3">{{ usergroup.admin_message|safe }}</p>
-            </div>
-            <form id="admin-form" method="POST" action="{% url 'group_detail' usergroup.slug %}" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ admin_form|crispy }}
-                <input type="hidden" name="form_type" value="admin_form">
-                <br>
-                <button type="submit" class="btn button-like mt-1 text-nowrap">Update Group</button>
-            </form>
-            <br>
-            <h3 class="mt-2">Members</h3>
-            <div class="card-footer mt-1">
-                <ul class="list-unstyled">
-                    {% for member in usergroup.members.all %}
-                    <li>{{ member.username }}
-                        {% if member != usergroup.admin %}
-                        <a href="{% url 'remove_member' usergroup.slug member.id %}" class="btn btn-danger btn-sm">Remove</a>
+            <div class="card my-3 py-3 col-lg-5 mt-4 mt-lg-0 right-box">
+                <h1 class="card-title">{{ usergroup.name }}</h1>
+                <hr>
+                <p class="image-flash">Admin: {{ usergroup.admin }}
+                     | Members: {{ usergroup.members.count }}
+                </p>
+                <div class="card-body">
+                    <p class="card-subtitle">{{ usergroup.description|safe }}</p>
+                </div>
+                <div class="card-footer">
+                    {% if user.is_authenticated %}
+                        {% if user in usergroup.members.all %}
+                            <p>You are a member of this group.</p>
+                        {% else %}
+                            <form method="post" action="{% url 'join_group' usergroup.slug %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Join Group</button>
+                            </form>
                         {% endif %}
-                    </li>
-                    {% endfor %}
-                </ul>
+                    {% endif %}
+                </div>
             </div>
         </div>
-    </div>
-    {% endif %}
-
-    <!-- Group posts -->
-    <div class="row my-5 py-3">
-        {% for post in group_only_post %}
-        <div class="col-md-6 mb-3">
-            <a href="{% url 'post_detail' post.slug %}" class="post-link" style="text-decoration: none; color: inherit;">
-                <div class="card mb-3 shadow card-hover">
-                    <div class="card-img-top">
-                        <img src="{{ post.banner_image.url }}" class="img-fluid mt-5 rounded" alt="{{ post.title }}">
-                        <div class="image-flash">
-                            <p class="author ms-1">Author: {{ post.author }} | Category: {{ post.category }}</p>
+        <!-- Admin form -->
+        <div class="container-fluid">
+            {% if user.is_authenticated and user == usergroup.admin %}
+                <div class="card my-2 py-2 text-center">
+                    <div class="card-body">
+                        <div class="card colour-2 mb-3">
+                            <p class="mt-3">{{ usergroup.admin_message|safe }}</p>
+                        </div>
+                        <form id="admin-form"
+                              method="post"
+                              action="{% url 'group_detail' usergroup.slug %}"
+                              enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ admin_form|crispy }}
+                            <input type="hidden" name="form_type" value="admin_form">
+                            <br>
+                            <button type="submit" class="btn button-like mt-1 text-nowrap">Update Group</button>
+                        </form>
+                        <br>
+                        <h3 class="mt-2">Members</h3>
+                        <div class="card-footer mt-1">
+                            <ul class="list-unstyled">
+                                {% for member in usergroup.members.all %}
+                                    <li>
+                                        {{ member.username }}
+                                        {% if member != usergroup.admin %}
+                                            <a href="{% url 'remove_member' usergroup.slug member.id %}"
+                                               class="btn btn-danger btn-sm">Remove</a>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
                         </div>
                     </div>
-                    <div class="card-title">
-                        <h2 class="card-title ms-1 title-link">{{ post.title }}</h2>
-                        <p class="card-subtitle ms-1">{% if post.group %}From Group: {{ post.group }}{% endif %}</p>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-subtitle ms-1">{{ post.blurb|truncatewords:30 }}</p>
-                    </div>
-                    <div class="card-footer">
-                        <p class="text-muted h6 custom-center">
-                            {{ post.created_at|date:"F d, Y" }} | Upvotes: {{ post.total_upvotes }} | Downvotes: {{ post.total_downvotes }}
-                        </p>
-                    </div>
                 </div>
-            </a>
-        </div>
-        {% endfor %}
-    </div>
-
-    <!-- Pagination -->
-    {% if is_paginated %}
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center">
-            {% if page_obj.has_previous %}
-            <li><a href="?page={{ page_obj.previous_page_number }}" class="page-link">&laquo; PREV</a></li>
             {% endif %}
-            {% if page_obj.has_next %}
-            <li><a href="?page={{ page_obj.next_page_number }}" class="page-link">NEXT &raquo;</a></li>
-            {% endif %}
-        </ul>
-    </nav>
-    {% endif %}
-
-    <!-- Comments section -->
-<section>
-    <hr>
-    <div class="comment-container">
-        {% with allcomments.count as total_comments %}
-        <h2>
-            {{ total_comments }} comment{{ total_comments|pluralize }}
-        </h2>
-        {% endwith %}
-
-        {% load mptt_tags %}
-
-        <div>
-            <a id="comments-section"></a>
-            {% recursetree comments %}
-            <div id="comment-{{ node.id }}" class="card my-1 px-sm-1 px-md-2 px-lg-3 fw-bolder mb-4" style="border: 5px solid grey">
-                <div class="d-flex card-body phone-column justify-content-between">
-                    <span class="comment-author">By <a href="{% url 'view_profile' node.author.username %}">{{ node.author }}</a></span>
-                    <div id="reply-count">Total Replies: {{ node.get_descendant_count }}</div>
-                </div>
-                <div class="ms-2" id="comment-content-{{ node.id }}">{{ node.content }}
-                </div>
-                <div class='d-flex justify-content-start'>
-                {% if node.image %}
-                <img id="comment-image-{{ node.id }}" class='img-small' src="{{ node.image }}" alt="Comment Image" style="display: {{ node.image|yesno:'block,none' }};">
-                <!-- node.image|yesno is a great DTL that evaluates variables like the node.image, if node.image is empty (no URL)
-                 None is returned, if a URL is present in node.image, return True -->
-                {% endif %}
-                </div>
-                <div id="edit-comment-{{ node.id }}" style="display: none;">
-                    <form method="post" enctype='multipart/form-data' id="edit-comment-form-{{ node.id }}"
-                        onsubmit="return submitEditComment({{ node.id }})(event);">
-                        {% csrf_token %}
-                        <textarea name="content" id="edit-content-{{ node.id }}"
-                            class="form-control">{{ node.content }}</textarea>
-                        <input type="file" name="image" class="form-control mt-2">
-                        <button type="submit" class="btn btn-primary mt-2">Save changes</button>
-                        <button type="button" class="btn btn-secondary mt-2"
-                            onclick="cancelEditComment({{ node.id }})">Cancel</button>
-                    </form>
-                </div>
-                <hr />
-                <div class="button-container d-md-none">
-                    <button class='btn btn-primary text-dark' type='button' data-bs-toggle='collapse' data-bs-target='#buttonList-{{ node.id }}' aria-expanded='false' aria-controls='buttonList'><i class="fa-solid fa-arrow-down-wide-short"></i></button>
-                    <div class='collapse commentButtonCollapse' id='buttonList-{{ node.id }}'>
-                        <button class="button mt-1" onclick="voteComment({{ node.id }}, true)"><i class="fa-regular fa-thumbs-up fa-lg"></i></button>
-                        <button class="button mt-1" onclick="voteComment({{ node.id }}, false)"><i class="fa-regular fa-thumbs-down fa-lg"></i></button>
-                        {% if node.level < 3 %}
-                        <button class="button mt-1" onclick="grabOne({{ node.id }})"><i class="fa-regular fa-comment-dots fa-lg"></i></button>
+            <!-- Group posts -->
+            <div class="row my-5 py-3">
+                {% for post in group_only_post %}
+                    <div class="col-md-6 mb-3">
+                        <a href="{% url 'post_detail' post.slug %}"
+                           class="post-link"
+                           style="text-decoration: none;
+                                  color: inherit">
+                            <div class="card mb-3 shadow card-hover">
+                                <div class="card-img-top">
+                                    <img src="{{ post.banner_image.url }}"
+                                         class="img-fluid mt-5 rounded"
+                                         alt="{{ post.title }}">
+                                    <div class="image-flash">
+                                        <p class="author ms-1">Author: {{ post.author }}
+                                             | Category: {{ post.category }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="card-title">
+                                    <h2 class="card-title ms-1 title-link">{{ post.title }}</h2>
+                                    <p class="card-subtitle ms-1">
+                                        {% if post.group %}From Group: {{ post.group }}{% endif %}
+                                    </p>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-subtitle ms-1">{{ post.blurb|truncatewords:30 }}</p>
+                                </div>
+                                <div class="card-footer">
+                                    <p class="text-muted h6 custom-center">
+                                        {{ post.created_at|date:"F d, Y" }}
+                                         | Upvotes: {{ post.total_upvotes }}
+                                          | Downvotes: {{ post.total_downvotes }}
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+            <!-- Pagination -->
+            {% if is_paginated %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li>
+                                <a href="?page={{ page_obj.previous_page_number }}" class="page-link">&laquo; PREV</a>
+                            </li>
                         {% endif %}
-                        {% if request.user == node.author %}
-                        <button class="button mt-1" onclick="editComment({{ node.id }})"><i class="fa-regular fa-pen-to-square fa-lg"></i></button>
-                        <button onclick="confirmDelete({{ node.id }})" class="button delete-button mt-1"><i class="fa-solid fa-trash fa-lg"></i></button>
+                        {% if page_obj.has_next %}
+                            <li>
+                                <a href="?page={{ page_obj.next_page_number }}" class="page-link">NEXT &raquo;</a>
+                            </li>
                         {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+            <!-- Comments section -->
+            <section>
+                <hr>
+                <div class="comment-container">
+                    {% with allcomments.count as total_comments %}
+                        <h2>{{ total_comments }} comment{{ total_comments|pluralize }}</h2>
+                    {% endwith %}
+                    {% load mptt_tags %}
+                    <div>
+                        <a id="comments-section"></a>
+                        {% recursetree comments %}
+                        <div id="comment-{{ node.id }}"
+                             class="card my-1 px-sm-1 px-md-2 px-lg-3 fw-bolder mb-4"
+                             style="border: 5px solid grey">
+                            <div class="d-flex card-body phone-column justify-content-between">
+                                <span class="comment-author">
+                                    By <a href="{% url 'view_profile' node.author.username %}">{{ node.author }}</a>
+                                </span>
+                                <div id="reply-count">Total Replies: {{ node.get_descendant_count }}</div>
+                            </div>
+                            <div class="ms-2" id="comment-content-{{ node.id }}">{{ node.content }}</div>
+                            <div class='d-flex justify-content-start'>
+                                {% if node.image %}
+                                    <img id="comment-image-{{ node.id }}"
+                                         class='img-small'
+                                         src="{{ node.image }}"
+                                         alt="Comment Image"
+                                         style="display: {{ node.image|yesno:'block,none' }}">
+                                    <!-- node.image|yesno is a great DTL that evaluates variables like the node.image,
+                                      if node.image is empty (no URL) None is returned, if a URL is present in node.image,
+                                       return True -->
+                                {% endif %}
+                            </div>
+                            <div id="edit-comment-{{ node.id }}" style="display: none;">
+                                <form method="post"
+                                      enctype='multipart/form-data'
+                                      id="edit-comment-form-{{ node.id }}"
+                                      onsubmit="return submitEditComment({{ node.id }})(event);">
+                                    {% csrf_token %}
+                                    <textarea name="content" id="edit-content-{{ node.id }}" class="form-control">
+                                        {{ node.content }}
+                                    </textarea>
+                                    <input type="file" name="image" class="form-control mt-2">
+                                    <button type="submit" class="btn btn-primary mt-2">Save changes</button>
+                                    <button type="button"
+                                            class="btn btn-secondary mt-2"
+                                            onclick="cancelEditComment({{ node.id }})">Cancel</button>
+                                </form>
+                            </div>
+                            <hr />
+                            <div class="button-container d-md-none">
+                                <button class='btn btn-primary text-dark'
+                                        type='button'
+                                        data-bs-toggle='collapse'
+                                        data-bs-target='#buttonList-{{ node.id }}'
+                                        aria-expanded='false'
+                                        aria-controls='buttonList'>
+                                    <i class="fa-solid fa-arrow-down-wide-short"></i>
+                                </button>
+                                <div class='collapse commentButtonCollapse' id='buttonList-{{ node.id }}'>
+                                    <button class="button mt-1" onclick="voteComment({{ node.id }}, true)">
+                                        <i class="fa-regular fa-thumbs-up fa-lg"></i>
+                                    </button>
+                                    <button class="button mt-1" onclick="voteComment({{ node.id }}, false)">
+                                        <i class="fa-regular fa-thumbs-down fa-lg"></i>
+                                    </button>
+                                    {% if node.level < 3 %}
+                                        <button class="button mt-1" onclick="grabOne({{ node.id }})">
+                                            <i class="fa-regular fa-comment-dots fa-lg"></i>
+                                        </button>
+                                    {% endif %}
+                                    {% if request.user == node.author %}
+                                        <button class="button mt-1" onclick="editComment({{ node.id }})">
+                                            <i class="fa-regular fa-pen-to-square fa-lg"></i>
+                                        </button>
+                                        <button onclick="confirmDelete({{ node.id }})"
+                                                class="button delete-button mt-1">
+                                            <i class="fa-solid fa-trash fa-lg"></i>
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class='button-container d-none d-md-flex'>
+                                <button class="button ms-1 btn-sm-width"
+                                        onclick="voteComment({{ node.id }}, true)">
+                                    <i class="fa-regular fa-thumbs-up fa-lg"></i>
+                                </button>
+                                <button class="button ms-1 btn-sm-width"
+                                        onclick="voteComment({{ node.id }}, false)">
+                                    <i class="fa-regular fa-thumbs-down fa-lg"></i>
+                                </button>
+                                {% if node.level < 3 %}
+                                    <button class="button ms-1 btn-sm-width" onclick="grabOne({{ node.id }})">
+                                        <i class="fa-regular fa-comment-dots fa-lg"></i>
+                                    </button>
+                                    <!-- grabOne collects the assocoaited parent id of the comment
+                                    so the comment reply knows what comment to call its parent,
+                                    this js function also makes sure only one reply form can be visible at one time-->
+                                {% endif %}
+                                {% if request.user == node.author %}
+                                    <button class="button ms-1 btn-sm-width" onclick="editComment({{ node.id }})">
+                                        <i class="fa-regular fa-pen-to-square fa-lg"></i>
+                                    </button>
+                                    <button onclick="confirmDelete({{ node.id }})"
+                                            class="button delete-button ms-1 btn-sm-width">
+                                        <i class="fa-solid fa-trash fa-lg"></i>
+                                    </button>
+                                {% endif %}
+                            </div>
+                            <div class="d-flex justify-content-between p-1">
+                                <div>
+                                    <p>
+                                        Upvotes <i class="fa-regular fa-thumbs-up fa-lg"></i> : {{ node.total_upvotes }}
+                                         | Downvotes <i class="fa-regular fa-thumbs-down fa-lg"></i> : {{ node.total_downvotes }}
+                                    </p>
+                                </div>
+                                <div>
+                                    <span id="created-at-{{ node.id }}">Posted: {{ node.created_at|date:"Y-m-d H:i:s" }}</span>
+                                    {% if node.updated_at and node.updated_at.date != node.created_at.date %}
+                                        <span id="updated-at-{{ node.id }}">Edited: {{ node.updated_at|date:"Y-m-d H:i:s" }}<span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% if not node.is_leaf_node %}
+                            <div class="children nested-comment pl-2 pl-md-5">{{ children }}</div>{% endif %}
+                        {% endrecursetree %}
                     </div>
                 </div>
-                <div class='button-container d-none d-md-flex'>
-                    <button class="button ms-1 btn-sm-width" onclick="voteComment({{ node.id }}, true)"><i class="fa-regular fa-thumbs-up fa-lg"></i></button>
-                    <button class="button ms-1 btn-sm-width" onclick="voteComment({{ node.id }}, false)"><i class="fa-regular fa-thumbs-down fa-lg"></i></button>
-                    {% if node.level < 3 %}
-                    <button class="button ms-1 btn-sm-width" onclick="grabOne({{ node.id }})"><i class="fa-regular fa-comment-dots fa-lg"></i></button>
-                    <!-- grabOne collects the assocoaited parent id of the comment so the comment reply knows what comment to call its parent,
-                    this js function also makes sure only one reply form can be visible at one time-->
-                    {% endif %}
-                    {% if request.user == node.author %}
-                    <button class="button ms-1 btn-sm-width" onclick="editComment({{ node.id }})"><i class="fa-regular fa-pen-to-square fa-lg"></i></button>
-                    <button onclick="confirmDelete({{ node.id }})" class="button delete-button ms-1 btn-sm-width"><i class="fa-solid fa-trash fa-lg"></i></button>
-                    {% endif %}
-                </div>
-                <div class="d-flex justify-content-between p-1">
-                <div>
-                <p> Upvotes <i class="fa-regular fa-thumbs-up fa-lg"></i> : {{ node.total_upvotes }} | Downvotes <i class="fa-regular fa-thumbs-down fa-lg"></i> : {{ node.total_downvotes }} </p>
-                </div>
-                <div><span id="created-at-{{ node.id }}">Posted: {{ node.created_at|date:"Y-m-d H:i:s" }}</span>
-                    {% if node.updated_at and node.updated_at.date != node.created_at.date %}
-                    <span id="updated-at-{{ node.id}}">Edited: {{ node.updated_at|date:"Y-m-d H:i:s" }}<span>
-                    {% endif %}
-                </div>
+            </section>
+            <!-- Comment form -->
+            <div id="myDIV" style="display:block;" class="ms-sm-2">
+                <form id="comment-form" method="post" enctype='multipart/form-data'>
+                    <h2>Create new comment</h2>
+                    {% csrf_token %}
+                    {{ comment_form.as_p }}
+                    <input type="hidden" name="form_type" value="comment_form">
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" id="post-comment-button" class="btn button-like">Submit</button>
+                    </div>
+                </form>
             </div>
-            </div>
-            {% if not node.is_leaf_node %}
-            <div class="children nested-comment pl-2 pl-md-5">
-                {{ children }}
-            </div>
-            {% endif %}
-            {% endrecursetree %}
         </div>
     </div>
-</section>
-
-    <!-- Comment form -->
-    <div id="myDIV" style="display:block;" class="ms-sm-2">
-        <form id="comment-form" method="post" enctype='multipart/form-data'>
-            <h2>Create new comment</h2>
-            {% csrf_token %}
-            {{ comment_form.as_p }}
-            <input type="hidden" name="form_type" value="comment_form">
-            <div class="d-flex justify-content-center">
-                <button type="submit" id="post-comment-button" class="btn button-like">Submit</button>
-            </div>
-        </form>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const postCommentButton = document.getElementById('post-comment-button');
-            postCommentButton.addEventListener('click', function() {
-                const urlParams = new URLSearchParams(window.location.search);
-                if (urlParams.has('comment_posted') && window.location.hash === '#comments-section') {
-                    document.getElementById('comments-section').scrollIntoView();
-                }
-            });
-        });
-    </script>
-</div>
-</div>
 {% endblock %}

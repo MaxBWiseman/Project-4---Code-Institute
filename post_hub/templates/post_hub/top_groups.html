@@ -6,9 +6,10 @@
             <div class="col-12">
                 <ul class="list-unstyled">
                     {% for group in top_groups %}
-                    <li>
-                        <a href="{% url 'group_detail' group.slug %}" class="button3">{{ group.name }}</a> Tooter's - {{ group.num_members }}
-                    </li>
+                        <li>
+                            <a href="{% url 'group_detail' group.slug %}" class="button3">{{ group.name }}</a>
+                             Tooter's - {{ group.num_members }}
+                        </li>
                     {% endfor %}
                 </ul>
             </div>

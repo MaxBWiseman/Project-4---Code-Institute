@@ -2,190 +2,233 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
-
-
-<div class='row'>
-    <div class='col-12 col-sm-9 mx-auto'>
-    <img src="{{ post.banner_image.url }}" class="img-fluid mt-5" style="max-width: 950px;max-height: 600px;" alt="{{ post.title }}">
-<div class="col-12">
-    <h1 class="fw-bolder mb-2 mt-2">{{ post.title }}</h1>
-    <p class="text-muted mb-1">{{ post.author }} | {{ post.created_at|date:"F d, Y" }}</p>
-    {% if node.updated_at and node.updated_at.date != node.created_at.date %}
-    <!-- Displays only if updated_at and created_at become different as they are both set the same
+    <div class='row'>
+        <div class='col-12 col-sm-9 mx-auto'>
+            <img src="{{ post.banner_image.url }}"
+                 class="post-picture mt-5"
+                 alt="{{ post.title }}">
+            <div class="col-12">
+                <h1 class="fw-bolder mb-2 mt-2">{{ post.title }}</h1>
+                <p class="text-muted mb-1">{{ post.author }} | {{ post.created_at|date:"F d, Y" }}</p>
+                {% if node.updated_at and node.updated_at.date != node.created_at.date %}
+                    <!-- Displays only if updated_at and created_at become different as they are both set the same
              creation date-->
-    <span id="updated-at-{{ node.id}}">Edited: {{ node.updated_at|date:"Y-m-d H:i:s" }}<span>
-    {% endif %}
-    <p class="fw-lighter">Category: {{ post.category }}{% if post.group %} | From Group: {{post.group}} {% endif %}</p>
-    <p class="fw-lighter">Upvotes: {{ total_upvotes }}</p>
-    <p class="fw-lighter">Downvotes: {{ total_downvotes }}</p>
-    <div class="mb-5 mt-2 gap-3 button-container d-inline-block justify-content-center d-flex">
-        <button class="button like" onclick="votePost({{ post.id }}, true)"><i class="fa-regular fa-thumbs-up"></i></button>
-        <button class="button dislike" onclick="votePost({{ post.id }}, false)"><i class="fa-regular fa-thumbs-down"></i></button>
-    </div>
-</header>
-<section>
-    {% if post.content %}
-    
-    {% endif %}
-    <p class="fs-5">{{ post.content | safe }}</p>
-    </div>
-    <div class='d-flex justify-content-between'>
-        {% if request.user == post.author %}
-        <button onclick="confirmDeletePost({{ post.id }})" class="btn {% if request.user != post.author and not request.user.is_superuser %}d-none{% else %}d-inline{% endif %}">Delete</button>
-        <a href="{% url 'edit_post' post.slug %}" class="btn button-like {% if request.user != post.author %}d-none{% else %}d-inline{% endif %}">Edit</a>
-        {% endif %}
-    </div>
-</section>
-{% load mptt_tags %}
-<section>
-    <hr>
-    <div class="comment-container">
-        {% with allcomments.count as total_comments %}
-        <h2>
-            {{ total_comments }} comment{{ total_comments|pluralize }}
-        </h2>
-        {% endwith %}
-
-        {% load mptt_tags %}
-
-        <div>
-            <a id="comments-section"></a>
-            {% recursetree comments %}
-            <div id="comment-{{ node.id }}" class="card my-1 px-sm-1 px-md-2 px-lg-3 fw-bolder mb-4" style="border: 5px solid grey">
-                <div class="d-flex card-body phone-column justify-content-between">
-                    <span class="comment-author">By <a href="{% url 'view_profile' node.author.username %}">{{ node.author }}</a></span>
-                    <div id="reply-count">Total Replies: {{ node.get_descendant_count }}</div>
+                    <span id="updated-at-{{ node.id }}">Edited: {{ node.updated_at|date:"Y-m-d H:i:s" }}<span>
+                    {% endif %}
+                    <p class="fw-lighter">
+                        Category: {{ post.category }}
+                        {% if post.group %}| From Group: {{ post.group }}{% endif %}
+                    </p>
+                    <p class="fw-lighter">Upvotes: {{ total_upvotes }}</p>
+                    <p class="fw-lighter">Downvotes: {{ total_downvotes }}</p>
+                    <div class="mb-5 mt-2 gap-3 button-container d-inline-block justify-content-center d-flex">
+                        <button class="button like" onclick="votePost({{ post.id }}, true)">
+                            <i class="fa-regular fa-thumbs-up"></i>
+                        </button>
+                        <button class="button dislike" onclick="votePost({{ post.id }}, false)">
+                            <i class="fa-regular fa-thumbs-down"></i>
+                        </button>
+                    </div>
+                </header>
+                <section>
+                    {% if post.content %}{% endif %}
+                    <p class="fs-5">{{ post.content | safe }}</p>
                 </div>
-                <div class="ms-2" id="comment-content-{{ node.id }}">{{ node.content }}
+                <div class='d-flex justify-content-between'>
+                    {% if request.user == post.author %}
+                        <button onclick="confirmDeletePost({{ post.id }})"
+                                class="btn {% if request.user != post.author and not request.user.is_superuser %}
+                                d-none{% else %}d-inline{% endif %}">Delete
+                        </button>
+                        <a href="{% url 'edit_post' post.slug %}"
+                           class="btn button-like {% if request.user != post.author %}d-none{% else %}d-inline{% endif %}">
+                           Edit
+                        </a>
+                    {% endif %}
                 </div>
-                <div class='d-flex justify-content-start'>
-                {% if node.image %}
-                <img id="comment-image-{{ node.id }}" class='img-small' src="{{ node.image }}" alt="Comment Image" style="display: {{ node.image|yesno:'block,none' }};">
-                <!-- node.image|yesno is a great DTL that evaluates variables like the node.image, if node.image is empty (no URL)
-                 None is returned, if a URL is present in node.image, return True -->
-                {% endif %}
-                </div>
-                <div id="edit-comment-{{ node.id }}" style="display: none;">
-                    <form method="post" enctype='multipart/form-data' id="edit-comment-form-{{ node.id }}"
-                        onsubmit="return submitEditComment({{ node.id }})(event);">
-                        {% csrf_token %}
-                        <textarea name="content" id="edit-content-{{ node.id }}"
-                            class="form-control">{{ node.content }}</textarea>
-                        <input type="file" name="image" class="form-control mt-2">
-                        <button type="submit" class="btn btn-primary mt-2">Save changes</button>
-                        <button type="button" class="btn btn-secondary mt-2"
-                            onclick="cancelEditComment({{ node.id }})">Cancel</button>
-                    </form>
-                </div>
-                <hr />
-                <div class="button-container gap-2 d-md-none">
-                    <button class='btn btn-primary text-nowrap' type='button' data-bs-toggle='collapse' data-bs-target='#buttonList-{{ node.id }}' aria-expanded='false' aria-controls='buttonList'><i class="fa-solid fa-arrow-down-wide-short"></i></button>
-                    <div class='collapse commentButtonCollapse' id='buttonList-{{ node.id }}'>
-                        <button class="button mt-1" onclick="voteComment({{ node.id }}, true)"><i class="fa-regular fa-thumbs-up fa-lg"></i></button>
-                        <button class="button mt-1" onclick="voteComment({{ node.id }}, false)"><i class="fa-regular fa-thumbs-down fa-lg"></i></button>
-                        {% if node.level < 3 %}
-                        <button class="button mt-1" onclick="grabOne({{ node.id }})"><i class="fa-regular fa-comment-dots fa-lg"></i></button>
-                        {% endif %}
-                        {% if request.user == node.author %}
-                        <button class="button mt-1" onclick="editComment({{ node.id }})"><i class="fa-regular fa-pen-to-square fa-lg"></i></button>
-                        <button onclick="confirmDelete({{ node.id }})" class="button delete-button mt-1"><i class="fa-solid fa-trash fa-lg"></i></button>
-                        {% endif %}
+            </section>
+            {% load mptt_tags %}
+            <section>
+                <hr>
+                <div class="comment-container">
+                    {% with allcomments.count as total_comments %}
+                        <h2>{{ total_comments }} comment{{ total_comments|pluralize }}</h2>
+                    {% endwith %}
+                    {% load mptt_tags %}
+                    <div>
+                        <a id="comments-section"></a>
+                        {% recursetree comments %}
+                        <div id="comment-{{ node.id }}"
+                             class="card my-1 px-sm-1 px-md-2 px-lg-3 fw-bolder mb-4"
+                             style="border: 5px solid grey">
+                            <div class="d-flex card-body phone-column justify-content-between">
+                                <span class="comment-author">
+                                    By <a href="{% url 'view_profile' node.author.username %}">{{ node.author }}</a>
+                                </span>
+                                <div id="reply-count">Total Replies: {{ node.get_descendant_count }}</div>
+                            </div>
+                            <div class="ms-2" id="comment-content-{{ node.id }}">{{ node.content }}</div>
+                            <div class='d-flex justify-content-start'>
+                                {% if node.image %}
+                                    <img id="comment-image-{{ node.id }}"
+                                         class='img-small'
+                                         src="{{ node.image }}"
+                                         alt="Comment Image"
+                                         style="display: {{ node.image|yesno:'block,none' }}">
+                                    <!-- node.image|yesno is a great DTL that evaluates variables like the node.image,
+                                      if node.image is empty (no URL) None is returned, if a URL is present in node.image,
+                                       return True -->
+                                {% endif %}
+                            </div>
+                            <div id="edit-comment-{{ node.id }}" style="display: none;">
+                                <form method="post"
+                                      enctype='multipart/form-data'
+                                      id="edit-comment-form-{{ node.id }}"
+                                      onsubmit="return submitEditComment({{ node.id }})(event);">
+                                    {% csrf_token %}
+                                    <textarea name="content" id="edit-content-{{ node.id }}" class="form-control">
+                                        {{ node.content }}
+                                    </textarea>
+                                    <input type="file" name="image" class="form-control mt-2">
+                                    <button type="submit" class="btn btn-primary mt-2">Save changes</button>
+                                    <button type="button"
+                                            class="btn btn-secondary mt-2"
+                                            onclick="cancelEditComment({{ node.id }})">Cancel</button>
+                                </form>
+                            </div>
+                            <hr />
+                            <div class="button-container gap-2 d-md-none">
+                                <button class='btn btn-primary text-nowrap'
+                                        type='button'
+                                        data-bs-toggle='collapse'
+                                        data-bs-target='#buttonList-{{ node.id }}'
+                                        aria-expanded='false'
+                                        aria-controls='buttonList'>
+                                    <i class="fa-solid fa-arrow-down-wide-short"></i>
+                                </button>
+                                <div class='collapse commentButtonCollapse' id='buttonList-{{ node.id }}'>
+                                    <button class="button mt-1" onclick="voteComment({{ node.id }}, true)">
+                                        <i class="fa-regular fa-thumbs-up fa-lg"></i>
+                                    </button>
+                                    <button class="button mt-1" onclick="voteComment({{ node.id }}, false)">
+                                        <i class="fa-regular fa-thumbs-down fa-lg"></i>
+                                    </button>
+                                    {% if node.level < 3 %}
+                                        <button class="button mt-1" onclick="grabOne({{ node.id }})">
+                                            <i class="fa-regular fa-comment-dots fa-lg"></i>
+                                        </button>
+                                    {% endif %}
+                                    {% if request.user == node.author %}
+                                        <button class="button mt-1" onclick="editComment({{ node.id }})">
+                                            <i class="fa-regular fa-pen-to-square fa-lg"></i>
+                                        </button>
+                                        <button onclick="confirmDelete({{ node.id }})"
+                                                class="button delete-button mt-1">
+                                            <i class="fa-solid fa-trash fa-lg"></i>
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class='button-container d-none d-md-flex'>
+                                <button class="button ms-1 btn-sm-width"
+                                        onclick="voteComment({{ node.id }}, true)">
+                                    <i class="fa-regular fa-thumbs-up fa-lg"></i>
+                                </button>
+                                <button class="button ms-1 btn-sm-width"
+                                        onclick="voteComment({{ node.id }}, false)">
+                                    <i class="fa-regular fa-thumbs-down fa-lg"></i>
+                                </button>
+                                {% if node.level < 3 %}
+                                    <button class="button ms-1 btn-sm-width" onclick="grabOne({{ node.id }})">
+                                        <i class="fa-regular fa-comment-dots fa-lg"></i>
+                                    </button>
+                                    <!-- grabOne collects the assocoaited parent id of the comment so the comment reply
+                                      knows what comment to call its parent, this js function also makes sure only one
+                                       reply form can be visible at one time-->
+                                {% endif %}
+                                {% if request.user == node.author %}
+                                    <button class="button ms-1 btn-sm-width" onclick="editComment({{ node.id }})">
+                                        <i class="fa-regular fa-pen-to-square fa-lg"></i>
+                                    </button>
+                                    <button onclick="confirmDelete({{ node.id }})"
+                                            class="button delete-button ms-1 btn-sm-width">
+                                        <i class="fa-solid fa-trash fa-lg"></i>
+                                    </button>
+                                {% endif %}
+                            </div>
+                            <div class="d-flex justify-content-between p-1">
+                                <div>
+                                    <p>
+                                        Upvotes <i class="fa-regular fa-thumbs-up fa-lg"></i> : {{ node.total_upvotes }}
+                                         | Downvotes <i class="fa-regular fa-thumbs-down fa-lg"></i> : {{ node.total_downvotes }}
+                                    </p>
+                                </div>
+                                <div>
+                                    <span id="created-at-{{ node.id }}">Posted: {{ node.created_at|date:"Y-m-d H:i:s" }}</span>
+                                    {% if node.updated_at and node.updated_at.date != node.created_at.date %}
+                                        <span id="updated-at-{{ node.id }}">Edited: {{ node.updated_at|date:"Y-m-d H:i:s" }}<span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% if not node.is_leaf_node %}
+                            <div class="children nested-comment pl-2 pl-md-5">{{ children }}</div>
+                            {% endif %}
+                        {% endrecursetree %}
                     </div>
                 </div>
-                <div class='button-container d-none d-md-flex'>
-                    <button class="button ms-1 btn-sm-width" onclick="voteComment({{ node.id }}, true)"><i class="fa-regular fa-thumbs-up fa-lg"></i></button>
-                    <button class="button ms-1 btn-sm-width" onclick="voteComment({{ node.id }}, false)"><i class="fa-regular fa-thumbs-down fa-lg"></i></button>
-                    {% if node.level < 3 %}
-                    <button class="button ms-1 btn-sm-width" onclick="grabOne({{ node.id }})"><i class="fa-regular fa-comment-dots fa-lg"></i></button>
-                    <!-- grabOne collects the assocoaited parent id of the comment so the comment reply knows what comment to call its parent,
-                    this js function also makes sure only one reply form can be visible at one time-->
+            </section>
+            <div class="py-4 d-flex justify-content-center">
+                <nav aria-label="Page navigation example">
+                    {% if comments.has_other_pages %}
+                        <ul class="pagination">
+                            {% if comments.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ comments.previous_page_number }}">Previous</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#">Previous</a>
+                                </li>
+                            {% endif %}
+                            {% for num in comments.paginator.page_range %}
+                                {% if comments.number == l %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
+                                    </li>
+                                {% else %}
+                                    <li>
+                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if comments.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ comments.next_page_number }}">Next</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#">Next</a>
+                                </li>
+                            {% endif %}
+                        </ul>
                     {% endif %}
-                    {% if request.user == node.author %}
-                    <button class="button ms-1 btn-sm-width" onclick="editComment({{ node.id }})"><i class="fa-regular fa-pen-to-square fa-lg"></i></button>
-                    <button onclick="confirmDelete({{ node.id }})" class="button delete-button ms-1 btn-sm-width"><i class="fa-solid fa-trash fa-lg"></i></button>
-                    {% endif %}
-                </div>
-                <div class="d-flex justify-content-between p-1">
-                <div>
-                <p> Upvotes <i class="fa-regular fa-thumbs-up fa-lg"></i> : {{ node.total_upvotes }} | Downvotes <i class="fa-regular fa-thumbs-down fa-lg"></i> : {{ node.total_downvotes }} </p>
-                </div>
-                <div><span id="created-at-{{ node.id }}">Posted: {{ node.created_at|date:"Y-m-d H:i:s" }}</span>
-                    {% if node.updated_at and node.updated_at.date != node.created_at.date %}
-                    <span id="updated-at-{{ node.id}}">Edited: {{ node.updated_at|date:"Y-m-d H:i:s" }}<span>
-                    {% endif %}
-                </div>
+                </nav>
             </div>
+            <div id="myDIV" style="display:block;">
+                <form id="comment-form" method="post" enctype='multipart/form-data'>
+                    <h2>Create new comment</h2>
+                    {% csrf_token %}
+                    {{ comment_form.as_p }}
+                    <input type="hidden" id="comment-id" name="comment-id">
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" id="post-comment-button" class="btn button-like">Submit</button>
+                    </div>
+                </form>
             </div>
-            {% if not node.is_leaf_node %}
-            <div class="children nested-comment pl-2 pl-md-5">
-                {{ children }}
-            </div>
-            {% endif %}
-            {% endrecursetree %}
         </div>
     </div>
-</section>
-<div class="py-4 d-flex justify-content-center">
-    <nav aria-label="Page navigation example">
-        {% if comments.has_other_pages %}
-        <ul class="pagination">
-            {% if comments.has_previous %}
-            <li class="page-item"><a class="page-link" href="?page={{ comments.previous_page_number }}">Previous</a>
-            </li>
-            {% else %}
-            <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-            {% endif %}
-            {% for num in comments.paginator.page_range %}
-            {% if comments.number == l %}
-            <li class="page-item active"><span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
-            </li>
-            {% else %}
-            <li><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
-            {% endif %}
-            {% endfor %}
-            {% if comments.has_next %}
-            <li class="page-item"><a class="page-link" href="?page={{ comments.next_page_number }}">Next</a></li>
-            {% else %}
-            <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
-            {% endif %}
-        </ul>
-        {% endif %}
-    </nav>
-</div>
-
-<div id="myDIV" style="display:block;">
-    <form id="comment-form" method="post" enctype='multipart/form-data'>
-        <h2>Create new comment</h2>
-        {% csrf_token %}
-        {{ comment_form.as_p }}
-        <input type="hidden" id="comment-id" name="comment-id">
-        <div class="d-flex justify-content-center">
-            <button type="submit" id="post-comment-button" class="btn button-like">Submit</button>
-        </div>
-    </form>
-</div>
-
 </div>
 </div>
 </div>
-</div>
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const postCommentButton = document.getElementById('post-comment-button');
-        postCommentButton.addEventListener('click', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            // The URLSearchParams object is a way to grab the URL and search for specific parameters
-            if (urlParams.has('comment_posted') && window.location.hash === '#comments-section') {
-                // We check if the URL has the parameter 'comment_posted' and if the hash is '#comments-section'
-                document.getElementById('comments-section').scrollIntoView();
-                // If so, we know the user has just posted a comment, so scroll to the comments section
-            }
-        });
-    });
-</script>
-
-
-
 {% endblock content %}

@@ -6,7 +6,11 @@
             <div class="col-sm-12">
                 <ul class="list-unstyled">
                     {% for category in top_categories %}
-                    <li><a href="{% url 'category_detail' category.slug %}" class="button3">{{ category.category_name }}</a></li>
+                        <li>
+                            <a href="{% url 'category_detail' category.slug %}" class="button3">
+                                {{ category.category_name }}
+                            </a>
+                        </li>
                     {% endfor %}
                 </ul>
             </div>

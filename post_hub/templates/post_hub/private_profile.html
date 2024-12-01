@@ -1,26 +1,29 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-
-<div class='container mt-4 ms-sm-5'>
-    <div class='row'>
-        <div class='col-12'>
-            <div class='card card3 w-100'>
-                <div class='card-header text-center'>This Profile is Private</div>
-                <div class='card-body'>
-                    <div class='row d-flex justify-content-center'>
-                        <div class='col-4'>
-                            <img src="{{ profile.user_image.url }}" class='post-picture' alt='{{ profile.user }}'>
-                        </div>
-                        <div class='col-md-6 col-sm-12'>
-                            <h5 class='text-center fw-bolder fs-2'>{{ profile.user }}{% if profile.user.is_superuser %} (Admin){% endif %}</h5>
-                            <hr>
+    <div class='container mt-4 ms-sm-5'>
+        <div class='row'>
+            <div class='col-12'>
+                <div class='card card3 w-100'>
+                    <div class='card-header text-center'>This Profile is Private</div>
+                    <div class='card-body'>
+                        <div class='row d-flex justify-content-center'>
+                            <div class='col-4'>
+                                <img src="{{ profile.user_image.url }}"
+                                     class='post-picture'
+                                     alt='{{ profile.user }}'>
+                            </div>
+                            <div class='col-md-6 col-sm-12'>
+                                <h5 class='text-center fw-bolder fs-2'>
+                                    {{ profile.user }}
+                                    {% if profile.user.is_superuser %}(Admin){% endif %}
+                                </h5>
+                                <hr>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
 {% endblock %}
