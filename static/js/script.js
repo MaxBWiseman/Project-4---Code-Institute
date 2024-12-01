@@ -116,6 +116,11 @@ function successModal() {
     modal.style.display = "block";
 }
 
+function editSuccessModal() {
+    const modal = document.getElementById("editSuccessModal");
+    modal.style.display = "block";
+}
+
 function cancelEditComment(commentId) {
     const commentContent = document.getElementById(
         "comment-content-" + commentId);
@@ -196,7 +201,7 @@ function submitEditComment(commentId) {
                 // Hide the edit form and display the updated comment content
                 cancelEditComment(commentId);
                 console.log(`Comment ${commentId} updated successfully.`);
-                successModal();
+                editSuccessModal();
             } else {
                 alert("Error updating comment: " + data.error);
             }
@@ -214,8 +219,10 @@ function defaultFormSubmission(event) {
 function closeModal() {
     const modal = document.getElementById("deleteModal");
     const modal2 = document.getElementById("successModal");
+    const modal3 = document.getElementById("editSuccessModal");
     modal.style.display = "none";
     modal2.style.display = "none";
+    modal3.style.display = "none";
 }
 
 function deleteComment(commentId) {
