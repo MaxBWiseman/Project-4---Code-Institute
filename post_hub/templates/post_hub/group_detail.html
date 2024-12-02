@@ -11,7 +11,7 @@
                      alt="{{ post.title }}">
             </div>
             <div class="card my-3 py-3 col-lg-5 mt-4 mt-lg-0 right-box">
-                <h1 class="card-title">{{ usergroup.name }}</h1>
+                <h1 class="card-title darktext">{{ usergroup.name }}</h1>
                 <hr>
                 <p class="image-flash">Admin: {{ usergroup.admin }}
                      | Members: {{ usergroup.members.count }}
@@ -52,7 +52,7 @@
                             <button type="submit" class="btn button-like mt-1 text-nowrap">Update Group</button>
                         </form>
                         <br>
-                        <h3 class="mt-2">Members</h3>
+                        <h2 class="mt-2 darktext">Members</h2>
                         <div class="card-footer mt-1">
                             <ul class="list-unstyled">
                                 {% for member in usergroup.members.all %}
@@ -182,55 +182,53 @@
                                         data-bs-toggle='collapse'
                                         data-bs-target='#buttonList-{{ node.id }}'
                                         aria-expanded='false'
-                                        aria-controls='buttonList'>
+                                        aria-controls='buttonList'
+                                        aria-label="Toggle comment actions">
                                     <i class="fa-solid fa-arrow-down-wide-short"></i>
                                 </button>
                                 <div class='collapse commentButtonCollapse' id='buttonList-{{ node.id }}'>
-                                    <button class="button mt-1" onclick="voteComment({{ node.id }}, true)">
+                                    <button class="button mt-1" onclick="voteComment({{ node.id }}, true)" aria-label="Upvote comment">
                                         <i class="fa-regular fa-thumbs-up fa-lg"></i>
                                     </button>
-                                    <button class="button mt-1" onclick="voteComment({{ node.id }}, false)">
+                                    <button class="button mt-1" onclick="voteComment({{ node.id }}, false)" aria-label="Downvote comment">
                                         <i class="fa-regular fa-thumbs-down fa-lg"></i>
                                     </button>
                                     {% if node.level < 3 %}
-                                        <button class="button mt-1" onclick="grabOne({{ node.id }})">
+                                        <button class="button mt-1" onclick="grabOne({{ node.id }})" aria-label="Reply to comment">
                                             <i class="fa-regular fa-comment-dots fa-lg"></i>
                                         </button>
                                     {% endif %}
                                     {% if request.user == node.author %}
-                                        <button class="button mt-1" onclick="editComment({{ node.id }})">
+                                        <button class="button mt-1" onclick="editComment({{ node.id }})" aria-label="Edit comment">
                                             <i class="fa-regular fa-pen-to-square fa-lg"></i>
                                         </button>
                                         <button onclick="confirmDelete({{ node.id }})"
-                                                class="button delete-button mt-1">
+                                                class="button delete-button mt-1"
+                                                aria-label="Delete comment">
                                             <i class="fa-solid fa-trash fa-lg"></i>
                                         </button>
                                     {% endif %}
                                 </div>
                             </div>
                             <div class='button-container d-none d-md-flex'>
-                                <button class="button ms-1 btn-sm-width"
-                                        onclick="voteComment({{ node.id }}, true)">
+                                <button class="button ms-1 btn-sm-width" onclick="voteComment({{ node.id }}, true)" aria-label="Upvote comment">
                                     <i class="fa-regular fa-thumbs-up fa-lg"></i>
                                 </button>
-                                <button class="button ms-1 btn-sm-width"
-                                        onclick="voteComment({{ node.id }}, false)">
+                                <button class="button ms-1 btn-sm-width" onclick="voteComment({{ node.id }}, false)" aria-label="Downvote comment">
                                     <i class="fa-regular fa-thumbs-down fa-lg"></i>
                                 </button>
                                 {% if node.level < 3 %}
-                                    <button class="button ms-1 btn-sm-width" onclick="grabOne({{ node.id }})">
+                                    <button class="button ms-1 btn-sm-width" onclick="grabOne({{ node.id }})" aria-label="Reply to comment">
                                         <i class="fa-regular fa-comment-dots fa-lg"></i>
                                     </button>
-                                    <!-- grabOne collects the assocoaited parent id of the comment
-                                    so the comment reply knows what comment to call its parent,
-                                    this js function also makes sure only one reply form can be visible at one time-->
                                 {% endif %}
                                 {% if request.user == node.author %}
-                                    <button class="button ms-1 btn-sm-width" onclick="editComment({{ node.id }})">
+                                    <button class="button ms-1 btn-sm-width" onclick="editComment({{ node.id }})" aria-label="Edit comment">
                                         <i class="fa-regular fa-pen-to-square fa-lg"></i>
                                     </button>
                                     <button onclick="confirmDelete({{ node.id }})"
-                                            class="button delete-button ms-1 btn-sm-width">
+                                            class="button delete-button ms-1 btn-sm-width"
+                                            aria-label="Delete comment">
                                         <i class="fa-solid fa-trash fa-lg"></i>
                                     </button>
                                 {% endif %}

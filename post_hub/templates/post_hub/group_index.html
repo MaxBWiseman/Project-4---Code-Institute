@@ -4,7 +4,7 @@
     <div class="container mt-4 ms-sm-5">
         <div class="row mb-4">
             <div class="col-md-8">
-                <h1 class="text-center">Search Groups</h1>
+                <h1 class="text-center darktext">Search Groups</h1>
                 <form method="GET" action="{% url 'group_index' %}">
                     <input type="text"
                            name="q"
@@ -29,23 +29,23 @@
         </div>
         <div class="row mt-5 ms-sm-5">
             {% if usergroups %}
+            <h3 class="fw-bolder">You searched for:</h3>
                 {% for group, post in group_posts %}
-                    <h3 class="fw-bolder">You searched for:</h3>
                     <div class="col-6 mt-2">
                         <div class="card mb-4">
                             <div class="card-img-top">
-                                <img src="{{ usergroup.group_image.url }}"
+                                <img src="{{ group.group_image.url }}"
                                      class="post-picture"
                                      alt="{{ post.title }}">
                             </div>
                             <div class="card-body">
-                                <h5 class="card-title">{{ group.name }}</h5>
+                                <h5 class="card-title text-center fw-bolder">{{ group.name }}</h5>
                                 <p class="card-subtitle">{{ group.description }}</p>
                             </div>
                             <div class="card-footer d-block d-sm-flex justify-content-between">
                                 {% if post %}
                                     <div>
-                                        <h6>Latest Post</h6>
+                                        <h6 class="text-muted">Latest Post:</h6>
                                         <p>
                                             <a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a> by
                                             {{ post.author.username }}
@@ -77,13 +77,13 @@
                                  alt="{{ post.title }}">
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">{{ usergroup.name }}</h5>
+                            <h5 class="card-title text-center fw-bolder">{{ usergroup.name }}</h5>
                             <hr>
                             <p class="card-subtitle">{{ usergroup.description|safe }}</p>
                             <div class="ms-1 mt-2 d-block d-sm-flex justify-content-between">
                                 <div>
                                     {% if post %}
-                                        <h6>Latest Post</h6>
+                                        <h6 class="text-muted">Latest Post:</h6>
                                         <p>
                                             <a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a>
                                              by {{ post.author.username }}
