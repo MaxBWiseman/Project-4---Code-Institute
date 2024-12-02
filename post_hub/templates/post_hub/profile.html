@@ -14,10 +14,10 @@
                                      alt='{{ profile.user }}'>
                             </div>
                             <div class='col-md-6 col-sm-12'>
-                                <h5 class='text-center fw-bolder fs-2'>
+                                <h1 class='text-center fw-bolder fs-2'>
                                     {{ profile.user }}
                                     {% if profile.user.is_superuser %}(Admin){% endif %}
-                                </h5>
+                                </h1>
                                 <hr>
                                 <div class='row'>
                                     <div class='col-12 col-sm-6 mb-3 mb-sm-0'>
@@ -46,23 +46,23 @@
                                             </div>
                                         </div>
                                         <div class='d-flex justify-content-end'>
-                                            <a href="{% url 'edit_profile' %}" class='btn button-like'>
+                                            <a href="{% url 'edit_profile' %}" class='btn button-like' aria-label="Edit profile">
                                                 <i class="fa-regular fa-pen-to-square fa-lg"></i>
                                             </a>
                                         </div>
                                         <div class='row ms-2'>
                                             <div class='col-12'>
-                                                <h3 class='text-center'>Posts:</h3>
+                                                <h2 class='text-center'>Posts:</h2>
                                                 <hr>
                                                 <div class='row'>
                                                     {% for post in post_page_obj %}
-                                                        <div class='col-12 col-md-6 col-lg-4 d-flex align-items-stretch mb-3'>
+                                                        <div class='col-12 col-md-6 d-flex align-items-stretch mb-3'>
                                                             <div class='card'>
                                                                 <img src="{{ post.banner_image }}"
                                                                      class='post-picture'
                                                                      alt='{{ post.title }}'>
                                                                 <div class='card-body'>
-                                                                    <h5 class='card-title'>{{ post.title }}</h5>
+                                                                    <p class='card-title text-center'>{{ post.title }}</p>
                                                                     <p class='card-text'>{{ post.description }}</p>
                                                                 </div>
                                                                 <div class='card-footer text-center'>
@@ -100,7 +100,7 @@
                                         </div>
                                         <div class='row mt-3 ms-2'>
                                             <div class='col-12'>
-                                                <h3 class='text-center'>Comments:</h3>
+                                                <h2 class='text-center'>Comments:</h2>
                                                 <hr>
                                                 <div class='row'>
                                                     {% for comment in comment_page_obj %}
@@ -111,7 +111,7 @@
                                                                     <div class='d-flex justify-content-end'>
                                                                         {% if comment.post and comment.post.slug %}
                                                                             <button class='btn button-like'>
-                                                                                <a href="{% url 'post_detail' comment.post.slug %}">
+                                                                                <a href="{% url 'post_detail' comment.post.slug %}" aria-label="Go to the comments post">
                                                                                     <i class="fa-solid fa-arrows-to-eye fa-lg"></i>
                                                                                 </a>
                                                                             </button>
@@ -149,17 +149,17 @@
                                         </div>
                                         <div class='row mt-3 ms-2'>
                                             <div class='col-12'>
-                                                <h3 class='text-center'>Groups:</h3>
+                                                <h2 class='text-center'>Groups:</h2>
                                                 <hr>
                                                 <div class='row'>
                                                     {% for group in user_groups %}
-                                                        <div class='col-12 col-md-6 col-lg-4 d-flex align-items-stretch mb-3'>
+                                                        <div class='col-12 col-md-8 d-flex align-items-stretch mb-3'>
                                                             <div class='card'>
                                                                 <img src="{{ group.group_image }}"
                                                                      class='post-picture'
                                                                      alt='{{ group.name }}'>
                                                                 <div class='card-body'>
-                                                                    <h5 class='card-title'>{{ group.name }}</h5>
+                                                                    <h3 class='card-title'>{{ group.name }}</h3>
                                                                     <p class='card-text'>{{ group.description|safe }}</p>
                                                                 </div>
                                                                 <div class='card-footer text-center'>
