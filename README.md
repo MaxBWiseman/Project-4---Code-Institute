@@ -232,33 +232,69 @@ and to view the progress from wireframe to final design.
 ![alt text](static/images/readme_images/comment_on_posts5.png)
 
 
+### Comments section final
 
-### 
+![alt text](static/images/readme_images/comments-final-ss1.png)
 
+![alt text](static/images/readme_images/comments-final-ss2.png)
 
-### 
-
-
-### 
-
-
-### 
+![alt text](static/images/readme_images/comments-final-owned-comment-features.png)
 
 
+### Create post before final
 
-### 
+![alt text](static/images/readme_images/create_and_read_posts1.png)
 
-
-
-### 
-
+![alt text](static/images/readme_images/create_and_read_posts2.png)
 
 
-### 
+### Create post final
+
+![alt text](static/images/readme_images/create-post-final-ss1.png)
+
+![alt text](static/images/readme_images/create-post-final-ss2.png)
+
+
+### Post page before final
+
+![alt text](static/images/readme_images/post-before-final.png)
+
+
+### Post page final
+
+![alt text](static/images/readme_images/post-page-final-ss1.png)
 
 
 
-### 
+### User groups before final
+
+![alt text](static/images/readme_images/usergroups1.png)
+
+![alt text](static/images/readme_images/usergroups2.png)
+
+![alt text](static/images/readme_images/usergroups3.png)
+
+![alt text](static/images/readme_images/usergroups4.png)
+
+![alt text](static/images/readme_images/usergroups5.png)
+
+![alt text](static/images/readme_images/usergroups6.png)
+
+
+
+### -----
+
+
+
+### Profile before final
+
+![alt text](static/images/readme_images/profile-ss1.png)
+
+![alt text](static/images/readme_images/profile-ss2.png)
+
+![alt text](static/images/readme_images/profile-ss3.png)
+
+![alt text](static/images/readme_images/profile-ss4.png)
 
 
 
