@@ -20,7 +20,7 @@
     * [](#)
     * [](#)
     * [](#)
-* [My Algorithm's](#my-algorithms)
+* [My Data Schema](#my-data-schema)
     * [](#)
     * [](#)
 * [Languages](#languages-that-were-used-for-this-project)
@@ -490,9 +490,6 @@ Or look at some quick screenshots -
 ![alt text](static/images/readme_images/project-details-ss4.png)
 
 
-
-
-
 ## Languages and Frameworks that were used for this project
 
 - **HTML**
@@ -528,33 +525,19 @@ My project was deployed to heroku, being sure to include the correct dependencie
 - **Whitenoise**
  - For loading static files
 - **Gunicorn**
-  - 
+  -A Python WSGI HTTP Server for UNIX, used to serve the Django application in production.
 - **Config Vars**
  -  Where sensitive information critical for this project should be kept
 
 After confirming these, I connected my GitHub to the Deploy section on the heroku dashboard and deployed the main branch of my projects repository.
 
-Deployment link -
-
-### How I deployed my project
-
-
-- ****
- - 
-- ****
- - 
-- ****
- -
-- ****
- -  
-
-Deployment link -
+Deployment link - 
 
 ### How to clone this repository
 
 To clone this repository, use the following command:
 
-git clone https://github.com/yourusername/Event-Hoarder.git
+git clone https://github.com/yourusername/Project-4---Code-Institute.git
 
 
 ### How to fork this repository
@@ -574,8 +557,39 @@ This project was created by me, Max Wiseman
 
 ### Media
 
+All media used in this project, including images, icons, and other visual assets, have been sourced from reputable and free-to-use platforms. The profile and banner images were uploaded and managed using Cloudinary, which provides secure and scalable media storage solutions. Icons used throughout the site are from Font Awesome, a popular icon library that offers a wide range of high-quality icons. Additionally, some images were sourced from Unsplash, a platform that offers a vast collection of free high-resolution photos. All media assets have been used in accordance with their respective licenses, and full credit is given to the creators and platforms that provided these resources.
 
 ### Acknowledgements
+
+- **Code Institute**: For providing the educational resources and guidance that made this project possible.
+
+- **Cloudinary**: For offering a robust and scalable media storage solution that greatly enhanced the functionality of this project.
+
+- **Font Awesome**: For providing a comprehensive library of high-quality icons that improved the visual appeal of the site.
+
+- **Unsplash**: For offering a vast collection of free high-resolution photos that were used to enhance the visual content of the site.
+
+- **Django AllAuth**: For simplifying the implementation of authentication and user management features.
+
+- **Django Crispy Forms**: For making it easy to style Django forms with Bootstrap.
+
+- **Django MPTT**: For providing tools to handle hierarchical data in models.
+
+- **Django Summernote**: For enabling rich text editing in forms.
+
+- **Whitenoise**: For simplifying the process of serving static files in production.
+
+- **Gunicorn**: For providing a reliable WSGI HTTP server for deploying the application.
+
+- **Pillow**: For offering powerful image processing capabilities.
+
+- **GitHub**: For providing a platform to host and collaborate on this project.
+
+- **Heroku**: For offering a platform to deploy and manage the application in a production environment.
+
+- **My Family and Friends**: For their unwavering support and encouragement throughout the development of this project.
+
+Thank you all for your contributions and support. This project would not have been possible without you.
 
 
 ### Link to production deployment
