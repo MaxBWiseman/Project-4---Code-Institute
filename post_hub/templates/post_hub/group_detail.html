@@ -33,17 +33,18 @@
                 </div>
             </div>
         </div>
-        <!-- Admin form -->
-        {% if user.is_authenticated and user == usergroup.admin %}
-            <div class="card my-2 py-2 text-center">
-                <div class="card-body">
-                    <div class="card colour-2 mb-3">
-                        <p class="mt-3">{{ usergroup.admin_message|safe }}</p>
-                    </div>
+        <!-- Admin form and member list -->
+        {% if user.is_authenticated and user in usergroup.members.all %}
+        <div class="card my-2 py-2 text-center">
+            <div class="card-body">
+                <div class="card colour-2 mb-3">
+                    <p class="mt-3">{{ usergroup.admin_message|safe }}</p>
+                </div>
+                {% if user == usergroup.admin %}
                     <form id="admin-form"
-                          method="post"
-                          action="{% url 'group_detail' usergroup.slug %}"
-                          enctype="multipart/form-data">
+                        method="post"
+                        action="{% url 'group_detail' usergroup.slug %}"
+                        enctype="multipart/form-data">
                         {% csrf_token %}
                         {{ admin_form|crispy }}
                         <input type="hidden" name="form_type" value="admin_form">
@@ -59,14 +60,15 @@
                                     {{ member.username }}
                                     {% if member != usergroup.admin %}
                                         <a href="{% url 'remove_member' usergroup.slug member.id %}"
-                                           class="btn btn-danger btn-sm">Remove</a>
+                                        class="btn btn-danger btn-sm">Remove</a>
                                     {% endif %}
                                 </li>
                             {% endfor %}
                         </ul>
                     </div>
-                </div>
+                {% endif %}
             </div>
+        </div>
         {% endif %}
         <!-- Group posts -->
         <div class="row my-5 py-3">

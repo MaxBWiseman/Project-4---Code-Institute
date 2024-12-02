@@ -2,6 +2,8 @@
 
 #### Total time on this project - [![wakatime](https://wakatime.com/badge/user/d85da0fd-b442-4c33-98af-3ef622520fc1/project/91b3f0a1-e9d0-43bb-bd41-ce4137e84961.svg)](https://wakatime.com/badge/user/d85da0fd-b442-4c33-98af-3ef622520fc1/project/91b3f0a1-e9d0-43bb-bd41-ce4137e84961)
 
+#### Project board - https://github.com/users/MaxBWiseman/projects/2
+
 ## Contents
 * [Main Blurb](#main-blurb)
 * [Target Audience](#target-audience)
@@ -282,7 +284,26 @@ and to view the progress from wireframe to final design.
 
 
 
-### -----
+### User groups final 
+
+![alt text](static/images/readme_images/groups-final-ss1.png)
+
+![alt text](static/images/readme_images/groups-final-ss2.png)
+
+![alt text](static/images/readme_images/groups-final-ss3.png)
+
+![alt text](static/images/readme_images/groups-final-ss4.png)
+
+#### Group admin view
+
+![alt text](static/images/readme_images/group-final-admin-ss1.png)
+
+![alt text](static/images/readme_images/group-final-admin-ss2.png)
+
+#### Group member view
+
+![alt text](static/images/readme_images/group-final-member-ss1.png)
+![alt text](static/images/readme_images/group-final-noadmin-ss1.png)
 
 
 
@@ -298,48 +319,110 @@ and to view the progress from wireframe to final design.
 
 
 
-###
+### Profile final
+
+![alt text](static/images/readme_images/profile-final-ss1.png)
+
+![alt text](static/images/readme_images/profile-final-ss2.png)
+
+![alt text](static/images/readme_images/profile-final-ss3.png)
 
 
 
 ## Testing
 
+All testing has been done through UnitTest at the end of every PBI that required it, here are a few for reference, 
+
+### Profile test
+
+![alt text](static/images/readme_images/profile-test-ss1.png)
+
+![alt text](static/images/readme_images/profile-test-ss2.png)
+
+![alt text](static/images/readme_images/profile-ss5.png)
+
+### Edit post test
+
+![alt text](static/images/readme_images/edit-post-test1.png)
+
+![alt text](static/images/readme_images/edit-post-test2.png)
+
+### Usergroup model test
+
+![alt text](static/images/readme_images/usergroup-model.png)
+
+### Vote test
+
+![alt text](static/images/readme_images/vote-test.png)
+
+### Post/Comment test
+
+![alt text](static/images/readme_images/post-comment-testing.png)
+
+### Post/Comment form tests
+
+![alt text](static/images/readme_images/post_get_tests.png)
+
+![alt text](static/images/readme_images/post_get_tests2.png)
 
 ### Testing features
 
 | Test |Outcome  |
 |--|--|
-| | Pass|
-| | Pass|
-| | Pass|
-| | Pass|
-| | Pass|
-| |Pass|
-| |Pass|
-| |Pass|
-| |Pass|
-| |Pass|
+|Posting | Pass|
+|Commenting | Pass|
+|Nested commenting | Pass|
+|Group creation | Pass|
+|Group admin | Pass|
+|Profile |Pass|
+|Categories |Pass|
+|User Auth |Pass|
+|Edit post/comment |Pass|
+|Delete post/comment |Pass|
 
 ### Testing UI
 
 | Test |Outcome  |
 |--|--|
-| |Pass|
-| |Pass|
+|Widgets |Pass|
+|Day/night switch |Pass|
 
 ### User testing
 
-#### 
+#### I let my mother have a go and found that...
 
 | Test | Result |
 |--|--|
-|| 100%|
-|| 100%|
-| |100%|
+|Account created easily| 100%|
+|Post sent gracefully| 100%|
+|Liked comment/post easily |100%|
 
 ## Encountered Bugs
 
-### 
+### UnitTest bug
+
+I encountered a bug where my unittest couldent create a test database, this was fixed after removing the django-heroku library
+
+![alt text](static/images/readme_images/tests_error.png)
+
+### Voting bug
+
+Some time when voting too fast, one users vote can go beyond 1, I have seen it on 3 once, but fixes itself when vote again due to how the view works. This was fixed 
+
+![alt text](static/images/readme_images/vote-bug-fix.png)
+
+### Nesting comments
+Bugs with nesting comments, fixed with MPTT Models, Bug with "this field is required error" fixed by removing form reset jquery
+
+### Post and group association
+
+During development, association with posts to groups stopped working, after double checking the models relationships, I migrated again and this problem stopped.
+
+#### Bugs were documented in my project here - 
+
+https://github.com/users/MaxBWiseman/projects/2/views/7
+
+![alt text](static/images/readme_images/project-bugs-board.png)
 
 - 
 #### Code Example
@@ -359,26 +442,99 @@ and to view the progress from wireframe to final design.
 #### Code Example
 
 
-# My Algorithm's
+# My Data Schema
 
-## 
-
-## 
+![alt text](static/images/readme_images/data-schema.png)
 
 
-## Languages that were used for this project
+## Agile development
 
-- ****: 
+I used a kanban board through development with milestones/iterations and due dates. Here are few moments thoughout development -
+
+![alt text](static/images/readme_images/kanban.png)
+
+![alt text](static/images/readme_images/kanbanpic1.png)
+
+![alt text](static/images/readme_images/kanbanpic3.png)
+
+![alt text](static/images/readme_images/kanban-ss1.png)
+
+![alt text](static/images/readme_images/kanban-ss2.png)
+
+![alt text](static/images/readme_images/kanban-ss3.png)
+
+#### Milestones/Iterations
+
+![alt text](static/images/readme_images/iteration2-complete.png)
+
+![alt text](static/images/readme_images/milestone-iteration-ss.png)
+
+![alt text](static/images/readme_images/all-iterations-ss1.png)
+
+![alt text](static/images/readme_images/last-iteration-ss2.png)
+
+## Project updates
+
+I also used GitHubs project update feature, located at the top right on the project board named as "Project Details" - 
+
+![alt text](static/images/readme_images/project-details-ss1.png)
+
+I have placed alot of updates here, view them quickly with this link - https://github.com/users/MaxBWiseman/projects/2/views/1?pane=info
+
+Or look at some quick screenshots - 
+
+![alt text](static/images/readme_images/project-details-ss2.png)
+
+![alt text](static/images/readme_images/project-details-ss3.png)
+
+![alt text](static/images/readme_images/project-details-ss4.png)
+
+
+
+
+
+## Languages and Frameworks that were used for this project
+
+- **HTML**
+- **CSS**
+- **JavaScript**
+- **Python**
+- **Django**
 
 ### Other Libraries Used
 
-- ****:
-- ****: 
-- ****: 
-- ****: .
-- ****: 
+- **Django AllAuth**: For authentication and user management.
+- **Django Crispy Forms**: To style Django forms with Bootstrap.
+- **Django MPTT**: For handling hierarchical data in models.
+- **Django Summernote**: For rich text editing in forms.
+- **Cloudinary**: For managing and storing media files.
+- **Whitenoise**: For serving static files in production.
+- **Gunicorn**: A Python WSGI HTTP Server for UNIX.
+- **Pillow**: For image processing.
+- **psycopg2**: PostgreSQL database adapter for Python.
+- **python-dotenv**: For loading environment variables from a `.env` file.
+- **requests-oauthlib**: For OAuth authentication.
+- **PyJWT**: For JSON Web Token authentication.
+- **spellchecker**: For spell checking functionality.
 
 ## Deployment
+
+My project was deployed to heroku, being sure to include the correct dependencies such as having:
+
+- **requirements.txt**
+ - To declare all the programs libraries and modules
+- **Procfile**
+ - To specify how heroku should start the application
+- **Whitenoise**
+ - For loading static files
+- **Gunicorn**
+  - 
+- **Config Vars**
+ -  Where sensitive information critical for this project should be kept
+
+After confirming these, I connected my GitHub to the Deploy section on the heroku dashboard and deployed the main branch of my projects repository.
+
+Deployment link -
 
 ### How I deployed my project
 
