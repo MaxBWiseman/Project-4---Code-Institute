@@ -17,6 +17,7 @@
     * [Testing Features](#testing-features)
     * [Testing UI](#testing-ui)
     * [User Testing](#user-testing)
+* [Admin features](#admin-features)
 * [Encountered Bugs](#encountered-bugs)
 * [My Data Schema](#my-data-schema)
 * [Agile Development](#agile-development)
@@ -393,6 +394,39 @@ All testing has been done through UnitTest at the end of every PBI that required
 |Account created easily| 100%|
 |Post sent gracefully| 100%|
 |Liked comment/post easily |100%|
+
+
+## Admin features
+
+#### Django Admin Features for Superusers
+
+The Django admin interface provides a powerful and user-friendly way for superusers to manage the application's data and configurations. Here are some of the key features and customizations available in the Django admin interface for this project:
+
+- **Post Management**
+    -Rich Text Editing: The Post model is configured with the Summernote editor, allowing superusers to create and edit posts with rich text formatting.
+    - List Display: The admin interface displays a list of posts with columns for the title, slug, status, and creation date.
+    - Search Functionality: Superusers can search for posts by title, content, and category name.
+    - Filtering: Posts can be filtered by status and creation date.
+    - Slug Generation: The slug field is automatically populated based on the post title.
+- **Comment Management**
+    - Nested Comments: The Comment model is registered with the MPTTModelAdmin, enabling support for nested comments. This allows superusers to view and manage comments in a hierarchical tree structure.
+    - List Display: The admin interface displays a list of comments with columns for the author, content, and creation date.
+    Search Functionality: Superusers can search for comments by author and content.
+    - Filtering: Comments can be filtered by creation date.
+- **Category Management**
+    - List Display: The admin interface displays a list of categories with columns for the category name and slug.
+    - Search Functionality: Superusers can search for categories by name.
+    - Slug Generation: The slug field is automatically populated based on the category name.
+- **User Group Management**
+    - List Display: The admin interface displays a list of user groups with columns for the group name, admin, and member count.
+    - Search Functionality: Superusers can search for user groups by name and admin.
+    - Member Management: Superusers can view and manage the members of each user group.
+- **Profile Management**
+    - List Display: The admin interface displays a list of user profiles with columns for the user, bio, and location.
+    - Search Functionality: Superusers can search for profiles by user and bio.
+- **Additional Features**
+    - Custom Actions: Superusers can perform custom actions on selected items, such as bulk deleting posts or comments.
+    - Inline Editing: Superusers can edit related items directly within the parent item's edit page, making it easier to manage complex relationships.
 
 ## Encountered Bugs
 
