@@ -3,6 +3,7 @@
 #### Total time on this project - [![wakatime](https://wakatime.com/badge/user/d85da0fd-b442-4c33-98af-3ef622520fc1/project/91b3f0a1-e9d0-43bb-bd41-ce4137e84961.svg)](https://wakatime.com/badge/user/d85da0fd-b442-4c33-98af-3ef622520fc1/project/91b3f0a1-e9d0-43bb-bd41-ce4137e84961)
 
 #### Project board - https://github.com/users/MaxBWiseman/projects/2
+#### Project link - https://project4-reddit-style-site-1a90f95428a8.herokuapp.com/
 
 ## Contents
 * [Main Blurb](#main-blurb)
@@ -17,12 +18,8 @@
     * [Testing UI](#testing-ui)
     * [User Testing](#user-testing)
 * [Encountered Bugs](#encountered-bugs)
-    * [](#)
-    * [](#)
-    * [](#)
 * [My Data Schema](#my-data-schema)
-    * [](#)
-    * [](#)
+* [Agile Development](#agile-development)
 * [Languages](#languages-that-were-used-for-this-project)
     * [Other Libraries Used](#other-libraries-used)
 * [Deployment](#deployment)
@@ -425,21 +422,17 @@ https://github.com/users/MaxBWiseman/projects/2/views/7
 ![alt text](static/images/readme_images/project-bugs-board.png)
 
 - 
-#### Code Example
+### Code Examples
 
 
-### 
+#### Create post view
 
-- 
-
-#### Code Example
+![alt text](static/images/readme_images/create-post-view.png)
 
 
-### 
+#### Post model
 
-- 
-
-#### Code Example
+![alt text](static/images/readme_images/post-model.png)
 
 
 # My Data Schema
@@ -449,7 +442,13 @@ https://github.com/users/MaxBWiseman/projects/2/views/7
 
 ## Agile development
 
-I used a kanban board through development with milestones/iterations and due dates. Here are few moments thoughout development -
+Throughout the development of this project, I employed Agile methodologies to ensure a flexible and iterative approach. I used a Kanban board to manage tasks, track progress, and maintain a clear overview of the project's status. This approach allowed me to prioritize tasks effectively, adapt to changes, and deliver incremental improvements.
+
+### Kanban Board
+
+The Kanban board was instrumental in organizing the development process. It included columns for tasks such as "To Do," "In Progress," "Review," and "Done." Each task was represented by a card that could be moved across columns as it progressed. This visual representation helped in identifying bottlenecks and ensuring a smooth workflow.
+
+Here are a few snapshots of the Kanban board throughout the development:
 
 ![alt text](static/images/readme_images/kanban.png)
 
@@ -465,6 +464,10 @@ I used a kanban board through development with milestones/iterations and due dat
 
 #### Milestones/Iterations
 
+The project was divided into several milestones and iterations, each with specific goals and due dates. This iterative approach allowed for continuous feedback and improvement, ensuring that the project stayed on track and met its objectives.
+
+Here are some key milestones and iterations:
+
 ![alt text](static/images/readme_images/iteration2-complete.png)
 
 ![alt text](static/images/readme_images/milestone-iteration-ss.png)
@@ -475,11 +478,11 @@ I used a kanban board through development with milestones/iterations and due dat
 
 ## Project updates
 
-I also used GitHubs project update feature, located at the top right on the project board named as "Project Details" - 
+To keep track of progress and communicate updates, I used GitHub's project update feature. This feature, located at the top right of the project board under "Project Details," allowed me to document significant milestones, changes, and achievements throughout the development process.
+
+I have placed a lot of updates here, which can be viewed quickly with this link: https://github.com/users/MaxBWiseman/projects/2/views/1?pane=info
 
 ![alt text](static/images/readme_images/project-details-ss1.png)
-
-I have placed alot of updates here, view them quickly with this link - https://github.com/users/MaxBWiseman/projects/2/views/1?pane=info
 
 Or look at some quick screenshots - 
 
@@ -593,3 +596,11 @@ Thank you all for your contributions and support. This project would not have be
 
 
 ### Link to production deployment
+
+https://project4-reddit-style-site-1a90f95428a8.herokuapp.com/
+
+### More words from developer
+
+This project is dedicated to my late nan who passed away on the 2nd of november 2024 during development.
+
+May your memory live on enternally online.
