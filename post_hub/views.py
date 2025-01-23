@@ -1090,6 +1090,34 @@ def security(request):
     """
     return render(request, 'post_hub/security.html')
 
+# 2nd reason for fail :
+
+# The error TypeError: 'QueryDict' object is not callable occurs because you are trying to call request.POST as if it were a function.
+# Instead, you should access it like a dictionary.
+
+# broken :
+
+# def send_email(request):
+
+
+#      if request.method == 'POST':
+#         name = request.POST('name')
+#         email = request.POST('email')
+#         subject = request.POST('subject')
+#         message = request.POST('message')
+
+#         full_message = f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}"
+
+#         send_mail(
+#             subject,
+#             full_message,
+#             settings.DEFAULT_FROM_EMAIL,
+#             ['maxwise70@hotmail.co.uk'],
+#         )
+#         messages.success(request, 'Your email has been sent successfully!')
+#     return render(request, 'post_hub/contact.html')
+
+#fixed :
 
 def send_email(request):
     """
@@ -1107,18 +1135,19 @@ def send_email(request):
         HttpResponse: The rendered template for the contact page.
     """
     if request.method == 'POST':
-        name = request.POST('name')
-        email = request.POST('email')
-        subject = request.POST('subject')
-        message = request.POST('message')
+        name = request.POST.get('name', 'Anonymous')
+        email = request.POST.get('email', 'no-reply@example.com')
+        message = request.POST.get('message', '')
 
         full_message = f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}"
 
         send_mail(
-            subject,
+            f"Message from {name}",
             full_message,
-            settings.DEFAULT_FROM_EMAIL,
+            email,
             ['maxwise70@hotmail.co.uk'],
+            fail_silently=False,
         )
         messages.success(request, 'Your email has been sent successfully!')
+        return redirect('contact')
     return render(request, 'post_hub/contact.html')
